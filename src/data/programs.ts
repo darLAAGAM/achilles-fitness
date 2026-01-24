@@ -1499,11 +1499,1187 @@ Progresión: Aumenta reps cada semana. Si llegas al máximo del rango, añade pe
 };
 
 // ============================================
+// ACHILLES ELYSIUM (5 Days/Week, 3 Phases, 12 Weeks)
+// Advanced ATG-Influenced Back-Focused Program
+// ============================================
+
+const elysiumPhases: ProgramPhase[] = [
+  {
+    id: 'elysium-phase1',
+    name: 'Fase I: Fundamentos',
+    description: 'Construye la base con movimientos ATG y control excéntrico',
+    weeks: 4,
+    focus: 'strength',
+    trainingStyle: 'standard',
+    cardioType: 'steady_state',
+    cardioDuration: 20,
+    cardioFrequency: 3,
+    notes: [
+      'Enfoque en forma perfecta y rango completo',
+      'Tempo controlado en todos los ejercicios',
+      'Introduce ejercicios ATG gradualmente',
+      'Prioriza salud articular'
+    ]
+  },
+  {
+    id: 'elysium-phase2',
+    name: 'Fase II: Volumen',
+    description: 'Aumenta volumen manteniendo la calidad del movimiento',
+    weeks: 4,
+    focus: 'hypertrophy',
+    trainingStyle: 'standard',
+    cardioType: 'steady_state',
+    cardioDuration: 20,
+    cardioFrequency: 3,
+    notes: [
+      'Incrementa sets en ejercicios principales',
+      'Mantén intensidad RPE 7-8',
+      'Añade peso cuando completes todas las reps',
+      'Fase de acumulación de volumen'
+    ]
+  },
+  {
+    id: 'elysium-phase3',
+    name: 'Fase III: Pirámide',
+    description: 'Entrenamiento en pirámide para máxima fuerza e hipertrofia',
+    weeks: 4,
+    focus: 'strength',
+    trainingStyle: 'pyramid',
+    cardioType: 'none',
+    notes: [
+      'Pirámide ascendente en ejercicios principales',
+      'Aumenta peso, reduce reps cada set',
+      'Último set al fallo técnico',
+      'Fase de intensificación'
+    ]
+  }
+];
+
+// Elysium Phase 1 Workouts
+const elysiumPhase1Workouts: WorkoutTemplate[] = [
+  {
+    id: 'elysium-p1-lower-posterior',
+    name: 'Día 1 - Lower Posterior (Fase I)',
+    type: 'legs',
+    dayOfWeek: 1,
+    phaseId: 'elysium-phase1',
+    estimatedDuration: 60,
+    exercises: [
+      {
+        exerciseId: 'nordic-leg-curl',
+        order: 1,
+        intensity: 'heavy',
+        targetSets: 3,
+        targetRepsMin: 3,
+        targetRepsMax: 6,
+        restSeconds: 120,
+        notes: 'Usa asistencia si es necesario. Enfoque en excéntrico.'
+      },
+      {
+        exerciseId: 'atg-split-squat',
+        order: 2,
+        intensity: 'medium',
+        targetSets: 3,
+        targetRepsMin: 8,
+        targetRepsMax: 12,
+        restSeconds: 90,
+        notes: 'Rodilla pasa los dedos. Sin peso o ligero.'
+      },
+      {
+        exerciseId: 'reverse-step-up',
+        order: 3,
+        intensity: 'medium',
+        targetSets: 3,
+        targetRepsMin: 8,
+        targetRepsMax: 12,
+        restSeconds: 90,
+        notes: 'Control total en el descenso.'
+      },
+      {
+        exerciseId: 'single-leg-45-hyper',
+        order: 4,
+        intensity: 'light',
+        targetSets: 2,
+        targetRepsMin: 12,
+        targetRepsMax: 15,
+        restSeconds: 60,
+        notes: 'Énfasis en glúteo e isquio.',
+        alternativeExercises: ['romanian-deadlifts']
+      },
+      {
+        exerciseId: 'jefferson-curl',
+        order: 5,
+        intensity: 'light',
+        targetSets: 2,
+        targetRepsMin: 8,
+        targetRepsMax: 10,
+        restSeconds: 60,
+        notes: 'Peso muy ligero. Movilidad de columna.'
+      }
+    ]
+  },
+  {
+    id: 'elysium-p1-upper-push',
+    name: 'Día 2 - Upper Push (Fase I)',
+    type: 'push',
+    dayOfWeek: 2,
+    phaseId: 'elysium-phase1',
+    estimatedDuration: 60,
+    exercises: [
+      {
+        exerciseId: 'incline-db-press',
+        order: 1,
+        intensity: 'heavy',
+        targetSets: 3,
+        targetRepsMin: 6,
+        targetRepsMax: 10,
+        restSeconds: 120,
+        notes: 'Banco a 30 grados. Control excéntrico.'
+      },
+      {
+        exerciseId: 'dips',
+        order: 2,
+        intensity: 'medium',
+        targetSets: 3,
+        targetRepsMin: 8,
+        targetRepsMax: 12,
+        restSeconds: 90,
+        notes: 'Inclina hacia adelante para pecho.'
+      },
+      {
+        exerciseId: 'db-pullover',
+        order: 3,
+        intensity: 'medium',
+        targetSets: 3,
+        targetRepsMin: 10,
+        targetRepsMax: 15,
+        restSeconds: 90,
+        notes: 'Estiramiento profundo. Conecta pecho y dorsal.'
+      },
+      {
+        exerciseId: 'lateral-raises',
+        order: 4,
+        intensity: 'light',
+        targetSets: 3,
+        targetRepsMin: 12,
+        targetRepsMax: 15,
+        restSeconds: 60,
+        notes: 'Deltoides lateral para amplitud.'
+      },
+      {
+        exerciseId: 'tricep-pushdowns',
+        order: 5,
+        intensity: 'light',
+        targetSets: 2,
+        targetRepsMin: 12,
+        targetRepsMax: 15,
+        restSeconds: 60,
+        notes: 'Squeeze al final del movimiento.'
+      }
+    ]
+  },
+  {
+    id: 'elysium-p1-upper-pull',
+    name: 'Día 3 - Upper Pull (Fase I)',
+    type: 'pull',
+    dayOfWeek: 3,
+    phaseId: 'elysium-phase1',
+    estimatedDuration: 60,
+    exercises: [
+      {
+        exerciseId: 'wide-grip-pullup',
+        order: 1,
+        intensity: 'heavy',
+        targetSets: 3,
+        targetRepsMin: 5,
+        targetRepsMax: 8,
+        restSeconds: 120,
+        notes: 'Agarre ancho. Elysium Standard: BW+50% x 6',
+        alternativeExercises: ['weighted-pullups', 'lat-pulldown']
+      },
+      {
+        exerciseId: 'gironda-high-angle-row',
+        order: 2,
+        intensity: 'medium',
+        targetSets: 3,
+        targetRepsMin: 10,
+        targetRepsMax: 12,
+        restSeconds: 90,
+        notes: 'Codos altos, tira hacia axilas.'
+      },
+      {
+        exerciseId: 'inverted-row',
+        order: 3,
+        intensity: 'medium',
+        targetSets: 3,
+        targetRepsMin: 10,
+        targetRepsMax: 15,
+        restSeconds: 90,
+        notes: 'Cuerpo en línea recta. Aprieta escápulas.'
+      },
+      {
+        exerciseId: 'powell-raise',
+        order: 4,
+        intensity: 'light',
+        targetSets: 2,
+        targetRepsMin: 12,
+        targetRepsMax: 15,
+        restSeconds: 60,
+        notes: 'Deltoides posterior y manguito rotador.'
+      },
+      {
+        exerciseId: 'barbell-curls',
+        order: 5,
+        intensity: 'light',
+        targetSets: 2,
+        targetRepsMin: 10,
+        targetRepsMax: 12,
+        restSeconds: 60,
+        notes: 'Control estricto sin impulso.'
+      }
+    ]
+  },
+  {
+    id: 'elysium-p1-lower-anterior',
+    name: 'Día 4 - Lower Anterior (Fase I)',
+    type: 'legs',
+    dayOfWeek: 4,
+    phaseId: 'elysium-phase1',
+    estimatedDuration: 60,
+    exercises: [
+      {
+        exerciseId: 'vmo-squat',
+        order: 1,
+        intensity: 'heavy',
+        targetSets: 3,
+        targetRepsMin: 8,
+        targetRepsMax: 12,
+        restSeconds: 120,
+        notes: 'Talones elevados. Rodillas adelante.'
+      },
+      {
+        exerciseId: 'assisted-pistol-squat',
+        order: 2,
+        intensity: 'medium',
+        targetSets: 3,
+        targetRepsMin: 5,
+        targetRepsMax: 8,
+        restSeconds: 90,
+        notes: 'Usa TRX o soporte. Trabaja hacia pistol libre.'
+      },
+      {
+        exerciseId: 'leg-extension',
+        order: 3,
+        intensity: 'medium',
+        targetSets: 3,
+        targetRepsMin: 12,
+        targetRepsMax: 15,
+        restSeconds: 60,
+        notes: 'Contracción completa arriba.'
+      },
+      {
+        exerciseId: 'tibialis-raise',
+        order: 4,
+        intensity: 'light',
+        targetSets: 2,
+        targetRepsMin: 15,
+        targetRepsMax: 25,
+        restSeconds: 60,
+        notes: 'Tibial anterior. Prevención de lesiones.'
+      },
+      {
+        exerciseId: 'standing-leg-curl-monkey',
+        order: 5,
+        intensity: 'light',
+        targetSets: 2,
+        targetRepsMin: 12,
+        targetRepsMax: 15,
+        restSeconds: 60,
+        notes: 'Con Monkey Foot o mancuerna entre pies.',
+        alternativeExercises: ['leg-curls']
+      }
+    ]
+  },
+  {
+    id: 'elysium-p1-shoulders',
+    name: 'Día 5 - Shoulders (Fase I)',
+    type: 'shoulders',
+    dayOfWeek: 5,
+    phaseId: 'elysium-phase1',
+    estimatedDuration: 50,
+    exercises: [
+      {
+        exerciseId: 'db-shoulder-press',
+        order: 1,
+        intensity: 'heavy',
+        targetSets: 3,
+        targetRepsMin: 6,
+        targetRepsMax: 10,
+        restSeconds: 120,
+        notes: 'Sentado o de pie. Control total.'
+      },
+      {
+        exerciseId: 'lateral-raises',
+        order: 2,
+        intensity: 'medium',
+        targetSets: 3,
+        targetRepsMin: 12,
+        targetRepsMax: 15,
+        restSeconds: 60,
+        notes: 'Deltoides lateral. No uses impulso.'
+      },
+      {
+        exerciseId: 'face-pulls',
+        order: 3,
+        intensity: 'medium',
+        targetSets: 3,
+        targetRepsMin: 15,
+        targetRepsMax: 20,
+        restSeconds: 60,
+        notes: 'Rotación externa al final.'
+      },
+      {
+        exerciseId: 'powell-raise',
+        order: 4,
+        intensity: 'light',
+        targetSets: 2,
+        targetRepsMin: 12,
+        targetRepsMax: 15,
+        restSeconds: 60,
+        notes: 'Deltoides posterior aislado.'
+      },
+      {
+        exerciseId: 'db-shrugs',
+        order: 5,
+        intensity: 'light',
+        targetSets: 2,
+        targetRepsMin: 12,
+        targetRepsMax: 15,
+        restSeconds: 60,
+        notes: 'Trapecios. Pausa arriba.'
+      }
+    ]
+  }
+];
+
+// Elysium Phase 2 Workouts (Increased Volume)
+const elysiumPhase2Workouts: WorkoutTemplate[] = [
+  {
+    id: 'elysium-p2-lower-posterior',
+    name: 'Día 1 - Lower Posterior (Fase II)',
+    type: 'legs',
+    dayOfWeek: 1,
+    phaseId: 'elysium-phase2',
+    estimatedDuration: 70,
+    exercises: [
+      {
+        exerciseId: 'nordic-leg-curl',
+        order: 1,
+        intensity: 'heavy',
+        targetSets: 4,
+        targetRepsMin: 4,
+        targetRepsMax: 8,
+        restSeconds: 120,
+        notes: 'Progresa hacia menos asistencia.'
+      },
+      {
+        exerciseId: 'atg-split-squat',
+        order: 2,
+        intensity: 'heavy',
+        targetSets: 4,
+        targetRepsMin: 8,
+        targetRepsMax: 12,
+        restSeconds: 90,
+        notes: 'Añade peso con mancuernas.'
+      },
+      {
+        exerciseId: 'reverse-step-up',
+        order: 3,
+        intensity: 'medium',
+        targetSets: 3,
+        targetRepsMin: 10,
+        targetRepsMax: 12,
+        restSeconds: 90,
+        notes: 'Aumenta altura del cajón si es fácil.'
+      },
+      {
+        exerciseId: 'single-leg-45-hyper',
+        order: 4,
+        intensity: 'medium',
+        targetSets: 3,
+        targetRepsMin: 12,
+        targetRepsMax: 15,
+        restSeconds: 60,
+        notes: 'Añade peso si es necesario.',
+        alternativeExercises: ['romanian-deadlifts']
+      },
+      {
+        exerciseId: 'jefferson-curl',
+        order: 5,
+        intensity: 'light',
+        targetSets: 2,
+        targetRepsMin: 8,
+        targetRepsMax: 10,
+        restSeconds: 60,
+        notes: 'Progresa peso muy lentamente.'
+      },
+      {
+        exerciseId: 'atg-good-morning',
+        order: 6,
+        intensity: 'light',
+        targetSets: 2,
+        targetRepsMin: 10,
+        targetRepsMax: 12,
+        restSeconds: 90,
+        notes: 'Nuevo: Good Morning estilo ATG.'
+      }
+    ]
+  },
+  {
+    id: 'elysium-p2-upper-push',
+    name: 'Día 2 - Upper Push (Fase II)',
+    type: 'push',
+    dayOfWeek: 2,
+    phaseId: 'elysium-phase2',
+    estimatedDuration: 70,
+    exercises: [
+      {
+        exerciseId: 'incline-db-press',
+        order: 1,
+        intensity: 'heavy',
+        targetSets: 4,
+        targetRepsMin: 6,
+        targetRepsMax: 10,
+        restSeconds: 120,
+        notes: 'Aumenta peso vs Fase I.'
+      },
+      {
+        exerciseId: 'dips',
+        order: 2,
+        intensity: 'heavy',
+        targetSets: 4,
+        targetRepsMin: 8,
+        targetRepsMax: 12,
+        restSeconds: 90,
+        notes: 'Añade peso si superas 12 reps.'
+      },
+      {
+        exerciseId: 'db-pullover',
+        order: 3,
+        intensity: 'medium',
+        targetSets: 3,
+        targetRepsMin: 10,
+        targetRepsMax: 15,
+        restSeconds: 90,
+        notes: 'Aumenta ROM y peso.'
+      },
+      {
+        exerciseId: 'cable-flyes',
+        order: 4,
+        intensity: 'medium',
+        targetSets: 3,
+        targetRepsMin: 12,
+        targetRepsMax: 15,
+        restSeconds: 60,
+        notes: 'Nuevo: Aislamiento de pecho.'
+      },
+      {
+        exerciseId: 'lateral-raises',
+        order: 5,
+        intensity: 'medium',
+        targetSets: 4,
+        targetRepsMin: 12,
+        targetRepsMax: 15,
+        restSeconds: 60,
+        notes: 'Aumenta volumen de delts.'
+      },
+      {
+        exerciseId: 'tricep-pushdowns',
+        order: 6,
+        intensity: 'light',
+        targetSets: 3,
+        targetRepsMin: 12,
+        targetRepsMax: 15,
+        restSeconds: 60
+      }
+    ]
+  },
+  {
+    id: 'elysium-p2-upper-pull',
+    name: 'Día 3 - Upper Pull (Fase II)',
+    type: 'pull',
+    dayOfWeek: 3,
+    phaseId: 'elysium-phase2',
+    estimatedDuration: 70,
+    exercises: [
+      {
+        exerciseId: 'wide-grip-pullup',
+        order: 1,
+        intensity: 'heavy',
+        targetSets: 4,
+        targetRepsMin: 5,
+        targetRepsMax: 10,
+        restSeconds: 120,
+        notes: 'Añade peso si superas 10 reps.'
+      },
+      {
+        exerciseId: 'gironda-high-angle-row',
+        order: 2,
+        intensity: 'heavy',
+        targetSets: 4,
+        targetRepsMin: 8,
+        targetRepsMax: 12,
+        restSeconds: 90,
+        notes: 'Aumenta peso vs Fase I.'
+      },
+      {
+        exerciseId: 'cable-rows',
+        order: 3,
+        intensity: 'medium',
+        targetSets: 3,
+        targetRepsMin: 10,
+        targetRepsMax: 12,
+        restSeconds: 90,
+        notes: 'Nuevo: Row sentado para grosor.'
+      },
+      {
+        exerciseId: 'inverted-row',
+        order: 4,
+        intensity: 'medium',
+        targetSets: 3,
+        targetRepsMin: 12,
+        targetRepsMax: 15,
+        restSeconds: 60,
+        notes: 'Eleva pies si es fácil.'
+      },
+      {
+        exerciseId: 'powell-raise',
+        order: 5,
+        intensity: 'light',
+        targetSets: 3,
+        targetRepsMin: 12,
+        targetRepsMax: 15,
+        restSeconds: 60
+      },
+      {
+        exerciseId: 'barbell-curls',
+        order: 6,
+        intensity: 'light',
+        targetSets: 3,
+        targetRepsMin: 10,
+        targetRepsMax: 12,
+        restSeconds: 60
+      }
+    ]
+  },
+  {
+    id: 'elysium-p2-lower-anterior',
+    name: 'Día 4 - Lower Anterior (Fase II)',
+    type: 'legs',
+    dayOfWeek: 4,
+    phaseId: 'elysium-phase2',
+    estimatedDuration: 70,
+    exercises: [
+      {
+        exerciseId: 'vmo-squat',
+        order: 1,
+        intensity: 'heavy',
+        targetSets: 4,
+        targetRepsMin: 8,
+        targetRepsMax: 12,
+        restSeconds: 120,
+        notes: 'Aumenta peso con mancuernas/barra.'
+      },
+      {
+        exerciseId: 'assisted-pistol-squat',
+        order: 2,
+        intensity: 'heavy',
+        targetSets: 4,
+        targetRepsMin: 6,
+        targetRepsMax: 10,
+        restSeconds: 90,
+        notes: 'Reduce asistencia gradualmente.'
+      },
+      {
+        exerciseId: 'leg-press',
+        order: 3,
+        intensity: 'medium',
+        targetSets: 3,
+        targetRepsMin: 10,
+        targetRepsMax: 15,
+        restSeconds: 90,
+        notes: 'Nuevo: Volumen de cuádriceps.'
+      },
+      {
+        exerciseId: 'leg-extension',
+        order: 4,
+        intensity: 'medium',
+        targetSets: 3,
+        targetRepsMin: 12,
+        targetRepsMax: 15,
+        restSeconds: 60
+      },
+      {
+        exerciseId: 'tibialis-raise',
+        order: 5,
+        intensity: 'light',
+        targetSets: 3,
+        targetRepsMin: 20,
+        targetRepsMax: 30,
+        restSeconds: 60,
+        notes: 'Aumenta volumen de tibial.'
+      },
+      {
+        exerciseId: 'standing-leg-curl-monkey',
+        order: 6,
+        intensity: 'light',
+        targetSets: 3,
+        targetRepsMin: 12,
+        targetRepsMax: 15,
+        restSeconds: 60,
+        alternativeExercises: ['leg-curls']
+      }
+    ]
+  },
+  {
+    id: 'elysium-p2-shoulders',
+    name: 'Día 5 - Shoulders (Fase II)',
+    type: 'shoulders',
+    dayOfWeek: 5,
+    phaseId: 'elysium-phase2',
+    estimatedDuration: 60,
+    exercises: [
+      {
+        exerciseId: 'z-press',
+        order: 1,
+        intensity: 'heavy',
+        targetSets: 4,
+        targetRepsMin: 6,
+        targetRepsMax: 10,
+        restSeconds: 120,
+        notes: 'Nuevo: Press sin soporte de espalda.'
+      },
+      {
+        exerciseId: 'db-shoulder-press',
+        order: 2,
+        intensity: 'medium',
+        targetSets: 3,
+        targetRepsMin: 8,
+        targetRepsMax: 12,
+        restSeconds: 90,
+        notes: 'Volumen adicional de press.'
+      },
+      {
+        exerciseId: 'lateral-raises',
+        order: 3,
+        intensity: 'medium',
+        targetSets: 4,
+        targetRepsMin: 12,
+        targetRepsMax: 15,
+        restSeconds: 60
+      },
+      {
+        exerciseId: 'face-pulls',
+        order: 4,
+        intensity: 'medium',
+        targetSets: 4,
+        targetRepsMin: 15,
+        targetRepsMax: 20,
+        restSeconds: 60
+      },
+      {
+        exerciseId: 'powell-raise',
+        order: 5,
+        intensity: 'light',
+        targetSets: 3,
+        targetRepsMin: 12,
+        targetRepsMax: 15,
+        restSeconds: 60
+      },
+      {
+        exerciseId: 'db-shrugs',
+        order: 6,
+        intensity: 'light',
+        targetSets: 3,
+        targetRepsMin: 12,
+        targetRepsMax: 15,
+        restSeconds: 60
+      }
+    ]
+  }
+];
+
+// Elysium Phase 3 Workouts (Pyramid Training)
+const elysiumPhase3Workouts: WorkoutTemplate[] = [
+  {
+    id: 'elysium-p3-lower-posterior',
+    name: 'Día 1 - Lower Posterior (Fase III)',
+    type: 'legs',
+    dayOfWeek: 1,
+    phaseId: 'elysium-phase3',
+    trainingStyle: 'pyramid',
+    estimatedDuration: 75,
+    exercises: [
+      {
+        exerciseId: 'nordic-leg-curl',
+        order: 1,
+        intensity: 'heavy',
+        targetSets: 5,
+        targetRepsMin: 3,
+        targetRepsMax: 10,
+        restSeconds: 120,
+        notes: 'Pirámide: 10-8-6-4-3 reps. Añade peso/reduce asistencia.'
+      },
+      {
+        exerciseId: 'atg-split-squat',
+        order: 2,
+        intensity: 'heavy',
+        targetSets: 4,
+        targetRepsMin: 6,
+        targetRepsMax: 12,
+        restSeconds: 90,
+        notes: 'Pirámide: 12-10-8-6 reps.'
+      },
+      {
+        exerciseId: 'romanian-deadlifts',
+        order: 3,
+        intensity: 'heavy',
+        targetSets: 4,
+        targetRepsMin: 6,
+        targetRepsMax: 10,
+        restSeconds: 120,
+        notes: 'Nuevo: RDL pesado en pirámide.'
+      },
+      {
+        exerciseId: 'reverse-step-up',
+        order: 4,
+        intensity: 'medium',
+        targetSets: 3,
+        targetRepsMin: 8,
+        targetRepsMax: 12,
+        restSeconds: 90
+      },
+      {
+        exerciseId: 'jefferson-curl',
+        order: 5,
+        intensity: 'light',
+        targetSets: 2,
+        targetRepsMin: 8,
+        targetRepsMax: 10,
+        restSeconds: 60
+      }
+    ]
+  },
+  {
+    id: 'elysium-p3-upper-push',
+    name: 'Día 2 - Upper Push (Fase III)',
+    type: 'push',
+    dayOfWeek: 2,
+    phaseId: 'elysium-phase3',
+    trainingStyle: 'pyramid',
+    estimatedDuration: 75,
+    exercises: [
+      {
+        exerciseId: 'incline-db-press',
+        order: 1,
+        intensity: 'heavy',
+        targetSets: 5,
+        targetRepsMin: 4,
+        targetRepsMax: 12,
+        restSeconds: 120,
+        notes: 'Pirámide: 12-10-8-6-4 reps.'
+      },
+      {
+        exerciseId: 'flat-barbell-press',
+        order: 2,
+        intensity: 'heavy',
+        targetSets: 4,
+        targetRepsMin: 5,
+        targetRepsMax: 10,
+        restSeconds: 120,
+        notes: 'Nuevo: Press plano en pirámide.'
+      },
+      {
+        exerciseId: 'dips',
+        order: 3,
+        intensity: 'heavy',
+        targetSets: 4,
+        targetRepsMin: 6,
+        targetRepsMax: 12,
+        restSeconds: 90,
+        notes: 'Añade peso en pirámide.'
+      },
+      {
+        exerciseId: 'lateral-raises',
+        order: 4,
+        intensity: 'medium',
+        targetSets: 4,
+        targetRepsMin: 10,
+        targetRepsMax: 15,
+        restSeconds: 60
+      },
+      {
+        exerciseId: 'overhead-tricep-extension',
+        order: 5,
+        intensity: 'medium',
+        targetSets: 3,
+        targetRepsMin: 10,
+        targetRepsMax: 15,
+        restSeconds: 60
+      }
+    ]
+  },
+  {
+    id: 'elysium-p3-upper-pull',
+    name: 'Día 3 - Upper Pull (Fase III)',
+    type: 'pull',
+    dayOfWeek: 3,
+    phaseId: 'elysium-phase3',
+    trainingStyle: 'pyramid',
+    estimatedDuration: 75,
+    exercises: [
+      {
+        exerciseId: 'weighted-pullups',
+        order: 1,
+        intensity: 'heavy',
+        targetSets: 5,
+        targetRepsMin: 3,
+        targetRepsMax: 10,
+        restSeconds: 150,
+        notes: 'Pirámide: 10-8-6-4-3 reps. Objetivo: BW+50% x 6.'
+      },
+      {
+        exerciseId: 'barbell-bent-over-row',
+        order: 2,
+        intensity: 'heavy',
+        targetSets: 4,
+        targetRepsMin: 6,
+        targetRepsMax: 10,
+        restSeconds: 120,
+        notes: 'Nuevo: Row con barra en pirámide.'
+      },
+      {
+        exerciseId: 'gironda-high-angle-row',
+        order: 3,
+        intensity: 'medium',
+        targetSets: 4,
+        targetRepsMin: 8,
+        targetRepsMax: 12,
+        restSeconds: 90
+      },
+      {
+        exerciseId: 'face-pulls',
+        order: 4,
+        intensity: 'medium',
+        targetSets: 3,
+        targetRepsMin: 15,
+        targetRepsMax: 20,
+        restSeconds: 60
+      },
+      {
+        exerciseId: 'hammer-curls',
+        order: 5,
+        intensity: 'medium',
+        targetSets: 3,
+        targetRepsMin: 8,
+        targetRepsMax: 12,
+        restSeconds: 60
+      }
+    ]
+  },
+  {
+    id: 'elysium-p3-lower-anterior',
+    name: 'Día 4 - Lower Anterior (Fase III)',
+    type: 'legs',
+    dayOfWeek: 4,
+    phaseId: 'elysium-phase3',
+    trainingStyle: 'pyramid',
+    estimatedDuration: 75,
+    exercises: [
+      {
+        exerciseId: 'front-squat',
+        order: 1,
+        intensity: 'heavy',
+        targetSets: 5,
+        targetRepsMin: 4,
+        targetRepsMax: 10,
+        restSeconds: 150,
+        notes: 'Nuevo: Front Squat en pirámide para quads.'
+      },
+      {
+        exerciseId: 'vmo-squat',
+        order: 2,
+        intensity: 'heavy',
+        targetSets: 4,
+        targetRepsMin: 8,
+        targetRepsMax: 12,
+        restSeconds: 90,
+        notes: 'Peso moderado, enfoque en VMO.'
+      },
+      {
+        exerciseId: 'assisted-pistol-squat',
+        order: 3,
+        intensity: 'medium',
+        targetSets: 3,
+        targetRepsMin: 6,
+        targetRepsMax: 10,
+        restSeconds: 90,
+        notes: 'Intenta reducir asistencia al mínimo.'
+      },
+      {
+        exerciseId: 'leg-extension',
+        order: 4,
+        intensity: 'medium',
+        targetSets: 3,
+        targetRepsMin: 10,
+        targetRepsMax: 15,
+        restSeconds: 60
+      },
+      {
+        exerciseId: 'tibialis-raise',
+        order: 5,
+        intensity: 'light',
+        targetSets: 3,
+        targetRepsMin: 20,
+        targetRepsMax: 30,
+        restSeconds: 60
+      },
+      {
+        exerciseId: 'calf-raises',
+        order: 6,
+        intensity: 'light',
+        targetSets: 4,
+        targetRepsMin: 12,
+        targetRepsMax: 20,
+        restSeconds: 60
+      }
+    ]
+  },
+  {
+    id: 'elysium-p3-shoulders',
+    name: 'Día 5 - Shoulders (Fase III)',
+    type: 'shoulders',
+    dayOfWeek: 5,
+    phaseId: 'elysium-phase3',
+    trainingStyle: 'pyramid',
+    estimatedDuration: 65,
+    exercises: [
+      {
+        exerciseId: 'barbell-ohp',
+        order: 1,
+        intensity: 'heavy',
+        targetSets: 5,
+        targetRepsMin: 4,
+        targetRepsMax: 10,
+        restSeconds: 150,
+        notes: 'Pirámide: 10-8-6-5-4 reps.'
+      },
+      {
+        exerciseId: 'z-press',
+        order: 2,
+        intensity: 'heavy',
+        targetSets: 3,
+        targetRepsMin: 6,
+        targetRepsMax: 10,
+        restSeconds: 120,
+        notes: 'Después del OHP para volumen.'
+      },
+      {
+        exerciseId: 'lateral-raises',
+        order: 3,
+        intensity: 'medium',
+        targetSets: 4,
+        targetRepsMin: 12,
+        targetRepsMax: 15,
+        restSeconds: 60
+      },
+      {
+        exerciseId: 'rear-delt-flyes',
+        order: 4,
+        intensity: 'medium',
+        targetSets: 4,
+        targetRepsMin: 12,
+        targetRepsMax: 15,
+        restSeconds: 60
+      },
+      {
+        exerciseId: 'db-shrugs',
+        order: 5,
+        intensity: 'medium',
+        targetSets: 4,
+        targetRepsMin: 10,
+        targetRepsMax: 15,
+        restSeconds: 60
+      }
+    ]
+  }
+];
+
+const elysiumNutrition: NutritionGuidelines = {
+  recommendedFasting: '16/8',
+  proteinPerKg: 2.2,
+  mealFrequency: 4,
+  preworkoutTiming: 60,
+  postworkoutTiming: 30,
+  hydrationLiters: 3.5,
+  supplements: [
+    'Creatina 5g/día',
+    'Vitamina D3 5000 IU',
+    'Omega-3 (aceite de pescado)',
+    'Magnesio glicinato',
+    'Colágeno (para articulaciones)'
+  ],
+  recommendedFoods: [
+    'Carne de res grass-fed', 'Salmón salvaje', 'Huevos pasteurizados',
+    'Arroz blanco', 'Patatas', 'Frutas',
+    'Verduras de hoja verde', 'Aceite de oliva', 'Mantequilla'
+  ],
+  avoidFoods: [
+    'Aceites vegetales refinados',
+    'Azúcares procesados',
+    'Alimentos ultraprocesados'
+  ],
+  notes: [
+    'Proteína: 1g por libra de peso corporal objetivo',
+    'Carbohidratos alrededor del entrenamiento',
+    'Grasas saludables para hormonas y articulaciones',
+    'Hidratación extra por el volumen de entrenamiento',
+    'Considera suplemento de colágeno para salud articular ATG'
+  ]
+};
+
+// Elysium Strength Standards (based on bodyweight)
+export const elysiumStrengthStandards = {
+  upperBody: {
+    'weighted-pullups': {
+      description: 'Dominadas con peso (agarre ancho)',
+      target: 'BW + 50% x 6 reps',
+      levels: {
+        beginner: 'Solo BW x 6',
+        intermediate: 'BW + 25% x 6',
+        advanced: 'BW + 50% x 6',
+        elite: 'BW + 75% x 6'
+      }
+    },
+    'dips': {
+      description: 'Fondos con peso',
+      target: 'BW + 50% x 6 reps',
+      levels: {
+        beginner: 'Solo BW x 10',
+        intermediate: 'BW + 25% x 8',
+        advanced: 'BW + 50% x 6',
+        elite: 'BW + 75% x 6'
+      }
+    },
+    'incline-db-press': {
+      description: 'Press inclinado con mancuernas',
+      target: '75% BW cada mano x 6 reps',
+      levels: {
+        beginner: '30% BW x 10',
+        intermediate: '50% BW x 8',
+        advanced: '75% BW x 6',
+        elite: '100% BW x 6'
+      }
+    },
+    'barbell-ohp': {
+      description: 'Press militar con barra',
+      target: 'BW x 1 rep',
+      levels: {
+        beginner: '0.5x BW x 5',
+        intermediate: '0.7x BW x 5',
+        advanced: 'BW x 1',
+        elite: '1.2x BW x 1'
+      }
+    }
+  },
+  lowerBody: {
+    'nordic-leg-curl': {
+      description: 'Nordic curl sin asistencia',
+      target: '6 reps controladas',
+      levels: {
+        beginner: 'Con asistencia de manos',
+        intermediate: 'Asistencia mínima x 6',
+        advanced: 'Sin asistencia x 6',
+        elite: 'Sin asistencia x 10'
+      }
+    },
+    'atg-split-squat': {
+      description: 'ATG Split Squat con peso',
+      target: '50% BW cada mano x 8 reps',
+      levels: {
+        beginner: 'Solo BW x 10',
+        intermediate: '25% BW x 10',
+        advanced: '50% BW x 8',
+        elite: '75% BW x 8'
+      }
+    },
+    'front-squat': {
+      description: 'Sentadilla frontal',
+      target: 'BW x 5 reps',
+      levels: {
+        beginner: '0.5x BW x 8',
+        intermediate: '0.75x BW x 6',
+        advanced: 'BW x 5',
+        elite: '1.25x BW x 5'
+      }
+    },
+    'pistol-squat': {
+      description: 'Pistol squat sin asistencia',
+      target: '5 reps cada pierna',
+      levels: {
+        beginner: 'Con asistencia',
+        intermediate: 'Sin asistencia x 3',
+        advanced: 'Sin asistencia x 5',
+        elite: 'Con peso x 5'
+      }
+    }
+  }
+};
+
+export const achillesElysiumProgram: WorkoutProgram = {
+  id: 'achilles-elysium',
+  name: 'Achilles Elysium',
+  description: `Programa avanzado de 12 semanas inspirado en ATG (Knees Over Toes).
+
+La secuela del Achilles original. Enfocado en ESPALDA como grupo muscular dominante, no pecho.
+
+Filosofía: "Entrena ARTICULACIONES, no solo músculos."
+Influencias: ATG (Ben Patrick), GOATA, Functional Patterns.
+
+Estructura de 3 Fases:
+- Fase I (4 semanas): Fundamentos - Aprende los movimientos ATG
+- Fase II (4 semanas): Volumen - Aumenta sets manteniendo calidad
+- Fase III (4 semanas): Pirámide - Intensificación para máxima fuerza
+
+5 días por semana:
+1. Lower Posterior (isquios, glúteos)
+2. Upper Push (pecho, hombros, tríceps)
+3. Upper Pull (espalda, bíceps)
+4. Lower Anterior (cuádriceps, tibiales)
+5. Shoulders (deltoides, trapecios)
+
+Ejercicios únicos: Nordic Leg Curl, ATG Split Squat, VMO Squat, Jefferson Curl, Powell Raise, Gironda Row.
+
+Objetivo estético: "Hombre de Bronce" - espalda dominante, hombros anchos, piernas atléticas.`,
+  author: 'Alexander Cortes',
+  difficulty: 'advanced',
+  goal: 'athletic',
+  daysPerWeek: 5,
+  weeks: 12,
+  equipmentRequired: ['barbell', 'dumbbell', 'cable', 'machine', 'bodyweight'],
+  minEquipmentRequired: ['dumbbell', 'bodyweight'],
+  phases: elysiumPhases,
+  workouts: [...elysiumPhase1Workouts, ...elysiumPhase2Workouts, ...elysiumPhase3Workouts],
+  nutritionGuidelines: elysiumNutrition
+};
+
+// ============================================
 // ALL PROGRAMS EXPORT
 // ============================================
 
 export const allPrograms: WorkoutProgram[] = [
   achillesProgram,
+  achillesElysiumProgram,
   wolverineProgram,
   hopliteProgram,
   b3Program

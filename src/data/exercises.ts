@@ -1844,6 +1844,408 @@ export const exercises: Exercise[] = [
       'Dejar caer los hombros'
     ],
     defaultRestSeconds: 90
+  },
+
+  // ============================================
+  // ATG / ACHILLES ELYSIUM EXERCISES
+  // ============================================
+  {
+    id: 'nordic-leg-curl',
+    name: 'Nordic Leg Curl',
+    muscleGroup: 'hamstrings',
+    secondaryMuscles: ['glutes'],
+    category: 'compound',
+    equipment: ['bodyweight'],
+    youtubeUrl: 'https://www.youtube.com/watch?v=HUXS3S2xSX4',
+    techniqueNotes: [
+      'Rodillas sobre cojín, pies anclados',
+      'Baja el cuerpo controladamente usando isquiotibiales',
+      'Mantén caderas extendidas todo el tiempo',
+      'Usa las manos para asistir si es necesario'
+    ],
+    commonMistakes: [
+      'Flexionar las caderas durante el descenso',
+      'Caer sin control',
+      'No usar rango completo'
+    ],
+    strengthStandards: {
+      beginner: 0,
+      intermediate: 0,
+      advanced: 0,
+      elite: 0
+    },
+    defaultRestSeconds: 120
+  },
+  {
+    id: 'atg-split-squat',
+    name: 'ATG Split Squat',
+    muscleGroup: 'quads',
+    secondaryMuscles: ['glutes', 'hamstrings'],
+    category: 'compound',
+    equipment: ['dumbbell', 'bodyweight'],
+    youtubeUrl: 'https://www.youtube.com/watch?v=kkdmHTASZg8',
+    techniqueNotes: [
+      'Rodilla delantera pasa los dedos del pie (ATG style)',
+      'Talón trasero elevado, rodilla casi toca el suelo',
+      'Mayor rango que Bulgarian split squat',
+      'Fortalece rodillas en posiciones extremas'
+    ],
+    commonMistakes: [
+      'No permitir que la rodilla avance',
+      'Perder el equilibrio',
+      'Torso demasiado inclinado'
+    ],
+    defaultRestSeconds: 90
+  },
+  {
+    id: 'vmo-squat',
+    name: 'VMO Squat (Heel Elevated)',
+    muscleGroup: 'quads',
+    secondaryMuscles: ['glutes'],
+    category: 'compound',
+    equipment: ['dumbbell', 'bodyweight'],
+    youtubeUrl: 'https://www.youtube.com/watch?v=Av3LO2KpGrQ',
+    techniqueNotes: [
+      'Talones elevados sobre cuña o disco',
+      'Rodillas avanzan sobre los dedos',
+      'Enfoca el VMO (vastus medialis)',
+      'Baja profundo manteniendo tensión'
+    ],
+    commonMistakes: [
+      'Talones no suficientemente elevados',
+      'No bajar suficiente',
+      'Colapsar rodillas hacia adentro'
+    ],
+    defaultRestSeconds: 90
+  },
+  {
+    id: 'jefferson-curl',
+    name: 'Jefferson Curl',
+    muscleGroup: 'hamstrings',
+    secondaryMuscles: ['back_thickness', 'glutes'],
+    category: 'isolation',
+    equipment: ['barbell', 'dumbbell'],
+    youtubeUrl: 'https://www.youtube.com/watch?v=nYS0R4c3qCA',
+    techniqueNotes: [
+      'De pie sobre superficie elevada',
+      'Rueda la columna vértebra por vértebra',
+      'Estira isquios y espalda baja',
+      'Peso ligero, control total'
+    ],
+    commonMistakes: [
+      'Usar demasiado peso',
+      'Movimiento muy rápido',
+      'Doblar las rodillas'
+    ],
+    defaultRestSeconds: 90
+  },
+  {
+    id: 'powell-raise',
+    name: 'Powell Raise',
+    muscleGroup: 'shoulders_rear',
+    category: 'isolation',
+    equipment: ['dumbbell'],
+    youtubeUrl: 'https://www.youtube.com/watch?v=SvPsXKR1rvg',
+    techniqueNotes: [
+      'Acostado de lado sobre banco inclinado',
+      'Brazo colgando perpendicular al suelo',
+      'Levanta hacia afuera y arriba',
+      'Trabaja deltoides posterior y manguito rotador'
+    ],
+    commonMistakes: [
+      'Usar demasiado peso',
+      'Usar impulso',
+      'No controlar la negativa'
+    ],
+    defaultRestSeconds: 60
+  },
+  {
+    id: 'gironda-high-angle-row',
+    name: 'Gironda High Angle Row',
+    muscleGroup: 'back_thickness',
+    secondaryMuscles: ['shoulders_rear', 'biceps'],
+    category: 'compound',
+    equipment: ['cable', 'dumbbell'],
+    youtubeUrl: 'https://www.youtube.com/watch?v=OaI9Cgn1lyk',
+    techniqueNotes: [
+      'Banco inclinado a 45 grados, pecho apoyado',
+      'Tira hacia las axilas con codos altos',
+      'Énfasis en deltoides posterior y espalda alta',
+      'Creado por Vince Gironda'
+    ],
+    commonMistakes: [
+      'Tirar hacia el ombligo (no es el objetivo)',
+      'No mantener pecho en el banco',
+      'Codos muy bajos'
+    ],
+    defaultRestSeconds: 90
+  },
+  {
+    id: 'reverse-step-up',
+    name: 'Reverse Step-Up',
+    muscleGroup: 'glutes',
+    secondaryMuscles: ['hamstrings', 'quads'],
+    category: 'compound',
+    equipment: ['bodyweight', 'dumbbell'],
+    youtubeUrl: 'https://www.youtube.com/watch?v=UxaYjyJj7_8',
+    techniqueNotes: [
+      'Comienza de pie sobre cajón',
+      'Baja una pierna hacia atrás controladamente',
+      'Toca suavemente el suelo y sube',
+      'Excelente para glúteos y control'
+    ],
+    commonMistakes: [
+      'Caer sin control',
+      'Empujar con la pierna de abajo',
+      'Cajón muy alto para comenzar'
+    ],
+    defaultRestSeconds: 90
+  },
+  {
+    id: 'single-leg-45-hyper',
+    name: 'Single Leg 45° Hyperextension',
+    muscleGroup: 'hamstrings',
+    secondaryMuscles: ['glutes', 'back_thickness'],
+    category: 'isolation',
+    equipment: ['machine', 'bodyweight'],
+    youtubeUrl: 'https://www.youtube.com/watch?v=GhNpUCLFmhc',
+    techniqueNotes: [
+      'En máquina de hiperextensión a 45°',
+      'Una pierna trabaja, la otra descansa',
+      'Énfasis en isquio y glúteo unilateral',
+      'Baja hasta sentir estiramiento'
+    ],
+    commonMistakes: [
+      'Hiperextender la espalda',
+      'No usar rango completo',
+      'Usar impulso'
+    ],
+    defaultRestSeconds: 60
+  },
+  {
+    id: 'assisted-pistol-squat',
+    name: 'Assisted Pistol Squat',
+    muscleGroup: 'quads',
+    secondaryMuscles: ['glutes', 'hamstrings'],
+    category: 'compound',
+    equipment: ['bodyweight'],
+    youtubeUrl: 'https://www.youtube.com/watch?v=qDcniqddTeE',
+    techniqueNotes: [
+      'Sostente de TRX, poste o banda',
+      'Baja en una pierna hasta abajo',
+      'Pierna libre extendida al frente',
+      'Progresión hacia pistol squat completa'
+    ],
+    commonMistakes: [
+      'Depender demasiado del soporte',
+      'No bajar suficiente',
+      'Perder balance'
+    ],
+    defaultRestSeconds: 90
+  },
+  {
+    id: 'atg-good-morning',
+    name: 'ATG Good Morning',
+    muscleGroup: 'hamstrings',
+    secondaryMuscles: ['back_thickness', 'glutes'],
+    category: 'compound',
+    equipment: ['barbell'],
+    youtubeUrl: 'https://www.youtube.com/watch?v=vKPGe8zb2S4',
+    techniqueNotes: [
+      'Barra en trapecios (high bar)',
+      'Flexiona desde las caderas manteniendo espalda neutra',
+      'Rodillas ligeramente flexionadas',
+      'Estiramiento profundo de isquios'
+    ],
+    commonMistakes: [
+      'Redondear la espalda',
+      'Bloquear las rodillas',
+      'Usar demasiado peso'
+    ],
+    strengthStandards: {
+      beginner: 0.3,
+      intermediate: 0.5,
+      advanced: 0.75,
+      elite: 1.0
+    },
+    defaultRestSeconds: 120
+  },
+  {
+    id: 'tibialis-raise',
+    name: 'Tibialis Raise',
+    muscleGroup: 'calves',
+    category: 'isolation',
+    equipment: ['bodyweight', 'machine'],
+    youtubeUrl: 'https://www.youtube.com/watch?v=gNS_QjGAs_k',
+    techniqueNotes: [
+      'Talones en superficie elevada o máquina tib',
+      'Levanta los dedos hacia las espinillas',
+      'Trabaja el tibial anterior',
+      'Prevención de shin splints'
+    ],
+    commonMistakes: [
+      'Rango de movimiento corto',
+      'Movimiento muy rápido',
+      'No contraer arriba'
+    ],
+    defaultRestSeconds: 60
+  },
+  {
+    id: 'standing-leg-curl-monkey',
+    name: 'Standing Leg Curl (Monkey Foot)',
+    muscleGroup: 'hamstrings',
+    category: 'isolation',
+    equipment: ['dumbbell'],
+    youtubeUrl: 'https://www.youtube.com/watch?v=z0kVuC2PXAU',
+    techniqueNotes: [
+      'De pie, mancuerna sujeta entre los pies',
+      'Flexiona la rodilla llevando talón al glúteo',
+      'Sostente de algo para equilibrio',
+      'Alternativa a máquina de leg curl'
+    ],
+    commonMistakes: [
+      'Balancear el cuerpo',
+      'No usar rango completo',
+      'Mover la cadera'
+    ],
+    defaultRestSeconds: 60
+  },
+  {
+    id: 'wide-grip-pullup',
+    name: 'Wide Grip Pull-up',
+    muscleGroup: 'back_width',
+    secondaryMuscles: ['biceps', 'shoulders_rear'],
+    category: 'compound',
+    equipment: ['bodyweight'],
+    youtubeUrl: 'https://www.youtube.com/watch?v=CAwf7n6Luuc',
+    techniqueNotes: [
+      'Agarre 1.5x ancho de hombros',
+      'Tira el pecho hacia la barra',
+      'Énfasis en dorsales',
+      'Baja controlado hasta extensión completa'
+    ],
+    commonMistakes: [
+      'Agarre demasiado ancho',
+      'Usar kipping',
+      'No bajar completamente'
+    ],
+    strengthStandards: {
+      beginner: 0,
+      intermediate: 0.15,
+      advanced: 0.35,
+      elite: 0.6
+    },
+    defaultRestSeconds: 120
+  },
+  {
+    id: 'hip-flexor-raise',
+    name: 'Hip Flexor Raise',
+    muscleGroup: 'abs',
+    secondaryMuscles: ['quads'],
+    category: 'isolation',
+    equipment: ['bodyweight'],
+    youtubeUrl: 'https://www.youtube.com/watch?v=DjZZvr8ZKDY',
+    techniqueNotes: [
+      'Colgado o en Roman Chair',
+      'Levanta piernas rectas hacia arriba',
+      'Trabaja flexores de cadera y abs inferiores',
+      'Control total sin balanceo'
+    ],
+    commonMistakes: [
+      'Usar impulso',
+      'Flexionar las rodillas demasiado',
+      'Balancear el cuerpo'
+    ],
+    defaultRestSeconds: 60
+  },
+  {
+    id: 'ql-raise',
+    name: 'QL Raise (Side Plank Hip Lift)',
+    muscleGroup: 'abs',
+    secondaryMuscles: ['back_thickness'],
+    category: 'isolation',
+    equipment: ['bodyweight'],
+    youtubeUrl: 'https://www.youtube.com/watch?v=_5eKIcvKHB8',
+    techniqueNotes: [
+      'Posición de side plank',
+      'Baja la cadera hacia el suelo',
+      'Levanta la cadera hacia el techo',
+      'Trabaja el cuadrado lumbar (QL)'
+    ],
+    commonMistakes: [
+      'Rotar el torso',
+      'Rango de movimiento corto',
+      'No mantener alineación'
+    ],
+    defaultRestSeconds: 60
+  },
+  {
+    id: 'decline-crunch',
+    name: 'Decline Crunch',
+    muscleGroup: 'abs',
+    category: 'isolation',
+    equipment: ['bodyweight'],
+    youtubeUrl: 'https://www.youtube.com/watch?v=_vEXchsKLcg',
+    techniqueNotes: [
+      'En banco declinado, pies enganchados',
+      'Sube el torso usando solo abdominales',
+      'No uses impulso',
+      'Contrae fuerte arriba'
+    ],
+    commonMistakes: [
+      'Subir con impulso',
+      'Tirar del cuello',
+      'No controlar el descenso'
+    ],
+    defaultRestSeconds: 60
+  },
+  {
+    id: 'db-pullover',
+    name: 'Dumbbell Pullover',
+    muscleGroup: 'chest',
+    secondaryMuscles: ['back_width', 'triceps'],
+    category: 'isolation',
+    equipment: ['dumbbell'],
+    youtubeUrl: 'https://www.youtube.com/watch?v=FK4rHfWKEac',
+    techniqueNotes: [
+      'Acostado perpendicular al banco',
+      'Baja la mancuerna detrás de la cabeza',
+      'Estira dorsales y pecho',
+      'Sube hasta posición vertical'
+    ],
+    commonMistakes: [
+      'Flexionar demasiado los codos',
+      'Bajar demasiado (riesgo de hombro)',
+      'Arquear la espalda baja'
+    ],
+    defaultRestSeconds: 90
+  },
+  {
+    id: 'z-press',
+    name: 'Z Press',
+    muscleGroup: 'shoulders_front',
+    secondaryMuscles: ['triceps', 'abs'],
+    category: 'compound',
+    equipment: ['barbell', 'dumbbell'],
+    youtubeUrl: 'https://www.youtube.com/watch?v=o23K_mX6p5E',
+    techniqueNotes: [
+      'Sentado en el suelo con piernas extendidas',
+      'Press por encima de la cabeza',
+      'Sin apoyo de espalda - requiere core fuerte',
+      'Elimina asistencia de piernas'
+    ],
+    commonMistakes: [
+      'Inclinarse hacia atrás',
+      'Flexionar las piernas',
+      'Usar demasiado peso'
+    ],
+    strengthStandards: {
+      beginner: 0.25,
+      intermediate: 0.4,
+      advanced: 0.6,
+      elite: 0.8
+    },
+    defaultRestSeconds: 120
   }
 ];
 
