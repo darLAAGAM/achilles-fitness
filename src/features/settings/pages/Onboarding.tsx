@@ -1,18 +1,63 @@
-import { useState } from 'react';
-import { ChevronRight, ChevronLeft } from 'lucide-react';
+import { useState, useMemo } from 'react';
+import { ChevronRight, ChevronLeft, Dumbbell, Home, Clock, Target, Zap } from 'lucide-react';
 import { useUserStore } from '../../../stores/userStore';
+import { allPrograms, getProgramsByDaysPerWeek } from '../../../data/programs';
+import type { WorkoutProgram, Equipment } from '../../../types';
+
+type Phase = 'bulk' | 'cut' | 'maintain';
 
 export function Onboarding() {
   const { initializeUser } = useUserStore();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
 
+  // Step 1: Basic info
   const [name, setName] = useState('');
   const [age, setAge] = useState('34');
   const [height, setHeight] = useState('180');
   const [bodyweight, setBodyweight] = useState('80');
-  const [experienceYears, setExperienceYears] = useState('5');
-  const [phase, setPhase] = useState<'bulk' | 'cut' | 'maintain'>('bulk');
+
+  // Step 2: Training availability
+  const [trainingDays, setTrainingDays] = useState<3 | 4 | 5 | 6>(3);
+  const [hasGym, setHasGym] = useState(true);
+  const [experienceYears, setExperienceYears] = useState('2');
+
+  // Step 3: Goal
+  const [phase, setPhase] = useState<Phase>('bulk');
+
+  // Step 4: Program selection
+  const [selectedProgramId, setSelectedProgramId] = useState<string>('achilles-3day');
+
+  // Filter programs based on training days and equipment
+  const availablePrograms = useMemo(() => {
+    let programs = getProgramsByDaysPerWeek(trainingDays);
+
+    if (!hasGym) {
+      // Only show programs that can be done with bodyweight
+      programs = programs.filter(p =>
+        p.minEquipmentRequired?.includes('bodyweight') &&
+        p.minEquipmentRequired?.length === 1
+      );
+    }
+
+    // Sort by match with training days (exact match first)
+    return programs.sort((a, b) => {
+      const aDiff = Math.abs(a.daysPerWeek - trainingDays);
+      const bDiff = Math.abs(b.daysPerWeek - trainingDays);
+      return aDiff - bDiff;
+    });
+  }, [trainingDays, hasGym]);
+
+  // Auto-select best program when options change
+  useMemo(() => {
+    if (availablePrograms.length > 0) {
+      // Find exact match or closest
+      const exactMatch = availablePrograms.find(p => p.daysPerWeek === trainingDays);
+      setSelectedProgramId(exactMatch?.id || availablePrograms[0].id);
+    }
+  }, [availablePrograms, trainingDays]);
+
+  const selectedProgram = allPrograms.find(p => p.id === selectedProgramId);
 
   const handleComplete = async () => {
     setLoading(true);
@@ -38,19 +83,28 @@ export function Onboarding() {
       carbTarget = Math.round((dailyCalories - (proteinTarget * 4) - (fatTarget * 9)) / 4);
     }
 
+    const equipment: Equipment[] = hasGym
+      ? ['barbell', 'dumbbell', 'cable', 'machine', 'bodyweight']
+      : ['bodyweight'];
+
     await initializeUser({
       name: name || 'Guerrero',
       age: Number(age),
       height: Number(height),
       bodyweight: bwKg,
       experienceYears: Number(experienceYears),
-      trainingDaysPerWeek: 3,
+      trainingDaysPerWeek: trainingDays,
       preferredUnit: 'kg',
       currentPhase: phase,
       dailyCalories,
       proteinTarget,
       carbTarget,
-      fatTarget
+      fatTarget,
+      currentProgramId: selectedProgramId,
+      currentProgramPhase: selectedProgram?.phases ? 0 : undefined,
+      programStartDate: new Date(),
+      availableEquipment: equipment,
+      hasGymAccess: hasGym
     });
     setLoading(false);
   };
@@ -58,7 +112,8 @@ export function Onboarding() {
   const nextStep = () => setStep(prev => prev + 1);
   const prevStep = () => setStep(prev => prev - 1);
 
-  // Estilos inline para garantizar que se aplican
+  const totalSteps = 5;
+
   const styles = {
     container: {
       minHeight: '100dvh',
@@ -93,7 +148,7 @@ export function Onboarding() {
     },
     progressContainer: {
       display: 'flex',
-      gap: '8px',
+      gap: '6px',
       marginTop: '16px',
     },
     progressBar: (active: boolean) => ({
@@ -109,7 +164,7 @@ export function Onboarding() {
       overflowY: 'auto' as const,
     },
     title: {
-      fontSize: '32px',
+      fontSize: '28px',
       fontWeight: 700,
       color: '#fff',
       lineHeight: 1.2,
@@ -121,7 +176,7 @@ export function Onboarding() {
     subtitle: {
       color: '#888',
       fontSize: '16px',
-      marginBottom: '32px',
+      marginBottom: '24px',
     },
     label: {
       display: 'block',
@@ -132,7 +187,7 @@ export function Onboarding() {
     },
     inputContainer: {
       position: 'relative' as const,
-      marginBottom: '24px',
+      marginBottom: '20px',
     },
     input: {
       width: '100%',
@@ -144,6 +199,7 @@ export function Onboarding() {
       color: '#fff',
       fontSize: '18px',
       outline: 'none',
+      boxSizing: 'border-box' as const,
     },
     inputSuffix: {
       position: 'absolute' as const,
@@ -157,7 +213,7 @@ export function Onboarding() {
       display: 'grid',
       gridTemplateColumns: '1fr 1fr',
       gap: '16px',
-      marginBottom: '24px',
+      marginBottom: '20px',
     },
     footer: {
       flexShrink: 0,
@@ -193,22 +249,106 @@ export function Onboarding() {
       marginBottom: '12px',
     }),
     optionEmoji: {
-      fontSize: '32px',
+      fontSize: '28px',
     },
     optionLabel: (selected: boolean) => ({
-      fontSize: '18px',
+      fontSize: '17px',
       fontWeight: 600,
       color: selected ? '#000' : '#fff',
     }),
     optionDesc: (selected: boolean) => ({
-      fontSize: '14px',
+      fontSize: '13px',
       color: selected ? 'rgba(0,0,0,0.7)' : '#888',
     }),
+    daysGrid: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(4, 1fr)',
+      gap: '12px',
+      marginBottom: '24px',
+    },
+    dayButton: (selected: boolean) => ({
+      padding: '20px 8px',
+      borderRadius: '16px',
+      border: selected ? 'none' : '2px solid #333',
+      backgroundColor: selected ? '#d4af37' : '#1a1a1a',
+      cursor: 'pointer',
+      textAlign: 'center' as const,
+    }),
+    dayNumber: (selected: boolean) => ({
+      fontSize: '24px',
+      fontWeight: 700,
+      color: selected ? '#000' : '#fff',
+    }),
+    dayLabel: (selected: boolean) => ({
+      fontSize: '12px',
+      color: selected ? 'rgba(0,0,0,0.7)' : '#888',
+      marginTop: '4px',
+    }),
+    equipmentToggle: {
+      display: 'grid',
+      gridTemplateColumns: '1fr 1fr',
+      gap: '12px',
+      marginBottom: '24px',
+    },
+    equipmentButton: (selected: boolean) => ({
+      padding: '20px',
+      borderRadius: '16px',
+      border: selected ? 'none' : '2px solid #333',
+      backgroundColor: selected ? '#d4af37' : '#1a1a1a',
+      cursor: 'pointer',
+      display: 'flex',
+      flexDirection: 'column' as const,
+      alignItems: 'center',
+      gap: '8px',
+    }),
+    programCard: (selected: boolean, recommended: boolean) => ({
+      padding: '16px',
+      borderRadius: '16px',
+      border: selected ? '2px solid #d4af37' : recommended ? '2px solid rgba(212, 175, 55, 0.5)' : '2px solid #333',
+      backgroundColor: selected ? 'rgba(212, 175, 55, 0.1)' : '#1a1a1a',
+      cursor: 'pointer',
+      marginBottom: '12px',
+      position: 'relative' as const,
+    }),
+    recommendedBadge: {
+      position: 'absolute' as const,
+      top: '-10px',
+      right: '12px',
+      backgroundColor: '#d4af37',
+      color: '#000',
+      fontSize: '11px',
+      fontWeight: 700,
+      padding: '4px 10px',
+      borderRadius: '10px',
+    },
+    programName: (selected: boolean) => ({
+      fontSize: '17px',
+      fontWeight: 700,
+      color: selected ? '#d4af37' : '#fff',
+      marginBottom: '4px',
+    }),
+    programMeta: {
+      display: 'flex',
+      gap: '16px',
+      marginBottom: '8px',
+    },
+    programMetaItem: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: '4px',
+      fontSize: '13px',
+      color: '#888',
+    },
+    programDesc: {
+      fontSize: '13px',
+      color: '#888',
+      lineHeight: 1.4,
+    },
     summaryCard: {
       backgroundColor: '#1a1a1a',
       borderRadius: '16px',
       padding: '20px',
-      marginBottom: '24px',
+      marginBottom: '20px',
     },
     summaryRow: (hasBorder: boolean) => ({
       display: 'flex',
@@ -219,28 +359,46 @@ export function Onboarding() {
     }),
     summaryLabel: {
       color: '#888',
-      fontSize: '16px',
+      fontSize: '15px',
     },
     summaryValue: (highlight: boolean) => ({
       color: highlight ? '#d4af37' : '#fff',
-      fontSize: '16px',
+      fontSize: '15px',
       fontWeight: 600,
     }),
     infoBox: {
       backgroundColor: 'rgba(212, 175, 55, 0.1)',
       border: '1px solid rgba(212, 175, 55, 0.3)',
       borderRadius: '16px',
-      padding: '20px',
+      padding: '16px',
     },
     infoText: {
       color: '#fff',
-      fontSize: '15px',
+      fontSize: '14px',
       lineHeight: 1.5,
     },
     infoHighlight: {
       color: '#d4af37',
       fontWeight: 700,
     },
+  };
+
+  const getProgramIcon = (program: WorkoutProgram) => {
+    switch (program.id) {
+      case 'wolverine': return '🐺';
+      case 'bodyweight-hoplite': return '🛡️';
+      case 'achilles-3day': return '⚔️';
+      case 'b3-bulking': return '💪';
+      default: return '🏋️';
+    }
+  };
+
+  const getDifficultyLabel = (diff: WorkoutProgram['difficulty']) => {
+    switch (diff) {
+      case 'beginner': return 'Principiante';
+      case 'intermediate': return 'Intermedio';
+      case 'advanced': return 'Avanzado';
+    }
   };
 
   return (
@@ -256,11 +414,11 @@ export function Onboarding() {
           ) : (
             <div style={{ width: 64 }} />
           )}
-          <span style={styles.stepIndicator}>{step}/3</span>
+          <span style={styles.stepIndicator}>{step}/{totalSteps}</span>
           <div style={{ width: 64 }} />
         </div>
         <div style={styles.progressContainer}>
-          {[1, 2, 3].map((s) => (
+          {Array.from({ length: totalSteps }, (_, i) => i + 1).map((s) => (
             <div key={s} style={styles.progressBar(s <= step)} />
           ))}
         </div>
@@ -268,13 +426,14 @@ export function Onboarding() {
 
       {/* Content */}
       <main style={styles.main}>
+        {/* Step 1: Basic Info */}
         {step === 1 && (
           <div>
             <h1 style={styles.title}>
               Bienvenido a<br />
-              <span style={styles.titleGold}>Achilles</span>
+              <span style={styles.titleGold}>Achilles Fitness</span>
             </h1>
-            <p style={styles.subtitle}>Construye el físico de un guerrero griego</p>
+            <p style={styles.subtitle}>Entrena como un guerrero griego</p>
 
             <div>
               <label style={styles.label}>Tu nombre</label>
@@ -333,13 +492,62 @@ export function Onboarding() {
           </div>
         )}
 
+        {/* Step 2: Training Availability */}
         {step === 2 && (
           <div>
-            <h1 style={styles.title}>Tu objetivo</h1>
-            <p style={styles.subtitle}>Personalizamos el programa para ti</p>
+            <h1 style={styles.title}>Tu disponibilidad</h1>
+            <p style={styles.subtitle}>¿Cuántos días puedes entrenar?</p>
 
-            <label style={styles.label}>Años de experiencia</label>
-            <div style={{ position: 'relative', marginBottom: '24px' }}>
+            <label style={styles.label}>Días por semana</label>
+            <div style={styles.daysGrid}>
+              {([3, 4, 5, 6] as const).map((days) => (
+                <button
+                  key={days}
+                  onClick={() => setTrainingDays(days)}
+                  style={styles.dayButton(trainingDays === days)}
+                >
+                  <div style={styles.dayNumber(trainingDays === days)}>{days}</div>
+                  <div style={styles.dayLabel(trainingDays === days)}>días</div>
+                </button>
+              ))}
+            </div>
+
+            <label style={styles.label}>¿Dónde entrenas?</label>
+            <div style={styles.equipmentToggle}>
+              <button
+                onClick={() => setHasGym(true)}
+                style={styles.equipmentButton(hasGym)}
+              >
+                <Dumbbell size={28} color={hasGym ? '#000' : '#888'} />
+                <span style={{
+                  fontSize: '15px',
+                  fontWeight: 600,
+                  color: hasGym ? '#000' : '#fff'
+                }}>Gimnasio</span>
+                <span style={{
+                  fontSize: '12px',
+                  color: hasGym ? 'rgba(0,0,0,0.7)' : '#888'
+                }}>Equipo completo</span>
+              </button>
+              <button
+                onClick={() => setHasGym(false)}
+                style={styles.equipmentButton(!hasGym)}
+              >
+                <Home size={28} color={!hasGym ? '#000' : '#888'} />
+                <span style={{
+                  fontSize: '15px',
+                  fontWeight: 600,
+                  color: !hasGym ? '#000' : '#fff'
+                }}>En casa</span>
+                <span style={{
+                  fontSize: '12px',
+                  color: !hasGym ? 'rgba(0,0,0,0.7)' : '#888'
+                }}>Solo cuerpo</span>
+              </button>
+            </div>
+
+            <label style={styles.label}>Experiencia entrenando</label>
+            <div style={{ position: 'relative' }}>
               <input
                 type="number"
                 inputMode="numeric"
@@ -349,17 +557,24 @@ export function Onboarding() {
               />
               <span style={styles.inputSuffix}>años</span>
             </div>
+          </div>
+        )}
 
-            <label style={styles.label}>¿Qué quieres lograr?</label>
-            <div style={{ marginTop: '12px' }}>
+        {/* Step 3: Goal */}
+        {step === 3 && (
+          <div>
+            <h1 style={styles.title}>Tu objetivo</h1>
+            <p style={styles.subtitle}>¿Qué quieres lograr?</p>
+
+            <div>
               {[
-                { value: 'bulk', emoji: '💪', label: 'Ganar músculo', desc: 'Superávit calórico' },
-                { value: 'cut', emoji: '🔥', label: 'Definir', desc: 'Déficit controlado' },
-                { value: 'maintain', emoji: '⚖️', label: 'Mantener', desc: 'Recomposición' }
+                { value: 'bulk', emoji: '💪', label: 'Ganar músculo', desc: 'Superávit calórico, máxima hipertrofia' },
+                { value: 'cut', emoji: '🔥', label: 'Definir', desc: 'Déficit controlado, mantener músculo' },
+                { value: 'maintain', emoji: '⚖️', label: 'Mantener', desc: 'Recomposición corporal' }
               ].map((option) => (
                 <button
                   key={option.value}
-                  onClick={() => setPhase(option.value as typeof phase)}
+                  onClick={() => setPhase(option.value as Phase)}
                   style={styles.optionButton(phase === option.value)}
                 >
                   <span style={styles.optionEmoji}>{option.emoji}</span>
@@ -373,30 +588,129 @@ export function Onboarding() {
           </div>
         )}
 
-        {step === 3 && (
+        {/* Step 4: Program Selection */}
+        {step === 4 && (
+          <div>
+            <h1 style={styles.title}>Tu programa</h1>
+            <p style={styles.subtitle}>
+              {availablePrograms.length > 1
+                ? `${availablePrograms.length} programas disponibles para ${trainingDays} días/semana`
+                : 'Programa recomendado para ti'
+              }
+            </p>
+
+            {availablePrograms.map((program, index) => {
+              const isRecommended = index === 0;
+              const isSelected = selectedProgramId === program.id;
+
+              return (
+                <button
+                  key={program.id}
+                  onClick={() => setSelectedProgramId(program.id)}
+                  style={styles.programCard(isSelected, isRecommended)}
+                >
+                  {isRecommended && (
+                    <div style={styles.recommendedBadge}>Recomendado</div>
+                  )}
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+                    <span style={{ fontSize: '32px' }}>{getProgramIcon(program)}</span>
+                    <div style={{ flex: 1, textAlign: 'left' as const }}>
+                      <div style={styles.programName(isSelected)}>{program.name}</div>
+                      <div style={styles.programMeta}>
+                        <span style={styles.programMetaItem}>
+                          <Clock size={14} />
+                          {program.daysPerWeek} días/sem
+                        </span>
+                        <span style={styles.programMetaItem}>
+                          <Target size={14} />
+                          {program.weeks} semanas
+                        </span>
+                        <span style={styles.programMetaItem}>
+                          <Zap size={14} />
+                          {getDifficultyLabel(program.difficulty)}
+                        </span>
+                      </div>
+                      <p style={styles.programDesc}>
+                        {program.description.split('\n')[0]}
+                      </p>
+                      {program.phases && (
+                        <p style={{ ...styles.programDesc, marginTop: '8px', color: '#d4af37' }}>
+                          📊 {program.phases.length} fases de periodización
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+
+            {availablePrograms.length === 0 && (
+              <div style={styles.infoBox}>
+                <p style={styles.infoText}>
+                  No hay programas disponibles para tu configuración.
+                  Prueba con más días de entrenamiento o acceso a gimnasio.
+                </p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Step 5: Summary */}
+        {step === 5 && selectedProgram && (
           <div>
             <h1 style={styles.title}>¡Listo, {name || 'Guerrero'}!</h1>
             <p style={styles.subtitle}>Tu plan personalizado</p>
 
             <div style={styles.summaryCard}>
               {[
-                { label: 'Programa', value: 'Achilles 3-Day', highlight: false },
-                { label: 'Rutina', value: 'Push / Pull / Legs', highlight: false },
-                { label: 'Objetivo', value: phase === 'bulk' ? '💪 Volumen' : phase === 'cut' ? '🔥 Definición' : '⚖️ Mantener', highlight: true },
+                { label: 'Programa', value: selectedProgram.name, highlight: true },
+                { label: 'Días/semana', value: `${selectedProgram.daysPerWeek} días`, highlight: false },
+                { label: 'Duración', value: `${selectedProgram.weeks} semanas`, highlight: false },
+                { label: 'Objetivo', value: phase === 'bulk' ? '💪 Volumen' : phase === 'cut' ? '🔥 Definición' : '⚖️ Mantener', highlight: false },
                 { label: 'Calorías/día', value: `~${Math.round(Number(bodyweight) * (phase === 'bulk' ? 33 : phase === 'cut' ? 26 : 30))} kcal`, highlight: false }
-              ].map((item, i) => (
-                <div key={i} style={styles.summaryRow(i < 3)}>
+              ].map((item, i, arr) => (
+                <div key={i} style={styles.summaryRow(i < arr.length - 1)}>
                   <span style={styles.summaryLabel}>{item.label}</span>
                   <span style={styles.summaryValue(item.highlight)}>{item.value}</span>
                 </div>
               ))}
             </div>
 
+            {selectedProgram.phases && (
+              <div style={{ ...styles.summaryCard, marginBottom: '20px' }}>
+                <div style={{ marginBottom: '12px', color: '#fff', fontWeight: 600 }}>
+                  📊 Fases del programa
+                </div>
+                {selectedProgram.phases.map((phase, i) => (
+                  <div key={phase.id} style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    padding: '8px 0',
+                    borderBottom: i < selectedProgram.phases!.length - 1 ? '1px solid #333' : 'none'
+                  }}>
+                    <span style={{ color: '#888', fontSize: '14px' }}>
+                      {i + 1}. {phase.name.split(':')[0].split('-')[1]?.trim() || phase.name}
+                    </span>
+                    <span style={{ color: '#d4af37', fontSize: '14px' }}>{phase.weeks} sem</span>
+                  </div>
+                ))}
+              </div>
+            )}
+
             <div style={styles.infoBox}>
               <p style={styles.infoText}>
-                <span style={styles.infoHighlight}>Objetivo Achilles: </span>
-                Desarrollar torso superior, hombros anchos y cintura estrecha. Ratio dorado 1.618.
+                <span style={styles.infoHighlight}>{getProgramIcon(selectedProgram)} {selectedProgram.name}: </span>
+                {selectedProgram.description.split('\n')[0]}
               </p>
+              {selectedProgram.nutritionGuidelines?.recommendedFasting && (
+                <p style={{ ...styles.infoText, marginTop: '8px' }}>
+                  <span style={styles.infoHighlight}>🍽️ Ayuno recomendado: </span>
+                  {selectedProgram.nutritionGuidelines.recommendedFasting === 'warrior'
+                    ? 'Warrior Diet (18-20h ayuno)'
+                    : `Intermitente ${selectedProgram.nutritionGuidelines.recommendedFasting}`
+                  }
+                </p>
+              )}
             </div>
           </div>
         )}
@@ -405,9 +719,12 @@ export function Onboarding() {
       {/* CTA Button */}
       <div style={styles.footer}>
         <button
-          onClick={step < 3 ? nextStep : handleComplete}
-          disabled={loading}
-          style={styles.ctaButton}
+          onClick={step < totalSteps ? nextStep : handleComplete}
+          disabled={loading || (step === 4 && availablePrograms.length === 0)}
+          style={{
+            ...styles.ctaButton,
+            opacity: (loading || (step === 4 && availablePrograms.length === 0)) ? 0.5 : 1
+          }}
         >
           {loading ? (
             <div style={{
@@ -420,7 +737,7 @@ export function Onboarding() {
             }} />
           ) : (
             <>
-              {step < 3 ? 'Continuar' : 'Comenzar'}
+              {step < totalSteps ? 'Continuar' : 'Comenzar entrenamiento'}
               <ChevronRight size={22} strokeWidth={2.5} />
             </>
           )}

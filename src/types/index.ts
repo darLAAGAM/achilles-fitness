@@ -277,6 +277,16 @@ export interface FastingWindow {
   eatingWindowEnd: string;
 }
 
+export interface FastingSession {
+  id: string;
+  startedAt: Date;
+  targetEndAt: Date;
+  endedAt?: Date;
+  fastingType: FastingType;
+  status: 'active' | 'completed' | 'broken';
+  notes?: string;
+}
+
 export interface NutritionGuidelines {
   recommendedFasting?: FastingType;
   proteinPerKg: number; // grams per kg bodyweight

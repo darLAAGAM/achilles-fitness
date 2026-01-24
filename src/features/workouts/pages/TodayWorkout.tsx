@@ -1,20 +1,21 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import type { CSSProperties } from 'react';
-import { Play, CheckCircle2, Zap, ChevronRight, Trophy, Flame, Dumbbell } from 'lucide-react';
+import { Play, CheckCircle2, Zap, ChevronRight, Trophy, Flame, Dumbbell, Calendar, RotateCcw } from 'lucide-react';
 import { useWorkoutStore } from '../../../stores/workoutStore';
 import { useUserStore } from '../../../stores/userStore';
-import { achillesTemplates } from '../../../data/achilles-program';
+import { getProgramById, achillesProgram } from '../../../data/programs';
 import { exercises as exerciseData } from '../../../data/exercises';
 import { db } from '../../../services/db/database';
-import type { WorkoutTemplate, Exercise, ExerciseTemplate, WorkoutSet } from '../../../types';
+import type { WorkoutTemplate, Exercise, ExerciseTemplate, WorkoutSet, WorkoutProgram, ProgramPhase } from '../../../types';
 import { ExerciseDetail } from './ExerciseDetail';
-import { format, startOfWeek, addDays, isToday, isSameDay } from 'date-fns';
+import { FastingTracker } from '../../../components/fasting/FastingTracker';
+import { format, startOfWeek, addDays, isToday, isSameDay, differenceInWeeks } from 'date-fns';
 import { es } from 'date-fns/locale';
 
 // ============================================
 // TYPES
 // ============================================
-type WorkoutType = 'push' | 'pull' | 'legs' | 'rest';
+type WorkoutType = 'push' | 'pull' | 'legs' | 'shoulders' | 'arms' | 'chest' | 'back' | 'full' | 'rest';
 
 interface WeekDay {
   date: Date;
@@ -38,9 +39,15 @@ const colors = {
   intensityHeavy: '#ef4444',
   intensityMedium: '#eab308',
   intensityLight: '#22c55e',
+  intensityExplosive: '#f97316',
   push: '#ef4444',
   pull: '#3b82f6',
   legs: '#22c55e',
+  shoulders: '#f97316',
+  arms: '#a855f7',
+  chest: '#ef4444',
+  back: '#3b82f6',
+  full: '#d4af37',
   rest: '#666666',
 };
 
@@ -367,30 +374,68 @@ const styles: Record<string, CSSProperties> = {
     color: colors.textSecondary,
     fontSize: '14px',
   },
+  phaseBanner: {
+    backgroundColor: `${colors.accent}15`,
+    border: `1px solid ${colors.accent}30`,
+    borderRadius: '12px',
+    padding: '12px 16px',
+    margin: '0 24px 16px',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px',
+  },
+  phaseIcon: {
+    width: '40px',
+    height: '40px',
+    borderRadius: '10px',
+    backgroundColor: `${colors.accent}20`,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  phaseInfo: {
+    flex: 1,
+  },
+  phaseName: {
+    fontSize: '14px',
+    fontWeight: '600',
+    color: colors.accent,
+    margin: 0,
+  },
+  phaseWeek: {
+    fontSize: '12px',
+    color: colors.textSecondary,
+    margin: 0,
+    marginTop: '2px',
+  },
+  circuitBadge: {
+    backgroundColor: `${colors.accent}20`,
+    color: colors.accent,
+    padding: '4px 10px',
+    borderRadius: '6px',
+    fontSize: '12px',
+    fontWeight: '600',
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '4px',
+    marginBottom: '12px',
+  },
 };
 
 // ============================================
 // HELPERS
 // ============================================
-const getWorkoutTypeForDay = (dayOfWeek: number): WorkoutType => {
-  // 0 = Sunday, 1 = Monday, etc.
-  switch (dayOfWeek) {
-    case 1: return 'push';   // Lunes
-    case 2: return 'rest';   // Martes - Descanso
-    case 3: return 'pull';   // Miércoles
-    case 4: return 'rest';   // Jueves - Descanso
-    case 5: return 'legs';   // Viernes
-    case 6: return 'rest';   // Sábado - Descanso
-    case 0: return 'rest';   // Domingo - Descanso
-    default: return 'rest';
-  }
-};
 
 const getWorkoutColor = (type: WorkoutType): string => {
   switch (type) {
     case 'push': return colors.push;
     case 'pull': return colors.pull;
     case 'legs': return colors.legs;
+    case 'shoulders': return colors.shoulders;
+    case 'arms': return colors.arms;
+    case 'chest': return colors.chest;
+    case 'back': return colors.back;
+    case 'full': return colors.full;
     default: return colors.rest;
   }
 };
@@ -400,22 +445,69 @@ const getWorkoutLabel = (type: WorkoutType): string => {
     case 'push': return 'Push';
     case 'pull': return 'Pull';
     case 'legs': return 'Legs';
+    case 'shoulders': return 'Hombros';
+    case 'arms': return 'Brazos';
+    case 'chest': return 'Pecho';
+    case 'back': return 'Espalda';
+    case 'full': return 'Full';
     default: return 'Rest';
   }
 };
 
-const getWorkoutTemplate = (type: WorkoutType): WorkoutTemplate | null => {
-  if (type === 'rest') return null;
-  return achillesTemplates.find(t => t.type === type) || null;
-};
+const getWorkoutDescription = (template: WorkoutTemplate | null): string => {
+  if (!template) return 'Día de recuperación. Tu cuerpo crece mientras descansas.';
 
-const getWorkoutDescription = (type: WorkoutType): string => {
+  const type = template.type;
   switch (type) {
     case 'push': return 'Pecho, hombros y tríceps. Construye los hombros anchos del guerrero griego.';
     case 'pull': return 'Espalda y bíceps. Desarrolla la V-taper característica de Achilles.';
     case 'legs': return 'Piernas y core. La base atlética de un verdadero hoplita.';
+    case 'shoulders': return 'Deltoides anterior, lateral y posterior. Hombros de acero.';
+    case 'arms': return 'Bíceps y tríceps. Brazos definidos y funcionales.';
+    case 'chest': return 'Pecho desde múltiples ángulos. Desarrollo completo del pectoral.';
+    case 'back': return 'Espalda ancha y gruesa. La V-taper del guerrero.';
+    case 'full': return template.isCircuit
+      ? `Circuito de cuerpo completo. ${template.circuitRounds || 3} rondas de alta intensidad.`
+      : 'Entrenamiento de cuerpo completo. Trabaja todos los músculos principales.';
     default: return 'Día de recuperación. Tu cuerpo crece mientras descansas.';
   }
+};
+
+// Get current phase for programs with multiple phases
+const getCurrentPhase = (program: WorkoutProgram, startDate?: Date): ProgramPhase | null => {
+  if (!program.phases || program.phases.length === 0) return null;
+  if (!startDate) return program.phases[0];
+
+  const weeksElapsed = differenceInWeeks(new Date(), startDate);
+  let accumulatedWeeks = 0;
+
+  for (const phase of program.phases) {
+    accumulatedWeeks += phase.weeks;
+    if (weeksElapsed < accumulatedWeeks) {
+      return phase;
+    }
+  }
+
+  // If all phases complete, return last phase
+  return program.phases[program.phases.length - 1];
+};
+
+// Get week number within current phase
+const getWeekInPhase = (program: WorkoutProgram, startDate?: Date): number => {
+  if (!program.phases || program.phases.length === 0) return 1;
+  if (!startDate) return 1;
+
+  const weeksElapsed = differenceInWeeks(new Date(), startDate);
+  let accumulatedWeeks = 0;
+
+  for (const phase of program.phases) {
+    if (weeksElapsed < accumulatedWeeks + phase.weeks) {
+      return weeksElapsed - accumulatedWeeks + 1;
+    }
+    accumulatedWeeks += phase.weeks;
+  }
+
+  return 1;
 };
 
 // ============================================
@@ -437,26 +529,58 @@ export function TodayWorkout() {
     templateExercise: WorkoutTemplate['exercises'][0];
   } | null>(null);
 
-  // Generate week days
-  const weekDays: WeekDay[] = (() => {
+  // Get the user's current program or default to Achilles
+  const currentProgram = useMemo(() => {
+    const programId = user?.currentProgramId || 'achilles-3day';
+    return getProgramById(programId) || achillesProgram;
+  }, [user?.currentProgramId]);
+
+  // Get current phase for programs with phases (like Wolverine)
+  const currentPhase = useMemo(() => {
+    return getCurrentPhase(currentProgram, user?.programStartDate);
+  }, [currentProgram, user?.programStartDate]);
+
+  const weekInPhase = useMemo(() => {
+    return getWeekInPhase(currentProgram, user?.programStartDate);
+  }, [currentProgram, user?.programStartDate]);
+
+  // Get workouts for current phase (or all workouts if no phases)
+  const programWorkouts = useMemo(() => {
+    if (currentPhase && currentProgram.phases) {
+      return currentProgram.workouts.filter(w => w.phaseId === currentPhase.id);
+    }
+    return currentProgram.workouts;
+  }, [currentProgram, currentPhase]);
+
+  // Map days of week to workouts based on program structure
+  const getWorkoutForDay = (dayOfWeek: number): WorkoutTemplate | null => {
+    // dayOfWeek: 0 = Sunday, 1 = Monday, etc.
+    // We need to map program days to actual calendar days
+    // Programs specify dayOfWeek in their workout templates
+    return programWorkouts.find(w => w.dayOfWeek === dayOfWeek) || null;
+  };
+
+  // Generate week days with dynamic workout assignment
+  const weekDays: WeekDay[] = useMemo(() => {
     const weekStart = startOfWeek(new Date(), { weekStartsOn: 1 }); // Start on Monday
     return Array.from({ length: 7 }, (_, i) => {
       const date = addDays(weekStart, i);
       const dayOfWeek = date.getDay();
+      const workout = getWorkoutForDay(dayOfWeek);
       return {
         date,
         dayName: format(date, 'EEE', { locale: es }),
         dayNumber: date.getDate(),
-        workoutType: getWorkoutTypeForDay(dayOfWeek),
+        workoutType: (workout?.type || 'rest') as WorkoutType,
         isToday: isToday(date),
       };
     });
-  })();
+  }, [programWorkouts]);
 
   // Get selected day's workout
   const selectedDayOfWeek = selectedDate.getDay();
-  const selectedWorkoutType = getWorkoutTypeForDay(selectedDayOfWeek);
-  const selectedTemplate = getWorkoutTemplate(selectedWorkoutType);
+  const selectedTemplate = getWorkoutForDay(selectedDayOfWeek);
+  const selectedWorkoutType = (selectedTemplate?.type || 'rest') as WorkoutType;
   const isSelectedToday = isToday(selectedDate);
 
   // Check if current session matches the selected workout
@@ -474,14 +598,26 @@ export function TodayWorkout() {
         await loadExercises();
       }
 
-      const existingTemplates = await db.workoutTemplates.count();
-      if (existingTemplates === 0) {
-        await db.workoutTemplates.bulkAdd(achillesTemplates);
+      // Update workout templates when program changes
+      const existingTemplates = await db.workoutTemplates.toArray();
+      const currentProgramTemplateIds = currentProgram.workouts.map(w => w.id);
+      const needsUpdate = !currentProgramTemplateIds.every(id =>
+        existingTemplates.some(t => t.id === id)
+      );
+
+      if (needsUpdate) {
+        // Add new templates that don't exist
+        for (const template of currentProgram.workouts) {
+          const exists = existingTemplates.find(t => t.id === template.id);
+          if (!exists) {
+            await db.workoutTemplates.put(template);
+          }
+        }
       }
     };
 
     initializeData();
-  }, [exercises.length, loadExercises]);
+  }, [exercises.length, loadExercises, currentProgram]);
 
   const handleStartWorkout = async () => {
     if (selectedTemplate) {
@@ -514,6 +650,7 @@ export function TodayWorkout() {
       case 'heavy': return colors.intensityHeavy;
       case 'medium': return colors.intensityMedium;
       case 'light': return colors.intensityLight;
+      case 'explosive': return colors.intensityExplosive;
       default: return colors.textSecondary;
     }
   };
@@ -523,6 +660,7 @@ export function TodayWorkout() {
       case 'heavy': return 'Heavy';
       case 'medium': return 'Medium';
       case 'light': return 'Light';
+      case 'explosive': return 'Explosivo';
       default: return 'Opcional';
     }
   };
@@ -614,9 +752,24 @@ export function TodayWorkout() {
               {format(new Date(), "MMMM yyyy", { locale: es })}
             </p>
           </div>
-          <span style={styles.weekLabel}>Programa Achilles</span>
+          <span style={styles.weekLabel}>{currentProgram.name}</span>
         </div>
       </div>
+
+      {/* Phase Banner (for programs with phases like Wolverine) */}
+      {currentPhase && currentProgram.phases && (
+        <div style={styles.phaseBanner}>
+          <div style={styles.phaseIcon}>
+            <Calendar size={20} color={colors.accent} />
+          </div>
+          <div style={styles.phaseInfo}>
+            <p style={styles.phaseName}>{currentPhase.name}</p>
+            <p style={styles.phaseWeek}>
+              Semana {weekInPhase} de {currentPhase.weeks} • {currentPhase.focus === 'strength' ? 'Fuerza' : currentPhase.focus === 'hypertrophy' ? 'Hipertrofia' : currentPhase.focus === 'explosivity' ? 'Explosividad' : 'Acondicionamiento'}
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* Week Calendar */}
       <div style={styles.calendarCard}>
@@ -662,6 +815,11 @@ export function TodayWorkout() {
 
       {/* Content */}
       <div style={styles.content}>
+        {/* Fasting Tracker - Show if program recommends fasting */}
+        {currentProgram.nutritionGuidelines?.recommendedFasting && (
+          <FastingTracker />
+        )}
+
         {/* Rest Day */}
         {selectedWorkoutType === 'rest' && (
           <div style={styles.restDayCard}>
@@ -670,7 +828,7 @@ export function TodayWorkout() {
             </div>
             <h2 style={styles.restDayTitle}>Día de Descanso</h2>
             <p style={styles.restDaySubtitle}>
-              {getWorkoutDescription('rest')}
+              {getWorkoutDescription(null)}
             </p>
           </div>
         )}
@@ -702,6 +860,13 @@ export function TodayWorkout() {
             {/* Workout info card (show when no session or session is for different workout) */}
             {!isSessionForSelectedWorkout && (
               <div style={styles.card}>
+                {/* Circuit badge for circuit workouts */}
+                {selectedTemplate.isCircuit && (
+                  <div style={styles.circuitBadge}>
+                    <RotateCcw size={14} />
+                    Circuito: {selectedTemplate.circuitRounds || 3} rondas
+                  </div>
+                )}
                 <div style={styles.workoutHeader}>
                   <div style={{
                     ...styles.workoutIconContainer,
@@ -717,16 +882,29 @@ export function TodayWorkout() {
                         backgroundColor: `${workoutColor}22`,
                         color: workoutColor,
                       }}>
-                        {selectedWorkoutType}
+                        {getWorkoutLabel(selectedWorkoutType)}
                       </span>
                       <span>{totalExercises} ejercicios</span>
-                      <span>~60 min</span>
+                      <span>~{selectedTemplate.estimatedDuration || 60} min</span>
                     </div>
                   </div>
                 </div>
                 <p style={styles.workoutDescription}>
-                  {getWorkoutDescription(selectedWorkoutType)}
+                  {getWorkoutDescription(selectedTemplate)}
                 </p>
+                {/* Training style note for superset workouts */}
+                {selectedTemplate.trainingStyle === 'superset' && (
+                  <p style={{
+                    fontSize: '12px',
+                    color: colors.accent,
+                    marginBottom: '12px',
+                    padding: '8px 12px',
+                    backgroundColor: `${colors.accent}10`,
+                    borderRadius: '8px',
+                  }}>
+                    💪 Entrenamiento con superseries - mínimo descanso entre ejercicios pareados
+                  </p>
+                )}
                 {!isSelectedToday && (
                   <p style={{
                     fontSize: '13px',
