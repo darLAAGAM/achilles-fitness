@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ChevronRight, Dumbbell, Target, Apple } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Dumbbell, Target, Sparkles } from 'lucide-react';
 import { Button, Input, Card } from '../../../components/ui';
 import { useUserStore } from '../../../stores/userStore';
 
@@ -19,7 +19,6 @@ export function Onboarding() {
   const handleComplete = async () => {
     setLoading(true);
 
-    // Calculate macros based on phase
     const bwKg = Number(bodyweight);
     const bwLbs = bwKg * 2.205;
 
@@ -29,19 +28,16 @@ export function Onboarding() {
     let fatTarget: number;
 
     if (phase === 'bulk') {
-      // Lean bulk: +200-300 calories
-      dailyCalories = Math.round(bwKg * 33); // ~33 cal/kg
-      proteinTarget = Math.round(bwLbs * 1.0); // 1g/lb
+      dailyCalories = Math.round(bwKg * 33);
+      proteinTarget = Math.round(bwLbs * 1.0);
       fatTarget = Math.round(dailyCalories * 0.25 / 9);
       carbTarget = Math.round((dailyCalories - (proteinTarget * 4) - (fatTarget * 9)) / 4);
     } else if (phase === 'cut') {
-      // Deficit: -500 calories
-      dailyCalories = Math.round(bwKg * 26); // ~26 cal/kg
-      proteinTarget = Math.round(bwLbs * 1.2); // Higher protein on cut
+      dailyCalories = Math.round(bwKg * 26);
+      proteinTarget = Math.round(bwLbs * 1.2);
       fatTarget = Math.round(dailyCalories * 0.25 / 9);
       carbTarget = Math.round((dailyCalories - (proteinTarget * 4) - (fatTarget * 9)) / 4);
     } else {
-      // Maintenance
       dailyCalories = Math.round(bwKg * 30);
       proteinTarget = Math.round(bwLbs * 1.0);
       fatTarget = Math.round(dailyCalories * 0.25 / 9);
@@ -69,15 +65,29 @@ export function Onboarding() {
   const nextStep = () => setStep(prev => prev + 1);
   const prevStep = () => setStep(prev => prev - 1);
 
+  const canContinueStep1 = name.trim().length > 0 && age && height && bodyweight;
+
   return (
-    <div className="min-h-screen bg-[var(--color-background)] flex flex-col">
-      {/* Progress bar */}
-      <div className="p-4 safe-area-top">
-        <div className="flex gap-2 max-w-lg mx-auto">
+    <div className="min-h-[100dvh] bg-[var(--color-background)] flex flex-col safe-area-top">
+      {/* Header con progress */}
+      <div className="shrink-0 px-5 pt-4 pb-3">
+        <div className="flex items-center justify-between mb-4">
+          <p className="text-xs text-[var(--color-text-secondary)]">Paso {step} de 3</p>
+          {step > 1 && (
+            <button
+              onClick={prevStep}
+              className="flex items-center gap-1 text-xs text-[var(--color-text-secondary)] active:text-[var(--color-text)]"
+            >
+              <ChevronLeft size={14} />
+              Atrás
+            </button>
+          )}
+        </div>
+        <div className="flex gap-2">
           {[1, 2, 3].map((s) => (
             <div
               key={s}
-              className={`h-1 flex-1 rounded-full transition-colors ${
+              className={`h-1 flex-1 rounded-full transition-all duration-300 ${
                 s <= step ? 'bg-[var(--color-primary)]' : 'bg-[var(--color-border)]'
               }`}
             />
@@ -85,184 +95,211 @@ export function Onboarding() {
         </div>
       </div>
 
-      {/* Content */}
-      <div className="flex-1 flex flex-col justify-center px-4 py-8 max-w-lg mx-auto w-full">
+      {/* Contenido scrolleable */}
+      <div className="flex-1 overflow-y-auto px-5 pb-32">
         {step === 1 && (
           <div className="animate-fade-in">
-            <div className="text-center mb-8">
-              <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-[var(--color-primary)]/20 flex items-center justify-center">
-                <Dumbbell size={40} className="text-[var(--color-primary)]" />
+            {/* Hero compacto */}
+            <div className="flex items-center gap-4 py-6">
+              <div className="w-14 h-14 shrink-0 rounded-2xl bg-[var(--color-primary)]/20 flex items-center justify-center">
+                <Dumbbell size={28} className="text-[var(--color-primary)]" />
               </div>
-              <h1 className="text-2xl font-bold text-[var(--color-text)]">
-                Bienvenido a Achilles
-              </h1>
-              <p className="text-[var(--color-text-secondary)] mt-2">
-                Tu camino hacia el físico de un guerrero griego comienza aquí.
-              </p>
+              <div>
+                <h1 className="text-xl font-bold text-[var(--color-text)]">
+                  Bienvenido a Achilles
+                </h1>
+                <p className="text-sm text-[var(--color-text-secondary)]">
+                  Construye el físico de un guerrero
+                </p>
+              </div>
             </div>
 
-            <div className="space-y-4">
+            {/* Form */}
+            <div className="space-y-5">
               <Input
                 label="¿Cómo te llamas?"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Tu nombre"
+                autoFocus
               />
-              <Input
-                label="Edad"
-                type="number"
-                value={age}
-                onChange={(e) => setAge(e.target.value)}
-                suffix="años"
-              />
-              <Input
-                label="Altura"
-                type="number"
-                value={height}
-                onChange={(e) => setHeight(e.target.value)}
-                suffix="cm"
-              />
+
+              <div className="grid grid-cols-2 gap-4">
+                <Input
+                  label="Edad"
+                  type="number"
+                  inputMode="numeric"
+                  value={age}
+                  onChange={(e) => setAge(e.target.value)}
+                  suffix="años"
+                />
+                <Input
+                  label="Altura"
+                  type="number"
+                  inputMode="numeric"
+                  value={height}
+                  onChange={(e) => setHeight(e.target.value)}
+                  suffix="cm"
+                />
+              </div>
+
               <Input
                 label="Peso actual"
                 type="number"
+                inputMode="decimal"
                 value={bodyweight}
                 onChange={(e) => setBodyweight(e.target.value)}
                 suffix="kg"
               />
             </div>
-
-            <Button fullWidth className="mt-8" onClick={nextStep}>
-              Continuar
-              <ChevronRight size={20} className="ml-2" />
-            </Button>
           </div>
         )}
 
         {step === 2 && (
           <div className="animate-fade-in">
-            <div className="text-center mb-8">
-              <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-[var(--color-primary)]/20 flex items-center justify-center">
-                <Target size={40} className="text-[var(--color-primary)]" />
+            {/* Hero */}
+            <div className="flex items-center gap-4 py-6">
+              <div className="w-14 h-14 shrink-0 rounded-2xl bg-[var(--color-primary)]/20 flex items-center justify-center">
+                <Target size={28} className="text-[var(--color-primary)]" />
               </div>
-              <h1 className="text-2xl font-bold text-[var(--color-text)]">
-                Tu experiencia
-              </h1>
-              <p className="text-[var(--color-text-secondary)] mt-2">
-                Personalicemos el programa a tu nivel.
-              </p>
+              <div>
+                <h1 className="text-xl font-bold text-[var(--color-text)]">
+                  Tu objetivo
+                </h1>
+                <p className="text-sm text-[var(--color-text-secondary)]">
+                  Personalizamos el programa para ti
+                </p>
+              </div>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-5">
               <Input
-                label="Años de experiencia en el gimnasio"
+                label="Años de experiencia"
                 type="number"
+                inputMode="numeric"
                 value={experienceYears}
                 onChange={(e) => setExperienceYears(e.target.value)}
                 suffix="años"
               />
 
               <div>
-                <label className="text-sm font-medium text-[var(--color-text-secondary)] mb-2 block">
-                  ¿Cuál es tu objetivo actual?
+                <label className="text-sm font-medium text-[var(--color-text-secondary)] mb-3 block">
+                  ¿Qué quieres lograr?
                 </label>
-                <div className="space-y-2">
+                <div className="space-y-3">
                   {[
-                    { value: 'bulk', label: 'Ganar músculo', desc: 'Superávit calórico para máximo crecimiento' },
-                    { value: 'cut', label: 'Definir', desc: 'Déficit para perder grasa manteniendo músculo' },
-                    { value: 'maintain', label: 'Mantener', desc: 'Recomposición corporal gradual' }
+                    { value: 'bulk', label: 'Ganar músculo', desc: 'Superávit calórico', emoji: '💪' },
+                    { value: 'cut', label: 'Definir', desc: 'Déficit controlado', emoji: '🔥' },
+                    { value: 'maintain', label: 'Mantener', desc: 'Recomposición', emoji: '⚖️' }
                   ].map((option) => (
                     <button
                       key={option.value}
                       onClick={() => setPhase(option.value as typeof phase)}
-                      className={`w-full p-4 rounded-xl text-left transition-colors ${
+                      className={`w-full p-4 rounded-2xl text-left transition-all active:scale-[0.98] ${
                         phase === option.value
-                          ? 'bg-[var(--color-primary)]/20 border-2 border-[var(--color-primary)]'
-                          : 'bg-[var(--color-surface)] border-2 border-transparent'
+                          ? 'bg-[var(--color-primary)] shadow-lg shadow-[var(--color-primary)]/25'
+                          : 'bg-[var(--color-surface)]'
                       }`}
                     >
-                      <p className={`font-semibold ${
-                        phase === option.value ? 'text-[var(--color-primary)]' : 'text-[var(--color-text)]'
-                      }`}>
-                        {option.label}
-                      </p>
-                      <p className="text-xs text-[var(--color-text-secondary)] mt-0.5">
-                        {option.desc}
-                      </p>
+                      <div className="flex items-center gap-3">
+                        <span className="text-2xl">{option.emoji}</span>
+                        <div>
+                          <p className={`font-semibold ${
+                            phase === option.value ? 'text-black' : 'text-[var(--color-text)]'
+                          }`}>
+                            {option.label}
+                          </p>
+                          <p className={`text-xs ${
+                            phase === option.value ? 'text-black/70' : 'text-[var(--color-text-secondary)]'
+                          }`}>
+                            {option.desc}
+                          </p>
+                        </div>
+                      </div>
                     </button>
                   ))}
                 </div>
               </div>
-            </div>
-
-            <div className="flex gap-3 mt-8">
-              <Button variant="secondary" onClick={prevStep} className="flex-1">
-                Atrás
-              </Button>
-              <Button onClick={nextStep} className="flex-1">
-                Continuar
-                <ChevronRight size={20} className="ml-2" />
-              </Button>
             </div>
           </div>
         )}
 
         {step === 3 && (
           <div className="animate-fade-in">
-            <div className="text-center mb-8">
-              <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-[var(--color-primary)]/20 flex items-center justify-center">
-                <Apple size={40} className="text-[var(--color-primary)]" />
+            {/* Hero */}
+            <div className="flex items-center gap-4 py-6">
+              <div className="w-14 h-14 shrink-0 rounded-2xl bg-[var(--color-primary)]/20 flex items-center justify-center">
+                <Sparkles size={28} className="text-[var(--color-primary)]" />
               </div>
-              <h1 className="text-2xl font-bold text-[var(--color-text)]">
-                ¡Todo listo!
-              </h1>
-              <p className="text-[var(--color-text-secondary)] mt-2">
-                Hemos calculado tu plan personalizado.
-              </p>
+              <div>
+                <h1 className="text-xl font-bold text-[var(--color-text)]">
+                  ¡Todo listo, {name || 'Guerrero'}!
+                </h1>
+                <p className="text-sm text-[var(--color-text-secondary)]">
+                  Tu plan personalizado está listo
+                </p>
+              </div>
             </div>
 
-            <Card className="mb-6">
-              <h3 className="font-semibold text-[var(--color-text)] mb-4">Tu plan Achilles</h3>
-              <div className="space-y-3">
-                <div className="flex justify-between">
-                  <span className="text-[var(--color-text-secondary)]">Programa</span>
-                  <span className="font-medium text-[var(--color-text)]">Achilles 3-Day</span>
+            <Card className="mb-4">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between py-2 border-b border-[var(--color-border)]">
+                  <span className="text-sm text-[var(--color-text-secondary)]">Programa</span>
+                  <span className="font-semibold text-[var(--color-text)]">Achilles 3-Day</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-[var(--color-text-secondary)]">Días por semana</span>
-                  <span className="font-medium text-[var(--color-text)]">3 (Push/Pull/Legs)</span>
+                <div className="flex items-center justify-between py-2 border-b border-[var(--color-border)]">
+                  <span className="text-sm text-[var(--color-text-secondary)]">Rutina</span>
+                  <span className="font-semibold text-[var(--color-text)]">Push / Pull / Legs</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-[var(--color-text-secondary)]">Fase</span>
-                  <span className="font-medium text-[var(--color-primary)]">
-                    {phase === 'bulk' ? 'Volumen' : phase === 'cut' ? 'Definición' : 'Mantener'}
+                <div className="flex items-center justify-between py-2 border-b border-[var(--color-border)]">
+                  <span className="text-sm text-[var(--color-text-secondary)]">Objetivo</span>
+                  <span className="font-semibold text-[var(--color-primary)]">
+                    {phase === 'bulk' ? '💪 Volumen' : phase === 'cut' ? '🔥 Definición' : '⚖️ Mantener'}
                   </span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-[var(--color-text-secondary)]">Calorías estimadas</span>
-                  <span className="font-medium text-[var(--color-text)]">
+                <div className="flex items-center justify-between py-2">
+                  <span className="text-sm text-[var(--color-text-secondary)]">Calorías/día</span>
+                  <span className="font-semibold text-[var(--color-text)]">
                     ~{Math.round(Number(bodyweight) * (phase === 'bulk' ? 33 : phase === 'cut' ? 26 : 30))} kcal
                   </span>
                 </div>
               </div>
             </Card>
 
-            <Card className="bg-[var(--color-primary)]/10 border-[var(--color-primary)]/30 mb-8">
-              <p className="text-sm text-[var(--color-text)]">
-                <strong>Objetivo:</strong> Alcanzar el físico de Brad Pitt en Troya mediante el desarrollo del torso superior, hombros anchos y cintura estrecha (Índice de Adonis: 1.618).
+            <div className="p-4 rounded-2xl bg-[var(--color-primary)]/10 border border-[var(--color-primary)]/20">
+              <p className="text-sm text-[var(--color-text)] leading-relaxed">
+                <strong className="text-[var(--color-primary)]">El objetivo Achilles:</strong> Desarrollar un torso superior imponente, hombros anchos y cintura estrecha siguiendo la proporción dorada (1.618).
               </p>
-            </Card>
-
-            <div className="flex gap-3">
-              <Button variant="secondary" onClick={prevStep} className="flex-1">
-                Atrás
-              </Button>
-              <Button onClick={handleComplete} loading={loading} className="flex-1">
-                Comenzar
-                <ChevronRight size={20} className="ml-2" />
-              </Button>
             </div>
           </div>
         )}
+      </div>
+
+      {/* Botón fijo en bottom */}
+      <div className="fixed bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-[var(--color-background)] via-[var(--color-background)] to-transparent pt-10 safe-area-bottom">
+        <div className="max-w-lg mx-auto">
+          {step < 3 ? (
+            <Button
+              fullWidth
+              onClick={nextStep}
+              disabled={step === 1 && !canContinueStep1}
+              className="h-14 text-base font-semibold shadow-lg shadow-[var(--color-primary)]/25"
+            >
+              Continuar
+              <ChevronRight size={20} className="ml-2" />
+            </Button>
+          ) : (
+            <Button
+              fullWidth
+              onClick={handleComplete}
+              loading={loading}
+              className="h-14 text-base font-semibold shadow-lg shadow-[var(--color-primary)]/25"
+            >
+              Comenzar mi transformación
+              <ChevronRight size={20} className="ml-2" />
+            </Button>
+          )}
+        </div>
       </div>
     </div>
   );
