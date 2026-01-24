@@ -1,7 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Plus, Utensils, Apple, Beef, Wheat, Droplet } from 'lucide-react';
-import { Header, PageContainer } from '../../../components/layout';
-import { Card, Button, Modal } from '../../../components/ui';
+import { useState, useEffect, CSSProperties } from 'react';
+import { Plus, Utensils, Apple, Beef, Wheat, Droplet, X } from 'lucide-react';
 import { useUserStore } from '../../../stores/userStore';
 import { db } from '../../../services/db/database';
 import type { DailyNutritionLog, Meal, MealTime } from '../../../types';
@@ -66,6 +64,346 @@ const sampleMeals: Meal[] = [
     fat: 5
   }
 ];
+
+// Estilos base
+const styles: Record<string, CSSProperties> = {
+  page: {
+    backgroundColor: '#0a0a0a',
+    minHeight: '100vh',
+    paddingTop: 'env(safe-area-inset-top)',
+    paddingBottom: 'env(safe-area-inset-bottom)',
+    paddingLeft: 'env(safe-area-inset-left)',
+    paddingRight: 'env(safe-area-inset-right)',
+  },
+  header: {
+    padding: '24px',
+    paddingTop: 'calc(env(safe-area-inset-top) + 16px)',
+  },
+  headerTitle: {
+    fontSize: '32px',
+    fontWeight: '700',
+    color: '#fff',
+    margin: 0,
+    marginBottom: '4px',
+  },
+  headerSubtitle: {
+    fontSize: '14px',
+    color: '#888',
+    margin: 0,
+    textTransform: 'capitalize' as const,
+  },
+  container: {
+    padding: '0 24px 24px 24px',
+  },
+  card: {
+    backgroundColor: '#1a1a1a',
+    borderRadius: '16px',
+    padding: '20px',
+    marginBottom: '16px',
+  },
+  cardSmall: {
+    backgroundColor: '#1a1a1a',
+    borderRadius: '16px',
+    padding: '12px 16px',
+    marginBottom: '8px',
+  },
+  caloriesHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: '16px',
+  },
+  caloriesLabel: {
+    fontSize: '14px',
+    color: '#888',
+    margin: 0,
+    marginBottom: '4px',
+  },
+  caloriesValue: {
+    fontSize: '32px',
+    fontWeight: '700',
+    color: '#fff',
+    margin: 0,
+  },
+  caloriesTarget: {
+    fontSize: '18px',
+    fontWeight: '400',
+    color: '#888',
+  },
+  statusBadge: {
+    padding: '6px 12px',
+    borderRadius: '20px',
+    fontSize: '13px',
+    fontWeight: '500',
+  },
+  statusBadgeWarning: {
+    backgroundColor: 'rgba(245, 158, 11, 0.2)',
+    color: '#f59e0b',
+  },
+  statusBadgeSuccess: {
+    backgroundColor: 'rgba(34, 197, 94, 0.2)',
+    color: '#22c55e',
+  },
+  progressBarContainer: {
+    height: '12px',
+    backgroundColor: '#2a2a2a',
+    borderRadius: '6px',
+    overflow: 'hidden',
+  },
+  progressBar: {
+    height: '100%',
+    backgroundColor: '#d4af37',
+    borderRadius: '6px',
+    transition: 'width 0.5s ease',
+  },
+  macrosTitle: {
+    fontSize: '16px',
+    fontWeight: '600',
+    color: '#fff',
+    margin: 0,
+    marginBottom: '16px',
+  },
+  macrosContainer: {
+    display: 'flex',
+    justifyContent: 'space-around',
+  },
+  macroItem: {
+    display: 'flex',
+    flexDirection: 'column' as const,
+    alignItems: 'center',
+  },
+  macroRingContainer: {
+    position: 'relative' as const,
+    width: '76px',
+    height: '76px',
+  },
+  macroRingCenter: {
+    position: 'absolute' as const,
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    display: 'flex',
+    flexDirection: 'column' as const,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  macroPercentage: {
+    fontSize: '11px',
+    fontWeight: '700',
+    color: '#fff',
+    marginTop: '2px',
+  },
+  macroLabel: {
+    fontSize: '11px',
+    color: '#888',
+    marginTop: '4px',
+  },
+  macroValues: {
+    fontSize: '11px',
+    fontWeight: '500',
+    color: '#fff',
+  },
+  sectionHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: '12px',
+  },
+  sectionTitle: {
+    fontSize: '16px',
+    fontWeight: '600',
+    color: '#fff',
+    margin: 0,
+  },
+  addButton: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '4px',
+    backgroundColor: '#d4af37',
+    color: '#000',
+    border: 'none',
+    borderRadius: '8px',
+    padding: '8px 12px',
+    fontSize: '14px',
+    fontWeight: '600',
+    cursor: 'pointer',
+  },
+  mealItem: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  mealLeft: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px',
+  },
+  mealIcon: {
+    width: '40px',
+    height: '40px',
+    borderRadius: '8px',
+    backgroundColor: '#2a2a2a',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  mealName: {
+    fontSize: '14px',
+    fontWeight: '500',
+    color: '#fff',
+    margin: 0,
+    marginBottom: '2px',
+  },
+  mealTime: {
+    fontSize: '12px',
+    color: '#888',
+    margin: 0,
+  },
+  mealCalories: {
+    fontSize: '14px',
+    fontWeight: '600',
+    color: '#fff',
+    margin: 0,
+    marginBottom: '2px',
+    textAlign: 'right' as const,
+  },
+  mealMacros: {
+    fontSize: '12px',
+    color: '#888',
+    margin: 0,
+    textAlign: 'right' as const,
+  },
+  emptyState: {
+    textAlign: 'center' as const,
+    padding: '24px 0',
+  },
+  emptyIcon: {
+    color: '#888',
+    marginBottom: '12px',
+  },
+  emptyTitle: {
+    fontSize: '16px',
+    fontWeight: '500',
+    color: '#fff',
+    margin: 0,
+    marginBottom: '4px',
+  },
+  emptySubtitle: {
+    fontSize: '14px',
+    color: '#888',
+    margin: 0,
+  },
+  // Modal styles
+  modalOverlay: {
+    position: 'fixed' as const,
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    display: 'flex',
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+    zIndex: 1000,
+    padding: 'env(safe-area-inset-bottom)',
+  },
+  modalContent: {
+    backgroundColor: '#1a1a1a',
+    borderRadius: '24px 24px 0 0',
+    width: '100%',
+    maxHeight: '85vh',
+    overflow: 'auto',
+    padding: '24px',
+    paddingBottom: 'calc(env(safe-area-inset-bottom) + 24px)',
+  },
+  modalHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: '24px',
+  },
+  modalTitle: {
+    fontSize: '20px',
+    fontWeight: '600',
+    color: '#fff',
+    margin: 0,
+  },
+  modalClose: {
+    backgroundColor: '#2a2a2a',
+    border: 'none',
+    borderRadius: '50%',
+    width: '32px',
+    height: '32px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    cursor: 'pointer',
+  },
+  formLabel: {
+    fontSize: '14px',
+    fontWeight: '500',
+    color: '#888',
+    display: 'block',
+    marginBottom: '8px',
+  },
+  mealTimeGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(3, 1fr)',
+    gap: '8px',
+    marginBottom: '20px',
+  },
+  mealTimeButton: {
+    padding: '10px 12px',
+    borderRadius: '8px',
+    fontSize: '13px',
+    fontWeight: '500',
+    border: 'none',
+    cursor: 'pointer',
+    transition: 'all 0.2s ease',
+  },
+  mealTimeButtonActive: {
+    backgroundColor: '#d4af37',
+    color: '#000',
+  },
+  mealTimeButtonInactive: {
+    backgroundColor: '#2a2a2a',
+    color: '#888',
+  },
+  mealOption: {
+    width: '100%',
+    padding: '16px',
+    borderRadius: '12px',
+    backgroundColor: '#2a2a2a',
+    border: 'none',
+    textAlign: 'left' as const,
+    cursor: 'pointer',
+    marginBottom: '8px',
+    transition: 'transform 0.1s ease',
+  },
+  mealOptionContent: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  mealOptionName: {
+    fontSize: '15px',
+    fontWeight: '500',
+    color: '#fff',
+    margin: 0,
+    marginBottom: '4px',
+  },
+  mealOptionMacros: {
+    fontSize: '12px',
+    color: '#888',
+    margin: 0,
+  },
+  mealOptionCalories: {
+    fontSize: '16px',
+    fontWeight: '600',
+    color: '#d4af37',
+  },
+};
 
 export function MacroTracker() {
   const { user } = useUserStore();
@@ -172,18 +510,23 @@ export function MacroTracker() {
     const radius = 32;
     const circumference = 2 * Math.PI * radius;
     const strokeDashoffset = circumference - (percentage / 100) * circumference;
-    const size = 76; // Optimized for iPhone 17 Pro (402px / 3 rings with gaps)
+    const size = 76;
     const center = size / 2;
 
     return (
-      <div className="flex flex-col items-center macro-container-landscape">
-        <div className="relative macro-ring-responsive" style={{ width: size, height: size }}>
-          <svg className="w-full h-full transform -rotate-90" viewBox={`0 0 ${size} ${size}`}>
+      <div style={styles.macroItem}>
+        <div style={styles.macroRingContainer}>
+          <svg
+            width={size}
+            height={size}
+            viewBox={`0 0 ${size} ${size}`}
+            style={{ transform: 'rotate(-90deg)' }}
+          >
             <circle
               cx={center}
               cy={center}
               r={radius}
-              stroke="var(--color-border)"
+              stroke="#2a2a2a"
               strokeWidth="5"
               fill="none"
             />
@@ -197,18 +540,18 @@ export function MacroTracker() {
               strokeLinecap="round"
               strokeDasharray={circumference}
               strokeDashoffset={strokeDashoffset}
-              className="transition-all duration-500"
+              style={{ transition: 'stroke-dashoffset 0.5s ease' }}
             />
           </svg>
-          <div className="absolute inset-0 flex flex-col items-center justify-center">
+          <div style={styles.macroRingCenter}>
             <Icon size={14} style={{ color }} />
-            <span className="text-[11px] font-bold text-[var(--color-text)] mt-0.5">
+            <span style={styles.macroPercentage}>
               {Math.round(percentage)}%
             </span>
           </div>
         </div>
-        <p className="text-[11px] text-[var(--color-text-secondary)] mt-1 macro-label-landscape">{label}</p>
-        <p className="text-[11px] font-medium text-[var(--color-text)]">
+        <p style={styles.macroLabel}>{label}</p>
+        <p style={styles.macroValues}>
           {current}/{target}g
         </p>
       </div>
@@ -216,52 +559,60 @@ export function MacroTracker() {
   };
 
   return (
-    <>
-      <Header
-        title="Nutrición"
-        subtitle={format(new Date(), "EEEE, d 'de' MMMM", { locale: es })}
-      />
-      <PageContainer>
+    <div style={styles.page}>
+      {/* Header */}
+      <div style={styles.header}>
+        <h1 style={styles.headerTitle}>Nutricion</h1>
+        <p style={styles.headerSubtitle}>
+          {format(new Date(), "EEEE, d 'de' MMMM", { locale: es })}
+        </p>
+      </div>
+
+      {/* Content */}
+      <div style={styles.container}>
         {/* Calories summary */}
-        <Card className="mb-4">
-          <div className="flex items-center justify-between mb-4">
+        <div style={styles.card}>
+          <div style={styles.caloriesHeader}>
             <div>
-              <p className="text-sm text-[var(--color-text-secondary)]">Calorías hoy</p>
-              <p className="text-3xl font-bold text-[var(--color-text)]">
+              <p style={styles.caloriesLabel}>Calorias hoy</p>
+              <p style={styles.caloriesValue}>
                 {consumed.calories}
-                <span className="text-lg font-normal text-[var(--color-text-secondary)]">
+                <span style={styles.caloriesTarget}>
                   /{targets.calories}
                 </span>
               </p>
             </div>
-            <div className={`px-3 py-1 rounded-full text-sm font-medium ${
-              consumed.calories < targets.calories
-                ? 'bg-[var(--color-warning)]/20 text-[var(--color-warning)]'
-                : 'bg-[var(--color-success)]/20 text-[var(--color-success)]'
-            }`}>
+            <div style={{
+              ...styles.statusBadge,
+              ...(consumed.calories < targets.calories
+                ? styles.statusBadgeWarning
+                : styles.statusBadgeSuccess)
+            }}>
               {consumed.calories < targets.calories
                 ? `Faltan ${targets.calories - consumed.calories}`
-                : '¡Objetivo cumplido!'}
+                : 'Objetivo cumplido!'}
             </div>
           </div>
 
           {/* Calorie progress bar */}
-          <div className="h-3 bg-[var(--color-surface-elevated)] rounded-full overflow-hidden">
+          <div style={styles.progressBarContainer}>
             <div
-              className="h-full bg-[var(--color-primary)] rounded-full transition-all duration-500"
-              style={{ width: `${Math.min((consumed.calories / targets.calories) * 100, 100)}%` }}
+              style={{
+                ...styles.progressBar,
+                width: `${Math.min((consumed.calories / targets.calories) * 100, 100)}%`
+              }}
             />
           </div>
-        </Card>
+        </div>
 
         {/* Macro rings */}
-        <Card className="mb-4">
-          <h3 className="font-semibold text-[var(--color-text)] mb-4">Macronutrientes</h3>
-          <div className="flex justify-around">
+        <div style={styles.card}>
+          <h3 style={styles.macrosTitle}>Macronutrientes</h3>
+          <div style={styles.macrosContainer}>
             <MacroRing
               current={consumed.protein}
               target={targets.protein}
-              label="Proteína"
+              label="Proteina"
               color="#ef4444"
               icon={Beef}
             />
@@ -280,113 +631,121 @@ export function MacroTracker() {
               icon={Droplet}
             />
           </div>
-        </Card>
+        </div>
 
         {/* Meals today */}
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="font-semibold text-[var(--color-text)]">Comidas de hoy</h3>
-          <Button size="sm" onClick={() => setShowAddMeal(true)}>
-            <Plus size={16} className="mr-1" />
+        <div style={styles.sectionHeader}>
+          <h3 style={styles.sectionTitle}>Comidas de hoy</h3>
+          <button style={styles.addButton} onClick={() => setShowAddMeal(true)}>
+            <Plus size={16} />
             Agregar
-          </Button>
+          </button>
         </div>
 
         {todayLog && todayLog.meals.length > 0 ? (
-          <div className="space-y-2">
+          <div>
             {todayLog.meals.map((mealEntry, index) => {
               const meal = sampleMeals.find(m => m.id === mealEntry.mealId);
               if (!meal) return null;
 
               return (
-                <Card key={index} padding="sm">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-lg bg-[var(--color-surface-elevated)] flex items-center justify-center">
-                        <Utensils size={18} className="text-[var(--color-text-secondary)]" />
+                <div key={index} style={styles.cardSmall}>
+                  <div style={styles.mealItem}>
+                    <div style={styles.mealLeft}>
+                      <div style={styles.mealIcon}>
+                        <Utensils size={18} style={{ color: '#888' }} />
                       </div>
                       <div>
-                        <p className="font-medium text-[var(--color-text)] text-sm">{meal.name}</p>
-                        <p className="text-xs text-[var(--color-text-secondary)]">
-                          {mealTimeLabels[mealEntry.mealTime]} • {format(new Date(mealEntry.consumedAt), 'HH:mm')}
+                        <p style={styles.mealName}>{meal.name}</p>
+                        <p style={styles.mealTime}>
+                          {mealTimeLabels[mealEntry.mealTime]} - {format(new Date(mealEntry.consumedAt), 'HH:mm')}
                         </p>
                       </div>
                     </div>
-                    <div className="text-right">
-                      <p className="font-semibold text-[var(--color-text)] text-sm">{meal.calories} kcal</p>
-                      <p className="text-xs text-[var(--color-text-secondary)]">
+                    <div>
+                      <p style={styles.mealCalories}>{meal.calories} kcal</p>
+                      <p style={styles.mealMacros}>
                         P:{meal.protein}g C:{meal.carbs}g G:{meal.fat}g
                       </p>
                     </div>
                   </div>
-                </Card>
+                </div>
               );
             })}
           </div>
         ) : (
-          <Card>
-            <div className="text-center py-6">
-              <Apple size={48} className="mx-auto text-[var(--color-text-secondary)] mb-3" />
-              <p className="text-[var(--color-text)] font-medium">Sin comidas registradas</p>
-              <p className="text-sm text-[var(--color-text-secondary)] mt-1">
-                Agrega tu primera comida del día
+          <div style={styles.card}>
+            <div style={styles.emptyState}>
+              <Apple size={48} style={styles.emptyIcon} />
+              <p style={styles.emptyTitle}>Sin comidas registradas</p>
+              <p style={styles.emptySubtitle}>
+                Agrega tu primera comida del dia
               </p>
             </div>
-          </Card>
+          </div>
         )}
+      </div>
 
-        {/* Add meal modal */}
-        <Modal
-          isOpen={showAddMeal}
-          onClose={() => setShowAddMeal(false)}
-          title="Agregar comida"
-        >
-          {/* Meal time selector */}
-          <div className="mb-4">
-            <label className="text-sm font-medium text-[var(--color-text-secondary)] mb-2 block">
-              ¿Cuándo comiste?
-            </label>
-            <div className="grid grid-cols-3 gap-2">
-              {(Object.keys(mealTimeLabels) as MealTime[]).map((time) => (
+      {/* Add meal modal */}
+      {showAddMeal && (
+        <div style={styles.modalOverlay} onClick={() => setShowAddMeal(false)}>
+          <div style={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <div style={styles.modalHeader}>
+              <h2 style={styles.modalTitle}>Agregar comida</h2>
+              <button style={styles.modalClose} onClick={() => setShowAddMeal(false)}>
+                <X size={18} style={{ color: '#fff' }} />
+              </button>
+            </div>
+
+            {/* Meal time selector */}
+            <div style={{ marginBottom: '20px' }}>
+              <label style={styles.formLabel}>
+                Cuando comiste?
+              </label>
+              <div style={styles.mealTimeGrid}>
+                {(Object.keys(mealTimeLabels) as MealTime[]).map((time) => (
+                  <button
+                    key={time}
+                    onClick={() => setSelectedMealTime(time)}
+                    style={{
+                      ...styles.mealTimeButton,
+                      ...(selectedMealTime === time
+                        ? styles.mealTimeButtonActive
+                        : styles.mealTimeButtonInactive)
+                    }}
+                  >
+                    {mealTimeLabels[time]}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Meal options */}
+            <div>
+              <label style={styles.formLabel}>
+                Selecciona una comida
+              </label>
+              {sampleMeals.map((meal) => (
                 <button
-                  key={time}
-                  onClick={() => setSelectedMealTime(time)}
-                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    selectedMealTime === time
-                      ? 'bg-[var(--color-primary)] text-black'
-                      : 'bg-[var(--color-surface-elevated)] text-[var(--color-text-secondary)]'
-                  }`}
+                  key={meal.id}
+                  onClick={() => addMealToLog(meal)}
+                  style={styles.mealOption}
                 >
-                  {mealTimeLabels[time]}
+                  <div style={styles.mealOptionContent}>
+                    <div>
+                      <p style={styles.mealOptionName}>{meal.name}</p>
+                      <p style={styles.mealOptionMacros}>
+                        P:{meal.protein}g - C:{meal.carbs}g - G:{meal.fat}g
+                      </p>
+                    </div>
+                    <span style={styles.mealOptionCalories}>{meal.calories} kcal</span>
+                  </div>
                 </button>
               ))}
             </div>
           </div>
-
-          {/* Meal options */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-[var(--color-text-secondary)] mb-2 block">
-              Selecciona una comida
-            </label>
-            {sampleMeals.map((meal) => (
-              <button
-                key={meal.id}
-                onClick={() => addMealToLog(meal)}
-                className="w-full p-3 rounded-xl bg-[var(--color-surface-elevated)] text-left active:scale-[0.98] transition-transform"
-              >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium text-[var(--color-text)]">{meal.name}</p>
-                    <p className="text-xs text-[var(--color-text-secondary)]">
-                      P:{meal.protein}g • C:{meal.carbs}g • G:{meal.fat}g
-                    </p>
-                  </div>
-                  <span className="font-semibold text-[var(--color-primary)]">{meal.calories} kcal</span>
-                </div>
-              </button>
-            ))}
-          </div>
-        </Modal>
-      </PageContainer>
-    </>
+        </div>
+      )}
+    </div>
   );
 }

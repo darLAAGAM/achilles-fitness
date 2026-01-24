@@ -1,7 +1,5 @@
 import { useState } from 'react';
-import { User, Target, Dumbbell, Download, Trash2, Info } from 'lucide-react';
-import { Header, PageContainer } from '../../../components/layout';
-import { Card, Button, Input, Modal } from '../../../components/ui';
+import { User, Target, Dumbbell, Download, Trash2, Info, ChevronRight, X, ChevronLeft } from 'lucide-react';
 import { useUserStore } from '../../../stores/userStore';
 import { exportData, clearDatabase } from '../../../services/db/database';
 
@@ -10,6 +8,7 @@ export function Settings() {
   const [showProfile, setShowProfile] = useState(false);
   const [showGoals, setShowGoals] = useState(false);
   const [showAbout, setShowAbout] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   // Profile form state
   const [name, setName] = useState(user?.name || '');
@@ -53,11 +52,352 @@ export function Settings() {
   };
 
   const handleReset = async () => {
-    if (confirm('¿Estás seguro? Se eliminarán TODOS tus datos.')) {
-      await clearDatabase();
-      setOnboarded(false);
-      window.location.reload();
-    }
+    await clearDatabase();
+    setOnboarded(false);
+    window.location.reload();
+  };
+
+  // Estilos inline
+  const styles = {
+    container: {
+      minHeight: '100dvh',
+      backgroundColor: '#0a0a0a',
+      display: 'flex',
+      flexDirection: 'column' as const,
+      paddingTop: 'env(safe-area-inset-top)',
+    },
+    header: {
+      flexShrink: 0,
+      padding: '16px 24px 8px',
+    },
+    title: {
+      fontSize: '32px',
+      fontWeight: 700,
+      color: '#fff',
+      lineHeight: 1.2,
+      marginBottom: '4px',
+    },
+    subtitle: {
+      color: '#888',
+      fontSize: '16px',
+    },
+    main: {
+      flex: 1,
+      padding: '24px',
+      paddingBottom: 'calc(env(safe-area-inset-bottom) + 100px)',
+      overflowY: 'auto' as const,
+    },
+    profileCard: {
+      backgroundColor: '#1a1a1a',
+      borderRadius: '16px',
+      padding: '20px',
+      marginBottom: '24px',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '16px',
+    },
+    avatar: {
+      width: '64px',
+      height: '64px',
+      borderRadius: '50%',
+      backgroundColor: 'rgba(212, 175, 55, 0.2)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexShrink: 0,
+    },
+    profileInfo: {
+      flex: 1,
+    },
+    profileName: {
+      fontSize: '18px',
+      fontWeight: 700,
+      color: '#fff',
+      marginBottom: '4px',
+    },
+    profileStats: {
+      fontSize: '14px',
+      color: '#888',
+      marginBottom: '4px',
+    },
+    profileProgram: {
+      fontSize: '13px',
+      color: '#d4af37',
+      fontWeight: 600,
+    },
+    sectionTitle: {
+      fontSize: '12px',
+      color: '#888',
+      textTransform: 'uppercase' as const,
+      letterSpacing: '1px',
+      marginBottom: '12px',
+      fontWeight: 600,
+    },
+    settingsCard: {
+      backgroundColor: '#1a1a1a',
+      borderRadius: '16px',
+      overflow: 'hidden',
+      marginBottom: '16px',
+    },
+    settingsItem: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: '12px',
+      padding: '16px 20px',
+      background: 'none',
+      border: 'none',
+      width: '100%',
+      textAlign: 'left' as const,
+      cursor: 'pointer',
+      borderBottom: '1px solid #333',
+    },
+    settingsItemLast: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: '12px',
+      padding: '16px 20px',
+      background: 'none',
+      border: 'none',
+      width: '100%',
+      textAlign: 'left' as const,
+      cursor: 'pointer',
+    },
+    settingsIcon: {
+      width: '40px',
+      height: '40px',
+      borderRadius: '12px',
+      backgroundColor: '#2a2a2a',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexShrink: 0,
+    },
+    settingsIconDanger: {
+      width: '40px',
+      height: '40px',
+      borderRadius: '12px',
+      backgroundColor: 'rgba(239, 68, 68, 0.2)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexShrink: 0,
+    },
+    settingsContent: {
+      flex: 1,
+    },
+    settingsLabel: {
+      fontSize: '16px',
+      fontWeight: 600,
+      color: '#fff',
+      marginBottom: '2px',
+    },
+    settingsLabelDanger: {
+      fontSize: '16px',
+      fontWeight: 600,
+      color: '#ef4444',
+      marginBottom: '2px',
+    },
+    settingsDesc: {
+      fontSize: '13px',
+      color: '#888',
+    },
+    chevron: {
+      color: '#666',
+    },
+    dangerSection: {
+      marginTop: '24px',
+    },
+    dangerCard: {
+      backgroundColor: '#1a1a1a',
+      borderRadius: '16px',
+      border: '1px solid rgba(239, 68, 68, 0.3)',
+      overflow: 'hidden',
+    },
+    // Modal styles
+    modalOverlay: {
+      position: 'fixed' as const,
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: 'rgba(0, 0, 0, 0.8)',
+      display: 'flex',
+      alignItems: 'flex-end',
+      justifyContent: 'center',
+      zIndex: 1000,
+    },
+    modalContent: {
+      backgroundColor: '#1a1a1a',
+      borderRadius: '24px 24px 0 0',
+      width: '100%',
+      maxHeight: '90vh',
+      padding: '24px',
+      paddingBottom: 'calc(env(safe-area-inset-bottom) + 24px)',
+      overflowY: 'auto' as const,
+    },
+    modalHeader: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      marginBottom: '24px',
+    },
+    modalTitle: {
+      fontSize: '20px',
+      fontWeight: 700,
+      color: '#fff',
+    },
+    modalClose: {
+      width: '32px',
+      height: '32px',
+      borderRadius: '50%',
+      backgroundColor: '#333',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      border: 'none',
+      cursor: 'pointer',
+    },
+    label: {
+      display: 'block',
+      color: '#888',
+      fontSize: '14px',
+      fontWeight: 500,
+      marginBottom: '8px',
+    },
+    inputContainer: {
+      position: 'relative' as const,
+      marginBottom: '20px',
+    },
+    input: {
+      width: '100%',
+      backgroundColor: '#0a0a0a',
+      border: '2px solid #333',
+      borderRadius: '12px',
+      padding: '14px 16px',
+      paddingRight: '60px',
+      color: '#fff',
+      fontSize: '16px',
+      outline: 'none',
+      boxSizing: 'border-box' as const,
+    },
+    inputSuffix: {
+      position: 'absolute' as const,
+      right: '16px',
+      top: '50%',
+      transform: 'translateY(-50%)',
+      color: '#666',
+      fontSize: '14px',
+    },
+    saveButton: {
+      width: '100%',
+      height: '52px',
+      backgroundColor: '#d4af37',
+      color: '#000',
+      fontSize: '16px',
+      fontWeight: 700,
+      border: 'none',
+      borderRadius: '14px',
+      cursor: 'pointer',
+      marginTop: '8px',
+    },
+    phaseGrid: {
+      display: 'grid',
+      gridTemplateColumns: '1fr 1fr 1fr',
+      gap: '8px',
+      marginBottom: '20px',
+    },
+    phaseButton: (selected: boolean) => ({
+      padding: '14px 8px',
+      borderRadius: '12px',
+      border: selected ? 'none' : '2px solid #333',
+      backgroundColor: selected ? '#d4af37' : '#0a0a0a',
+      color: selected ? '#000' : '#888',
+      fontSize: '14px',
+      fontWeight: 600,
+      cursor: 'pointer',
+      textAlign: 'center' as const,
+    }),
+    aboutContent: {
+      textAlign: 'center' as const,
+    },
+    aboutLogo: {
+      width: '80px',
+      height: '80px',
+      borderRadius: '20px',
+      backgroundColor: 'rgba(212, 175, 55, 0.2)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      margin: '0 auto 16px',
+    },
+    aboutTitle: {
+      fontSize: '22px',
+      fontWeight: 700,
+      color: '#fff',
+      marginBottom: '4px',
+    },
+    aboutVersion: {
+      fontSize: '14px',
+      color: '#888',
+      marginBottom: '16px',
+    },
+    aboutDesc: {
+      fontSize: '14px',
+      color: '#888',
+      lineHeight: 1.6,
+      marginBottom: '16px',
+    },
+    aboutHighlight: {
+      fontSize: '14px',
+      color: '#d4af37',
+      fontWeight: 600,
+    },
+    confirmModal: {
+      backgroundColor: '#1a1a1a',
+      borderRadius: '20px',
+      width: 'calc(100% - 48px)',
+      maxWidth: '320px',
+      padding: '24px',
+      textAlign: 'center' as const,
+    },
+    confirmTitle: {
+      fontSize: '18px',
+      fontWeight: 700,
+      color: '#fff',
+      marginBottom: '8px',
+    },
+    confirmDesc: {
+      fontSize: '14px',
+      color: '#888',
+      marginBottom: '24px',
+      lineHeight: 1.5,
+    },
+    confirmButtons: {
+      display: 'flex',
+      gap: '12px',
+    },
+    cancelButton: {
+      flex: 1,
+      padding: '14px',
+      borderRadius: '12px',
+      backgroundColor: '#333',
+      color: '#fff',
+      fontSize: '16px',
+      fontWeight: 600,
+      border: 'none',
+      cursor: 'pointer',
+    },
+    deleteButton: {
+      flex: 1,
+      padding: '14px',
+      borderRadius: '12px',
+      backgroundColor: '#ef4444',
+      color: '#fff',
+      fontSize: '16px',
+      fontWeight: 600,
+      border: 'none',
+      cursor: 'pointer',
+    },
   };
 
   const settingsItems = [
@@ -70,7 +410,7 @@ export function Settings() {
     {
       icon: Target,
       label: 'Objetivos',
-      description: 'Fase, calorías y macros',
+      description: 'Fase, calorias y macros',
       onClick: () => setShowGoals(true)
     },
     {
@@ -82,169 +422,267 @@ export function Settings() {
     {
       icon: Info,
       label: 'Acerca de',
-      description: 'Versión e información',
+      description: 'Version e informacion',
       onClick: () => setShowAbout(true)
     }
   ];
 
   return (
-    <>
-      <Header title="Ajustes" subtitle="Configura tu experiencia Achilles" />
-      <PageContainer>
-        {/* User summary */}
-        <Card className="mb-4">
-          <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-full bg-[var(--color-primary)]/20 flex items-center justify-center">
-              <Dumbbell size={28} className="text-[var(--color-primary)]" />
-            </div>
-            <div>
-              <h2 className="text-lg font-bold text-[var(--color-text)]">
-                {user?.name || 'Guerrero'}
-              </h2>
-              <p className="text-sm text-[var(--color-text-secondary)]">
-                {user?.bodyweight || '--'}kg • {user?.experienceYears || '--'}+ años
-              </p>
-              <p className="text-xs text-[var(--color-primary)] font-medium mt-0.5">
-                Programa Achilles 3-Day
-              </p>
-            </div>
-          </div>
-        </Card>
+    <div style={styles.container}>
+      {/* Header */}
+      <header style={styles.header}>
+        <h1 style={styles.title}>Ajustes</h1>
+        <p style={styles.subtitle}>Configura tu experiencia Achilles</p>
+      </header>
 
-        {/* Settings list */}
-        <div className="space-y-2">
-          {settingsItems.map(({ icon: Icon, label, description, onClick }) => (
-            <Card key={label} onClick={onClick} padding="sm">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-[var(--color-surface-elevated)] flex items-center justify-center">
-                  <Icon size={20} className="text-[var(--color-text-secondary)]" />
-                </div>
-                <div className="flex-1">
-                  <p className="font-medium text-[var(--color-text)]">{label}</p>
-                  <p className="text-xs text-[var(--color-text-secondary)]">{description}</p>
-                </div>
+      {/* Main Content */}
+      <main style={styles.main}>
+        {/* Profile Card */}
+        <div style={styles.profileCard}>
+          <div style={styles.avatar}>
+            <Dumbbell size={28} color="#d4af37" />
+          </div>
+          <div style={styles.profileInfo}>
+            <p style={styles.profileName}>{user?.name || 'Guerrero'}</p>
+            <p style={styles.profileStats}>
+              {user?.bodyweight || '--'}kg • {user?.experienceYears || '--'}+ anos
+            </p>
+            <p style={styles.profileProgram}>Programa Achilles 3-Day</p>
+          </div>
+        </div>
+
+        {/* Settings List */}
+        <p style={styles.sectionTitle}>Configuracion</p>
+        <div style={styles.settingsCard}>
+          {settingsItems.map(({ icon: Icon, label, description, onClick }, index) => (
+            <button
+              key={label}
+              onClick={onClick}
+              style={index === settingsItems.length - 1 ? styles.settingsItemLast : styles.settingsItem}
+            >
+              <div style={styles.settingsIcon}>
+                <Icon size={20} color="#888" />
               </div>
-            </Card>
+              <div style={styles.settingsContent}>
+                <p style={styles.settingsLabel}>{label}</p>
+                <p style={styles.settingsDesc}>{description}</p>
+              </div>
+              <ChevronRight size={20} style={styles.chevron} />
+            </button>
           ))}
         </div>
 
-        {/* Danger zone */}
-        <div className="mt-8">
-          <p className="text-xs text-[var(--color-text-secondary)] uppercase tracking-wider mb-2">
-            Zona peligrosa
-          </p>
-          <Card onClick={handleReset} className="border-[var(--color-error)]/30">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-[var(--color-error)]/20 flex items-center justify-center">
-                <Trash2 size={20} className="text-[var(--color-error)]" />
+        {/* Danger Zone */}
+        <div style={styles.dangerSection}>
+          <p style={styles.sectionTitle}>Zona peligrosa</p>
+          <div style={styles.dangerCard}>
+            <button
+              onClick={() => setShowDeleteConfirm(true)}
+              style={styles.settingsItemLast}
+            >
+              <div style={styles.settingsIconDanger}>
+                <Trash2 size={20} color="#ef4444" />
               </div>
-              <div>
-                <p className="font-medium text-[var(--color-error)]">Eliminar todos los datos</p>
-                <p className="text-xs text-[var(--color-text-secondary)]">
-                  Esta acción no se puede deshacer
-                </p>
+              <div style={styles.settingsContent}>
+                <p style={styles.settingsLabelDanger}>Eliminar todos los datos</p>
+                <p style={styles.settingsDesc}>Esta accion no se puede deshacer</p>
               </div>
-            </div>
-          </Card>
+            </button>
+          </div>
         </div>
+      </main>
 
-        {/* Profile Modal */}
-        <Modal isOpen={showProfile} onClose={() => setShowProfile(false)} title="Perfil">
-          <div className="space-y-4">
-            <Input
-              label="Nombre"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Tu nombre"
-            />
-            <Input
-              label="Edad"
-              type="number"
-              value={age}
-              onChange={(e) => setAge(e.target.value)}
-              suffix="años"
-            />
-            <Input
-              label="Altura"
-              type="number"
-              value={height}
-              onChange={(e) => setHeight(e.target.value)}
-              suffix="cm"
-            />
-            <Input
-              label="Peso actual"
-              type="number"
-              value={bodyweight}
-              onChange={(e) => setBodyweight(e.target.value)}
-              suffix="kg"
-            />
-            <Button fullWidth onClick={handleSaveProfile}>
+      {/* Profile Modal */}
+      {showProfile && (
+        <div style={styles.modalOverlay} onClick={() => setShowProfile(false)}>
+          <div style={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <div style={styles.modalHeader}>
+              <h2 style={styles.modalTitle}>Perfil</h2>
+              <button style={styles.modalClose} onClick={() => setShowProfile(false)}>
+                <X size={18} color="#fff" />
+              </button>
+            </div>
+
+            <label style={styles.label}>Nombre</label>
+            <div style={styles.inputContainer}>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Tu nombre"
+                style={{ ...styles.input, paddingRight: '16px' }}
+              />
+            </div>
+
+            <label style={styles.label}>Edad</label>
+            <div style={styles.inputContainer}>
+              <input
+                type="number"
+                inputMode="numeric"
+                value={age}
+                onChange={(e) => setAge(e.target.value)}
+                style={styles.input}
+              />
+              <span style={styles.inputSuffix}>anos</span>
+            </div>
+
+            <label style={styles.label}>Altura</label>
+            <div style={styles.inputContainer}>
+              <input
+                type="number"
+                inputMode="numeric"
+                value={height}
+                onChange={(e) => setHeight(e.target.value)}
+                style={styles.input}
+              />
+              <span style={styles.inputSuffix}>cm</span>
+            </div>
+
+            <label style={styles.label}>Peso actual</label>
+            <div style={styles.inputContainer}>
+              <input
+                type="number"
+                inputMode="decimal"
+                value={bodyweight}
+                onChange={(e) => setBodyweight(e.target.value)}
+                style={styles.input}
+              />
+              <span style={styles.inputSuffix}>kg</span>
+            </div>
+
+            <button style={styles.saveButton} onClick={handleSaveProfile}>
               Guardar cambios
-            </Button>
+            </button>
           </div>
-        </Modal>
+        </div>
+      )}
 
-        {/* Goals Modal */}
-        <Modal isOpen={showGoals} onClose={() => setShowGoals(false)} title="Objetivos">
-          <div className="space-y-4">
-            <div>
-              <label className="text-sm font-medium text-[var(--color-text-secondary)] mb-2 block">
-                Fase actual
-              </label>
-              <div className="grid grid-cols-3 gap-2">
-                {(['bulk', 'maintain', 'cut'] as const).map((p) => (
-                  <button
-                    key={p}
-                    onClick={() => setPhase(p)}
-                    className={`px-3 py-2 rounded-xl text-sm font-medium transition-colors ${
-                      phase === p
-                        ? 'bg-[var(--color-primary)] text-black'
-                        : 'bg-[var(--color-surface-elevated)] text-[var(--color-text-secondary)]'
-                    }`}
-                  >
-                    {p === 'bulk' ? 'Volumen' : p === 'cut' ? 'Definición' : 'Mantener'}
-                  </button>
-                ))}
-              </div>
+      {/* Goals Modal */}
+      {showGoals && (
+        <div style={styles.modalOverlay} onClick={() => setShowGoals(false)}>
+          <div style={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <div style={styles.modalHeader}>
+              <h2 style={styles.modalTitle}>Objetivos</h2>
+              <button style={styles.modalClose} onClick={() => setShowGoals(false)}>
+                <X size={18} color="#fff" />
+              </button>
             </div>
-            <Input
-              label="Calorías diarias"
-              type="number"
-              value={calories}
-              onChange={(e) => setCalories(e.target.value)}
-              suffix="kcal"
-            />
-            <Input
-              label="Proteína diaria"
-              type="number"
-              value={protein}
-              onChange={(e) => setProtein(e.target.value)}
-              suffix="g"
-            />
-            <Button fullWidth onClick={handleSaveGoals}>
+
+            <label style={styles.label}>Fase actual</label>
+            <div style={styles.phaseGrid}>
+              {(['bulk', 'maintain', 'cut'] as const).map((p) => (
+                <button
+                  key={p}
+                  onClick={() => setPhase(p)}
+                  style={styles.phaseButton(phase === p)}
+                >
+                  {p === 'bulk' ? 'Volumen' : p === 'cut' ? 'Definicion' : 'Mantener'}
+                </button>
+              ))}
+            </div>
+
+            <label style={styles.label}>Calorias diarias</label>
+            <div style={styles.inputContainer}>
+              <input
+                type="number"
+                inputMode="numeric"
+                value={calories}
+                onChange={(e) => setCalories(e.target.value)}
+                style={styles.input}
+              />
+              <span style={styles.inputSuffix}>kcal</span>
+            </div>
+
+            <label style={styles.label}>Proteina diaria</label>
+            <div style={styles.inputContainer}>
+              <input
+                type="number"
+                inputMode="numeric"
+                value={protein}
+                onChange={(e) => setProtein(e.target.value)}
+                style={styles.input}
+              />
+              <span style={styles.inputSuffix}>g</span>
+            </div>
+
+            <button style={styles.saveButton} onClick={handleSaveGoals}>
               Guardar objetivos
-            </Button>
+            </button>
           </div>
-        </Modal>
+        </div>
+      )}
 
-        {/* About Modal */}
-        <Modal isOpen={showAbout} onClose={() => setShowAbout(false)} title="Acerca de">
-          <div className="text-center">
-            <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-[var(--color-primary)]/20 flex items-center justify-center">
-              <Dumbbell size={40} className="text-[var(--color-primary)]" />
+      {/* About Modal */}
+      {showAbout && (
+        <div style={styles.modalOverlay} onClick={() => setShowAbout(false)}>
+          <div style={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <div style={styles.modalHeader}>
+              <h2 style={styles.modalTitle}>Acerca de</h2>
+              <button style={styles.modalClose} onClick={() => setShowAbout(false)}>
+                <X size={18} color="#fff" />
+              </button>
             </div>
-            <h3 className="text-xl font-bold text-[var(--color-text)]">Achilles Fitness</h3>
-            <p className="text-sm text-[var(--color-text-secondary)] mt-1">Versión 1.0.0</p>
-            <p className="text-xs text-[var(--color-text-secondary)] mt-4">
-              Basado en el Programa Achilles de Alexander Cortes.
-              Diseñado para alcanzar el físico de Brad Pitt en Troya.
-            </p>
-            <p className="text-xs text-[var(--color-primary)] mt-4 font-medium">
-              Índice de Adonis: 1.618
-            </p>
+
+            <div style={styles.aboutContent}>
+              <div style={styles.aboutLogo}>
+                <Dumbbell size={40} color="#d4af37" />
+              </div>
+              <h3 style={styles.aboutTitle}>Achilles Fitness</h3>
+              <p style={styles.aboutVersion}>Version 1.0.0</p>
+              <p style={styles.aboutDesc}>
+                Basado en el Programa Achilles de Alexander Cortes.
+                Disenado para alcanzar el fisico de Brad Pitt en Troya.
+              </p>
+              <p style={styles.aboutHighlight}>Indice de Adonis: 1.618</p>
+            </div>
           </div>
-        </Modal>
-      </PageContainer>
-    </>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteConfirm && (
+        <div
+          style={{
+            ...styles.modalOverlay,
+            alignItems: 'center',
+          }}
+          onClick={() => setShowDeleteConfirm(false)}
+        >
+          <div style={styles.confirmModal} onClick={(e) => e.stopPropagation()}>
+            <div style={{
+              width: '56px',
+              height: '56px',
+              borderRadius: '50%',
+              backgroundColor: 'rgba(239, 68, 68, 0.2)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              margin: '0 auto 16px',
+            }}>
+              <Trash2 size={28} color="#ef4444" />
+            </div>
+            <h3 style={styles.confirmTitle}>Eliminar todos los datos</h3>
+            <p style={styles.confirmDesc}>
+              Esta accion eliminara permanentemente todos tus entrenamientos,
+              medidas y configuracion. No se puede deshacer.
+            </p>
+            <div style={styles.confirmButtons}>
+              <button
+                style={styles.cancelButton}
+                onClick={() => setShowDeleteConfirm(false)}
+              >
+                Cancelar
+              </button>
+              <button
+                style={styles.deleteButton}
+                onClick={handleReset}
+              >
+                Eliminar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }

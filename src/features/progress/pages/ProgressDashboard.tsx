@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react';
 import { TrendingUp, Trophy, Scale, Camera, Ruler } from 'lucide-react';
-import { Header, PageContainer } from '../../../components/layout';
-import { Card, Button } from '../../../components/ui';
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
 import { db } from '../../../services/db/database';
 import { useUserStore } from '../../../stores/userStore';
@@ -88,58 +86,263 @@ export function ProgressDashboard() {
     return <BodyMetrics onBack={() => setShowMetrics(false)} />;
   }
 
+  // Estilos reutilizables
+  const styles = {
+    page: {
+      minHeight: '100vh',
+      backgroundColor: '#0a0a0a',
+      paddingTop: 'env(safe-area-inset-top)',
+      paddingBottom: 'calc(env(safe-area-inset-bottom) + 80px)',
+    } as React.CSSProperties,
+    header: {
+      padding: '24px',
+      paddingTop: '16px',
+    } as React.CSSProperties,
+    headerTitle: {
+      fontSize: '32px',
+      fontWeight: '700',
+      color: '#fff',
+      margin: 0,
+      marginBottom: '4px',
+    } as React.CSSProperties,
+    headerSubtitle: {
+      fontSize: '14px',
+      color: '#888',
+      margin: 0,
+    } as React.CSSProperties,
+    container: {
+      padding: '0 24px 24px 24px',
+    } as React.CSSProperties,
+    grid2: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(2, 1fr)',
+      gap: '12px',
+      marginBottom: '16px',
+    } as React.CSSProperties,
+    card: {
+      backgroundColor: '#1a1a1a',
+      borderRadius: '16px',
+      padding: '16px',
+    } as React.CSSProperties,
+    cardHeader: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: '6px',
+      marginBottom: '6px',
+    } as React.CSSProperties,
+    cardLabel: {
+      fontSize: '11px',
+      color: '#888',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
+    } as React.CSSProperties,
+    cardValue: {
+      fontSize: '20px',
+      fontWeight: '700',
+      color: '#fff',
+      margin: 0,
+    } as React.CSSProperties,
+    cardUnit: {
+      fontSize: '12px',
+      fontWeight: '400',
+    } as React.CSSProperties,
+    cardSubtext: {
+      fontSize: '11px',
+      color: '#888',
+      marginTop: '4px',
+    } as React.CSSProperties,
+    positiveChange: {
+      fontSize: '11px',
+      color: '#22c55e',
+      marginTop: '4px',
+    } as React.CSSProperties,
+    negativeChange: {
+      fontSize: '11px',
+      color: '#ef4444',
+      marginTop: '4px',
+    } as React.CSSProperties,
+    iconPrimary: {
+      color: '#d4af37',
+      flexShrink: 0,
+    } as React.CSSProperties,
+    chartCard: {
+      backgroundColor: '#1a1a1a',
+      borderRadius: '16px',
+      padding: '16px',
+      marginBottom: '16px',
+    } as React.CSSProperties,
+    chartTitle: {
+      fontWeight: '600',
+      color: '#fff',
+      fontSize: '14px',
+      marginBottom: '8px',
+      margin: 0,
+    } as React.CSSProperties,
+    chartContainer: {
+      height: '144px',
+      marginLeft: '-8px',
+    } as React.CSSProperties,
+    recordsCard: {
+      backgroundColor: '#1a1a1a',
+      borderRadius: '16px',
+      padding: '16px',
+      marginBottom: '16px',
+    } as React.CSSProperties,
+    recordsHeader: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: '8px',
+      marginBottom: '12px',
+    } as React.CSSProperties,
+    recordsTitle: {
+      fontWeight: '600',
+      color: '#fff',
+      margin: 0,
+    } as React.CSSProperties,
+    recordItem: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      padding: '8px 0',
+      borderBottom: '1px solid #2a2a2a',
+    } as React.CSSProperties,
+    recordItemLast: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      padding: '8px 0',
+      borderBottom: 'none',
+    } as React.CSSProperties,
+    recordName: {
+      fontSize: '14px',
+      fontWeight: '500',
+      color: '#fff',
+      margin: 0,
+    } as React.CSSProperties,
+    recordDate: {
+      fontSize: '12px',
+      color: '#888',
+      margin: 0,
+    } as React.CSSProperties,
+    recordWeight: {
+      fontWeight: '700',
+      color: '#d4af37',
+      margin: 0,
+    } as React.CSSProperties,
+    buttonSecondary: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: '#2a2a2a',
+      color: '#fff',
+      border: 'none',
+      borderRadius: '12px',
+      padding: '14px 16px',
+      fontSize: '14px',
+      fontWeight: '500',
+      cursor: 'pointer',
+      minHeight: '48px',
+    } as React.CSSProperties,
+    buttonPrimary: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: '#d4af37',
+      color: '#0a0a0a',
+      border: 'none',
+      borderRadius: '12px',
+      padding: '14px 24px',
+      fontSize: '14px',
+      fontWeight: '600',
+      cursor: 'pointer',
+      marginTop: '16px',
+    } as React.CSSProperties,
+    emptyCard: {
+      backgroundColor: '#1a1a1a',
+      borderRadius: '16px',
+      padding: '16px',
+      marginTop: '16px',
+    } as React.CSSProperties,
+    emptyContent: {
+      textAlign: 'center',
+      padding: '24px 0',
+    } as React.CSSProperties,
+    emptyIcon: {
+      color: '#888',
+      marginBottom: '12px',
+    } as React.CSSProperties,
+    emptyTitle: {
+      color: '#fff',
+      fontWeight: '500',
+      margin: 0,
+    } as React.CSSProperties,
+    emptySubtitle: {
+      fontSize: '14px',
+      color: '#888',
+      marginTop: '4px',
+    } as React.CSSProperties,
+  };
+
   return (
-    <>
-      <Header title="Progreso" subtitle="Tu transformación Achilles" />
-      <PageContainer>
-        {/* Stats cards - optimized for iPhone 17 Pro (402px width) */}
-        <div className="grid grid-cols-2 gap-3 grid-responsive-2 mb-4">
-          <Card className="card-responsive">
-            <div className="flex items-center gap-1.5 mb-1.5">
-              <Scale size={16} className="text-[var(--color-primary)] shrink-0" />
-              <span className="text-[11px] text-[var(--color-text-secondary)] truncate">Peso actual</span>
+    <div style={styles.page}>
+      {/* Header */}
+      <header style={styles.header}>
+        <h1 style={styles.headerTitle}>Progreso</h1>
+        <p style={styles.headerSubtitle}>Tu transformacion Achilles</p>
+      </header>
+
+      <div style={styles.container}>
+        {/* Stats cards */}
+        <div style={styles.grid2}>
+          {/* Peso actual */}
+          <div style={styles.card}>
+            <div style={styles.cardHeader}>
+              <Scale size={16} style={styles.iconPrimary} />
+              <span style={styles.cardLabel}>Peso actual</span>
             </div>
-            <p className="text-xl font-bold text-[var(--color-text)]">
-              {latestWeight || user?.bodyweight || '--'} <span className="text-xs font-normal">kg</span>
+            <p style={styles.cardValue}>
+              {latestWeight || user?.bodyweight || '--'} <span style={styles.cardUnit}>kg</span>
             </p>
             {weightChange !== 0 && (
-              <p className={`text-[11px] mt-0.5 ${weightChange > 0 ? 'text-[var(--color-success)]' : 'text-[var(--color-error)]'}`}>
+              <p style={weightChange > 0 ? styles.positiveChange : styles.negativeChange}>
                 {weightChange > 0 ? '+' : ''}{weightChange.toFixed(1)} kg
               </p>
             )}
-          </Card>
+          </div>
 
-          <Card className="card-responsive">
-            <div className="flex items-center gap-1.5 mb-1.5">
-              <TrendingUp size={16} className="text-[var(--color-primary)] shrink-0" />
-              <span className="text-[11px] text-[var(--color-text-secondary)] truncate">Volumen semanal</span>
+          {/* Volumen semanal */}
+          <div style={styles.card}>
+            <div style={styles.cardHeader}>
+              <TrendingUp size={16} style={styles.iconPrimary} />
+              <span style={styles.cardLabel}>Volumen semanal</span>
             </div>
-            <p className="text-xl font-bold text-[var(--color-text)]">
-              {(totalVolume / 1000).toFixed(1)} <span className="text-xs font-normal">t</span>
+            <p style={styles.cardValue}>
+              {(totalVolume / 1000).toFixed(1)} <span style={styles.cardUnit}>t</span>
             </p>
-            <p className="text-[11px] text-[var(--color-text-secondary)] mt-0.5">
+            <p style={styles.cardSubtext}>
               {workoutsThisWeek} entrenamientos
             </p>
-          </Card>
+          </div>
         </div>
 
-        {/* Weight chart - responsive for iPhone 17 Pro */}
+        {/* Weight chart */}
         {chartData.length > 1 && (
-          <Card className="mb-4 card-responsive">
-            <h3 className="font-semibold text-[var(--color-text)] text-sm mb-2">Peso corporal</h3>
-            <div className="h-36 chart-responsive -ml-2">
+          <div style={styles.chartCard}>
+            <h3 style={styles.chartTitle}>Peso corporal</h3>
+            <div style={styles.chartContainer}>
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={chartData} margin={{ top: 5, right: 5, left: -10, bottom: 0 }}>
                   <XAxis
                     dataKey="date"
-                    stroke="var(--color-text-secondary)"
+                    stroke="#888"
                     fontSize={9}
                     tickLine={false}
                     axisLine={false}
                     interval="preserveStartEnd"
                   />
                   <YAxis
-                    stroke="var(--color-text-secondary)"
+                    stroke="#888"
                     fontSize={9}
                     tickLine={false}
                     axisLine={false}
@@ -148,83 +351,84 @@ export function ProgressDashboard() {
                   />
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: 'var(--color-surface-elevated)',
-                      border: '1px solid var(--color-border)',
+                      backgroundColor: '#2a2a2a',
+                      border: '1px solid #3a3a3a',
                       borderRadius: '8px',
-                      fontSize: '12px'
+                      fontSize: '12px',
+                      color: '#fff',
                     }}
-                    labelStyle={{ color: 'var(--color-text-secondary)' }}
+                    labelStyle={{ color: '#888' }}
                   />
                   <Line
                     type="monotone"
                     dataKey="weight"
-                    stroke="var(--color-primary)"
+                    stroke="#d4af37"
                     strokeWidth={2}
-                    dot={{ fill: 'var(--color-primary)', strokeWidth: 0, r: 2.5 }}
-                    activeDot={{ r: 4, fill: 'var(--color-primary)' }}
+                    dot={{ fill: '#d4af37', strokeWidth: 0, r: 2.5 }}
+                    activeDot={{ r: 4, fill: '#d4af37' }}
                   />
                 </LineChart>
               </ResponsiveContainer>
             </div>
-          </Card>
+          </div>
         )}
 
         {/* Personal Records */}
         {personalRecords.length > 0 && (
-          <Card className="mb-4">
-            <div className="flex items-center gap-2 mb-3">
-              <Trophy size={18} className="text-[var(--color-primary)]" />
-              <h3 className="font-semibold text-[var(--color-text)]">Récords recientes</h3>
+          <div style={styles.recordsCard}>
+            <div style={styles.recordsHeader}>
+              <Trophy size={18} style={styles.iconPrimary} />
+              <h3 style={styles.recordsTitle}>Records recientes</h3>
             </div>
-            <div className="space-y-2">
+            <div>
               {personalRecords.map((pr, index) => (
                 <div
                   key={index}
-                  className="flex items-center justify-between py-2 border-b border-[var(--color-border)] last:border-0"
+                  style={index === personalRecords.length - 1 ? styles.recordItemLast : styles.recordItem}
                 >
                   <div>
-                    <p className="text-sm font-medium text-[var(--color-text)]">{pr.exercise}</p>
-                    <p className="text-xs text-[var(--color-text-secondary)]">
+                    <p style={styles.recordName}>{pr.exercise}</p>
+                    <p style={styles.recordDate}>
                       {format(new Date(pr.date), "d 'de' MMM", { locale: es })}
                     </p>
                   </div>
-                  <p className="font-bold text-[var(--color-primary)]">
-                    {pr.weight}kg × {pr.reps}
+                  <p style={styles.recordWeight}>
+                    {pr.weight}kg x {pr.reps}
                   </p>
                 </div>
               ))}
             </div>
-          </Card>
+          </div>
         )}
 
-        {/* Quick actions - touch-friendly for iPhone 17 Pro */}
-        <div className="grid grid-cols-2 gap-3 grid-responsive-2">
-          <Button variant="secondary" className="touch-target text-sm" onClick={() => setShowMetrics(true)}>
-            <Ruler size={16} className="mr-1.5 shrink-0" />
+        {/* Quick actions */}
+        <div style={styles.grid2}>
+          <button style={styles.buttonSecondary} onClick={() => setShowMetrics(true)}>
+            <Ruler size={16} style={{ marginRight: '6px', flexShrink: 0 }} />
             Medidas
-          </Button>
-          <Button variant="secondary" className="touch-target text-sm" onClick={() => {}}>
-            <Camera size={16} className="mr-1.5 shrink-0" />
+          </button>
+          <button style={styles.buttonSecondary} onClick={() => {}}>
+            <Camera size={16} style={{ marginRight: '6px', flexShrink: 0 }} />
             Fotos
-          </Button>
+          </button>
         </div>
 
         {/* Empty state */}
         {progressEntries.length === 0 && (
-          <Card className="mt-4">
-            <div className="text-center py-6">
-              <Scale size={48} className="mx-auto text-[var(--color-text-secondary)] mb-3" />
-              <p className="text-[var(--color-text)] font-medium">Sin datos de progreso</p>
-              <p className="text-sm text-[var(--color-text-secondary)] mt-1">
-                Registra tu peso y medidas para ver tu evolución
+          <div style={styles.emptyCard}>
+            <div style={styles.emptyContent as React.CSSProperties}>
+              <Scale size={48} style={{ ...styles.emptyIcon, display: 'block', margin: '0 auto 12px auto' }} />
+              <p style={styles.emptyTitle}>Sin datos de progreso</p>
+              <p style={styles.emptySubtitle}>
+                Registra tu peso y medidas para ver tu evolucion
               </p>
-              <Button className="mt-4" onClick={() => setShowMetrics(true)}>
+              <button style={styles.buttonPrimary} onClick={() => setShowMetrics(true)}>
                 Registrar progreso
-              </Button>
+              </button>
             </div>
-          </Card>
+          </div>
         )}
-      </PageContainer>
-    </>
+      </div>
+    </div>
   );
 }

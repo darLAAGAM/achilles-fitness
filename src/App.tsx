@@ -5,15 +5,20 @@ import { ProgressDashboard } from './features/progress';
 import { MacroTracker } from './features/nutrition';
 import { Settings, Onboarding } from './features/settings';
 
+const styles = {
+  app: {
+    minHeight: '100dvh',
+    backgroundColor: '#0a0a0a',
+  },
+};
+
 function App() {
   const { isOnboarded, activeTab } = useUserStore();
 
-  // Show onboarding if user hasn't completed it
   if (!isOnboarded) {
     return <Onboarding />;
   }
 
-  // Render active tab content
   const renderContent = () => {
     switch (activeTab) {
       case 'workout':
@@ -30,7 +35,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--color-background)]">
+    <div style={styles.app}>
       {renderContent()}
       <BottomNav />
     </div>

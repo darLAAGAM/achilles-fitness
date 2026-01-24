@@ -9,35 +9,81 @@ const tabs: { id: Tab; label: string; icon: typeof Dumbbell }[] = [
   { id: 'settings', label: 'Ajustes', icon: Settings }
 ];
 
+const styles = {
+  nav: {
+    position: 'fixed' as const,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#141414',
+    borderTop: '1px solid #2a2a2a',
+    zIndex: 50,
+    paddingBottom: 'env(safe-area-inset-bottom)',
+  },
+  container: {
+    display: 'flex',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    height: '64px',
+    maxWidth: '500px',
+    margin: '0 auto',
+    padding: '0 8px',
+  },
+  button: {
+    display: 'flex',
+    flexDirection: 'column' as const,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+    height: '100%',
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+    position: 'relative' as const,
+    padding: '8px 0',
+  },
+  label: {
+    fontSize: '11px',
+    lineHeight: 1.2,
+    marginTop: '4px',
+  },
+  indicator: {
+    position: 'absolute' as const,
+    bottom: '8px',
+    width: '40px',
+    height: '2px',
+    backgroundColor: '#d4af37',
+    borderRadius: '1px',
+  },
+};
+
 export function BottomNav() {
   const { activeTab, setActiveTab } = useUserStore();
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-[var(--color-surface)] border-t border-[var(--color-border)] border-sharp safe-area-bottom z-50 bottom-nav-responsive">
-      <div className="flex justify-around items-center h-[var(--bottom-nav-height)] max-w-lg mx-auto px-2">
+    <nav style={styles.nav}>
+      <div style={styles.container}>
         {tabs.map(({ id, label, icon: Icon }) => {
           const isActive = activeTab === id;
           return (
             <button
               key={id}
               onClick={() => setActiveTab(id)}
-              className={`flex flex-col items-center justify-center flex-1 h-full touch-target transition-colors ${
-                isActive
-                  ? 'text-[var(--color-primary)]'
-                  : 'text-[var(--color-text-secondary)]'
-              }`}
+              style={styles.button}
             >
               <Icon
                 size={22}
                 strokeWidth={isActive ? 2.5 : 2}
-                className="mb-0.5"
+                style={{ color: isActive ? '#d4af37' : '#888' }}
               />
-              <span className={`text-[11px] leading-tight ${isActive ? 'font-semibold' : 'font-normal'}`}>
+              <span style={{
+                ...styles.label,
+                color: isActive ? '#d4af37' : '#888',
+                fontWeight: isActive ? 600 : 400,
+              }}>
                 {label}
               </span>
-              {isActive && (
-                <div className="absolute bottom-[var(--safe-area-bottom)] w-10 h-0.5 bg-[var(--color-primary)] rounded-full" />
-              )}
+              {isActive && <div style={styles.indicator} />}
             </button>
           );
         })}

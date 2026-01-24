@@ -1,16 +1,257 @@
-import { useEffect, useState } from 'react';
-import { Play, CheckCircle2, Calendar, Zap } from 'lucide-react';
-import { Header, PageContainer } from '../../../components/layout';
-import { Button, Card } from '../../../components/ui';
-import { ExerciseCard } from '../../../components/workout';
+import { useEffect, useState, CSSProperties } from 'react';
+import { Play, CheckCircle2, Calendar, Zap, ChevronRight, Trophy, Flame } from 'lucide-react';
 import { useWorkoutStore } from '../../../stores/workoutStore';
 import { useUserStore } from '../../../stores/userStore';
 import { achillesTemplates } from '../../../data/achilles-program';
 import { exercises as exerciseData } from '../../../data/exercises';
 import { db } from '../../../services/db/database';
-import type { WorkoutTemplate, Exercise } from '../../../types';
+import type { WorkoutTemplate, Exercise, ExerciseTemplate, WorkoutSet } from '../../../types';
 import { ExerciseDetail } from './ExerciseDetail';
 
+// ============================================
+// STYLES
+// ============================================
+const colors = {
+  background: '#0a0a0a',
+  card: '#1a1a1a',
+  cardElevated: '#252525',
+  text: '#ffffff',
+  textSecondary: '#888888',
+  accent: '#d4af37',
+  success: '#22c55e',
+  intensityHeavy: '#ef4444',
+  intensityMedium: '#eab308',
+  intensityLight: '#22c55e',
+};
+
+const styles: Record<string, CSSProperties> = {
+  container: {
+    minHeight: '100vh',
+    backgroundColor: colors.background,
+    paddingTop: 'env(safe-area-inset-top)',
+    paddingBottom: 'calc(80px + env(safe-area-inset-bottom))',
+  },
+  header: {
+    padding: '24px',
+    paddingTop: 'calc(16px + env(safe-area-inset-top))',
+  },
+  headerTitle: {
+    fontSize: '32px',
+    fontWeight: '700',
+    color: colors.text,
+    margin: 0,
+    lineHeight: 1.2,
+  },
+  headerSubtitle: {
+    fontSize: '14px',
+    color: colors.textSecondary,
+    marginTop: '4px',
+  },
+  content: {
+    padding: '0 24px 24px',
+  },
+  card: {
+    backgroundColor: colors.card,
+    borderRadius: '16px',
+    padding: '20px',
+    marginBottom: '16px',
+  },
+  cardClickable: {
+    backgroundColor: colors.card,
+    borderRadius: '16px',
+    padding: '16px',
+    marginBottom: '12px',
+    cursor: 'pointer',
+    transition: 'transform 0.2s, background-color 0.2s',
+  },
+  cardComplete: {
+    backgroundColor: colors.card,
+    borderRadius: '16px',
+    padding: '16px',
+    marginBottom: '12px',
+    cursor: 'pointer',
+    border: `1px solid ${colors.success}50`,
+  },
+  progressHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: '12px',
+  },
+  progressLabel: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+  },
+  progressLabelText: {
+    fontWeight: '500',
+    color: colors.text,
+    fontSize: '14px',
+  },
+  progressPercent: {
+    fontSize: '14px',
+    color: colors.textSecondary,
+  },
+  progressBarContainer: {
+    height: '8px',
+    backgroundColor: colors.cardElevated,
+    borderRadius: '9999px',
+    overflow: 'hidden',
+  },
+  progressBarFill: {
+    height: '100%',
+    backgroundColor: colors.accent,
+    borderRadius: '9999px',
+    transition: 'width 0.5s ease',
+  },
+  workoutInfoHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px',
+    marginBottom: '16px',
+  },
+  workoutIcon: {
+    width: '48px',
+    height: '48px',
+    borderRadius: '12px',
+    backgroundColor: `${colors.accent}33`,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  workoutTitle: {
+    fontWeight: '600',
+    color: colors.text,
+    fontSize: '16px',
+    margin: 0,
+  },
+  workoutMeta: {
+    fontSize: '14px',
+    color: colors.textSecondary,
+    marginTop: '2px',
+  },
+  workoutDescription: {
+    fontSize: '14px',
+    color: colors.textSecondary,
+    marginBottom: '16px',
+    lineHeight: 1.5,
+  },
+  button: {
+    width: '100%',
+    backgroundColor: colors.accent,
+    color: '#000',
+    border: 'none',
+    borderRadius: '12px',
+    padding: '16px 24px',
+    fontSize: '16px',
+    fontWeight: '600',
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '8px',
+    transition: 'opacity 0.2s',
+  },
+  sectionTitle: {
+    fontSize: '12px',
+    fontWeight: '500',
+    color: colors.textSecondary,
+    textTransform: 'uppercase' as const,
+    letterSpacing: '0.05em',
+    marginBottom: '12px',
+  },
+  exerciseRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px',
+  },
+  exerciseProgress: {
+    width: '48px',
+    height: '48px',
+    borderRadius: '12px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '14px',
+    fontWeight: '700',
+  },
+  exerciseProgressIncomplete: {
+    backgroundColor: colors.cardElevated,
+    color: colors.textSecondary,
+  },
+  exerciseProgressComplete: {
+    backgroundColor: `${colors.success}33`,
+    color: colors.success,
+  },
+  exerciseInfo: {
+    flex: 1,
+    minWidth: 0,
+  },
+  exerciseNameRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+  },
+  exerciseName: {
+    fontWeight: '600',
+    color: colors.text,
+    fontSize: '15px',
+    margin: 0,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap' as const,
+  },
+  exerciseDetails: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    marginTop: '4px',
+  },
+  intensityBadge: {
+    fontSize: '12px',
+    fontWeight: '500',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '2px',
+  },
+  setsReps: {
+    fontSize: '12px',
+    color: colors.textSecondary,
+  },
+  lastSet: {
+    fontSize: '12px',
+    color: colors.textSecondary,
+    marginTop: '4px',
+  },
+  arrow: {
+    color: colors.textSecondary,
+    flexShrink: 0,
+  },
+  completeButtonContainer: {
+    position: 'fixed' as const,
+    bottom: '80px',
+    left: 0,
+    right: 0,
+    padding: '16px 24px',
+    paddingBottom: 'calc(16px + env(safe-area-inset-bottom))',
+    background: `linear-gradient(to top, ${colors.background}, transparent)`,
+  },
+  noUserCard: {
+    backgroundColor: colors.card,
+    borderRadius: '16px',
+    padding: '20px',
+    marginTop: '16px',
+    textAlign: 'center' as const,
+  },
+  noUserText: {
+    color: colors.textSecondary,
+    fontSize: '14px',
+  },
+};
+
+// ============================================
+// COMPONENT
+// ============================================
 export function TodayWorkout() {
   const { user } = useUserStore();
   const {
@@ -81,6 +322,25 @@ export function TodayWorkout() {
   const completedExercises = getCompletedExercisesCount();
   const progress = currentSession ? (completedExercises / totalExercises) * 100 : 0;
 
+  // Get intensity color
+  const getIntensityColor = (intensity: string) => {
+    switch (intensity) {
+      case 'heavy': return colors.intensityHeavy;
+      case 'medium': return colors.intensityMedium;
+      case 'light': return colors.intensityLight;
+      default: return colors.textSecondary;
+    }
+  };
+
+  const getIntensityLabel = (intensity: string) => {
+    switch (intensity) {
+      case 'heavy': return 'Heavy';
+      case 'medium': return 'Medium';
+      case 'light': return 'Light';
+      default: return 'Opcional';
+    }
+  };
+
   // If exercise detail is open
   if (selectedExercise) {
     return (
@@ -92,104 +352,164 @@ export function TodayWorkout() {
     );
   }
 
-  return (
-    <>
-      <Header
-        title={todayTemplate.name}
-        subtitle={currentSession ? `${completedExercises}/${totalExercises} ejercicios` : 'Programa Achilles'}
-      />
-      <PageContainer>
-        {/* Progress card */}
-        {currentSession && (
-          <Card className="mb-4">
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-2">
-                <Zap size={18} className="text-[var(--color-primary)]" />
-                <span className="font-medium text-[var(--color-text)]">Progreso</span>
-              </div>
-              <span className="text-sm text-[var(--color-text-secondary)]">
-                {Math.round(progress)}%
+  // Render Exercise Card inline
+  const renderExerciseCard = (
+    exercise: Exercise,
+    template: ExerciseTemplate,
+    completedSets: WorkoutSet[]
+  ) => {
+    const workingSets = completedSets.filter(s => !s.isWarmup);
+    const isComplete = workingSets.length >= template.targetSets;
+    const hasPersonalRecord = completedSets.some(s => s.isPersonalRecord);
+
+    return (
+      <div
+        key={template.exerciseId}
+        style={isComplete ? styles.cardComplete : styles.cardClickable}
+        onClick={() => {
+          if (currentSession) {
+            setSelectedExercise({ exercise, templateExercise: template });
+          }
+        }}
+      >
+        <div style={styles.exerciseRow}>
+          {/* Progress indicator */}
+          <div
+            style={{
+              ...styles.exerciseProgress,
+              ...(isComplete ? styles.exerciseProgressComplete : styles.exerciseProgressIncomplete),
+            }}
+          >
+            {workingSets.length}/{template.targetSets}
+          </div>
+
+          {/* Exercise info */}
+          <div style={styles.exerciseInfo}>
+            <div style={styles.exerciseNameRow}>
+              <h3 style={styles.exerciseName}>{exercise.name}</h3>
+              {hasPersonalRecord && (
+                <Trophy size={16} color={colors.accent} style={{ flexShrink: 0 }} />
+              )}
+            </div>
+            <div style={styles.exerciseDetails}>
+              <span
+                style={{
+                  ...styles.intensityBadge,
+                  color: getIntensityColor(template.intensity),
+                }}
+              >
+                <Flame size={12} style={{ marginRight: '2px' }} />
+                {getIntensityLabel(template.intensity)}
+              </span>
+              <span style={styles.setsReps}>
+                {template.targetSets}x{template.targetRepsMin}-{template.targetRepsMax}
               </span>
             </div>
-            <div className="h-2 bg-[var(--color-surface-elevated)] rounded-full overflow-hidden">
+            {workingSets.length > 0 && (
+              <p style={styles.lastSet}>
+                Ultimo: {workingSets[workingSets.length - 1].weight}kg x {workingSets[workingSets.length - 1].reps}
+              </p>
+            )}
+          </div>
+
+          {/* Arrow */}
+          <ChevronRight size={20} style={styles.arrow} />
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div style={styles.container}>
+      {/* Header */}
+      <div style={styles.header}>
+        <h1 style={styles.headerTitle}>{todayTemplate.name}</h1>
+        <p style={styles.headerSubtitle}>
+          {currentSession ? `${completedExercises}/${totalExercises} ejercicios` : 'Programa Achilles'}
+        </p>
+      </div>
+
+      {/* Content */}
+      <div style={styles.content}>
+        {/* Progress card */}
+        {currentSession && (
+          <div style={styles.card}>
+            <div style={styles.progressHeader}>
+              <div style={styles.progressLabel}>
+                <Zap size={18} color={colors.accent} />
+                <span style={styles.progressLabelText}>Progreso</span>
+              </div>
+              <span style={styles.progressPercent}>{Math.round(progress)}%</span>
+            </div>
+            <div style={styles.progressBarContainer}>
               <div
-                className="h-full bg-[var(--color-primary)] rounded-full transition-all duration-500"
-                style={{ width: `${progress}%` }}
+                style={{
+                  ...styles.progressBarFill,
+                  width: `${progress}%`,
+                }}
               />
             </div>
-          </Card>
+          </div>
         )}
 
         {/* Workout info when not started */}
         {!currentSession && (
-          <Card className="mb-4">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 rounded-xl bg-[var(--color-primary)]/20 flex items-center justify-center">
-                <Calendar size={24} className="text-[var(--color-primary)]" />
+          <div style={styles.card}>
+            <div style={styles.workoutInfoHeader}>
+              <div style={styles.workoutIcon}>
+                <Calendar size={24} color={colors.accent} />
               </div>
               <div>
-                <h3 className="font-semibold text-[var(--color-text)]">Hoy: {todayTemplate.name}</h3>
-                <p className="text-sm text-[var(--color-text-secondary)]">
-                  {totalExercises} ejercicios • ~60 min
-                </p>
+                <h3 style={styles.workoutTitle}>Hoy: {todayTemplate.name}</h3>
+                <p style={styles.workoutMeta}>{totalExercises} ejercicios - ~60 min</p>
               </div>
             </div>
-            <p className="text-sm text-[var(--color-text-secondary)] mb-4">
-              {todayTemplate.type === 'push' && 'Enfoque en pecho, hombros y tríceps para los hombros anchos de Achilles.'}
-              {todayTemplate.type === 'pull' && 'Espalda y bíceps para la V-taper del guerrero griego.'}
-              {todayTemplate.type === 'legs' && 'Piernas y core para la base atlética de un hoplita.'}
+            <p style={styles.workoutDescription}>
+              {todayTemplate.type === 'push' && 'Enfoque en pecho, hombros y triceps para los hombros anchos de Achilles.'}
+              {todayTemplate.type === 'pull' && 'Espalda y biceps para la V-taper del guerrero griego.'}
+              {todayTemplate.type === 'legs' && 'Piernas y core para la base atletica de un hoplita.'}
             </p>
-            <Button fullWidth onClick={handleStartWorkout}>
-              <Play size={20} className="mr-2" />
+            <button style={styles.button} onClick={handleStartWorkout}>
+              <Play size={20} />
               Comenzar Entreno
-            </Button>
-          </Card>
+            </button>
+          </div>
         )}
 
         {/* Exercise list */}
-        <div className="space-y-3">
-          <h2 className="text-sm font-medium text-[var(--color-text-secondary)] uppercase tracking-wider">
-            Ejercicios
-          </h2>
+        <div>
+          <h2 style={styles.sectionTitle}>Ejercicios</h2>
           {todayTemplate.exercises.map((templateExercise) => {
             const exercise = exercises.find(e => e.id === templateExercise.exerciseId);
             if (!exercise) return null;
 
-            return (
-              <ExerciseCard
-                key={templateExercise.exerciseId}
-                exercise={exercise}
-                template={templateExercise}
-                completedSets={getExerciseSets(exercise.id)}
-                onClick={() => {
-                  if (currentSession) {
-                    setSelectedExercise({ exercise, templateExercise });
-                  }
-                }}
-              />
+            return renderExerciseCard(
+              exercise,
+              templateExercise,
+              getExerciseSets(exercise.id)
             );
           })}
         </div>
 
         {/* Complete workout button */}
         {currentSession && progress === 100 && (
-          <div className="fixed bottom-20 left-0 right-0 p-4 bg-gradient-to-t from-[var(--color-background)] to-transparent">
-            <Button fullWidth onClick={handleCompleteWorkout} className="max-w-lg mx-auto">
-              <CheckCircle2 size={20} className="mr-2" />
+          <div style={styles.completeButtonContainer}>
+            <button style={styles.button} onClick={handleCompleteWorkout}>
+              <CheckCircle2 size={20} />
               Completar Entreno
-            </Button>
+            </button>
           </div>
         )}
 
         {/* Greeting when no user */}
         {!user && (
-          <Card className="mt-4">
-            <p className="text-center text-[var(--color-text-secondary)]">
-              Configura tu perfil para comenzar tu transformación Achilles
+          <div style={styles.noUserCard}>
+            <p style={styles.noUserText}>
+              Configura tu perfil para comenzar tu transformacion Achilles
             </p>
-          </Card>
+          </div>
         )}
-      </PageContainer>
-    </>
+      </div>
+    </div>
   );
 }
