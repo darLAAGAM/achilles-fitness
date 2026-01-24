@@ -7,7 +7,6 @@ export function Onboarding() {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
 
-  // Form data
   const [name, setName] = useState('');
   const [age, setAge] = useState('34');
   const [height, setHeight] = useState('180');
@@ -17,14 +16,10 @@ export function Onboarding() {
 
   const handleComplete = async () => {
     setLoading(true);
-
     const bwKg = Number(bodyweight);
     const bwLbs = bwKg * 2.205;
 
-    let dailyCalories: number;
-    let proteinTarget: number;
-    let carbTarget: number;
-    let fatTarget: number;
+    let dailyCalories: number, proteinTarget: number, carbTarget: number, fatTarget: number;
 
     if (phase === 'bulk') {
       dailyCalories = Math.round(bwKg * 33);
@@ -57,264 +52,372 @@ export function Onboarding() {
       carbTarget,
       fatTarget
     });
-
     setLoading(false);
   };
 
   const nextStep = () => setStep(prev => prev + 1);
   const prevStep = () => setStep(prev => prev - 1);
 
+  // Estilos inline para garantizar que se aplican
+  const styles = {
+    container: {
+      minHeight: '100dvh',
+      backgroundColor: '#0a0a0a',
+      display: 'flex',
+      flexDirection: 'column' as const,
+      paddingTop: 'env(safe-area-inset-top)',
+    },
+    header: {
+      flexShrink: 0,
+      padding: '16px 24px 8px',
+    },
+    nav: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+    },
+    backButton: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: '4px',
+      color: '#d4af37',
+      fontSize: '16px',
+      fontWeight: 500,
+      background: 'none',
+      border: 'none',
+      cursor: 'pointer',
+    },
+    stepIndicator: {
+      color: '#888',
+      fontSize: '14px',
+    },
+    progressContainer: {
+      display: 'flex',
+      gap: '8px',
+      marginTop: '16px',
+    },
+    progressBar: (active: boolean) => ({
+      height: '4px',
+      flex: 1,
+      borderRadius: '2px',
+      backgroundColor: active ? '#d4af37' : '#333',
+      transition: 'background-color 0.3s',
+    }),
+    main: {
+      flex: 1,
+      padding: '24px',
+      overflowY: 'auto' as const,
+    },
+    title: {
+      fontSize: '32px',
+      fontWeight: 700,
+      color: '#fff',
+      lineHeight: 1.2,
+      marginBottom: '8px',
+    },
+    titleGold: {
+      color: '#d4af37',
+    },
+    subtitle: {
+      color: '#888',
+      fontSize: '16px',
+      marginBottom: '32px',
+    },
+    label: {
+      display: 'block',
+      color: '#888',
+      fontSize: '14px',
+      fontWeight: 500,
+      marginBottom: '8px',
+    },
+    inputContainer: {
+      position: 'relative' as const,
+      marginBottom: '24px',
+    },
+    input: {
+      width: '100%',
+      backgroundColor: '#1a1a1a',
+      border: '2px solid #333',
+      borderRadius: '16px',
+      padding: '16px',
+      paddingRight: '60px',
+      color: '#fff',
+      fontSize: '18px',
+      outline: 'none',
+    },
+    inputSuffix: {
+      position: 'absolute' as const,
+      right: '16px',
+      top: '50%',
+      transform: 'translateY(-50%)',
+      color: '#666',
+      fontSize: '16px',
+    },
+    gridRow: {
+      display: 'grid',
+      gridTemplateColumns: '1fr 1fr',
+      gap: '16px',
+      marginBottom: '24px',
+    },
+    footer: {
+      flexShrink: 0,
+      padding: '16px 24px',
+      paddingBottom: 'calc(env(safe-area-inset-bottom) + 24px)',
+      backgroundColor: '#0a0a0a',
+    },
+    ctaButton: {
+      width: '100%',
+      height: '56px',
+      backgroundColor: '#d4af37',
+      color: '#000',
+      fontSize: '18px',
+      fontWeight: 700,
+      border: 'none',
+      borderRadius: '16px',
+      cursor: 'pointer',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: '8px',
+    },
+    optionButton: (selected: boolean) => ({
+      width: '100%',
+      padding: '16px',
+      borderRadius: '16px',
+      border: selected ? 'none' : '2px solid #333',
+      backgroundColor: selected ? '#d4af37' : '#1a1a1a',
+      cursor: 'pointer',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '16px',
+      marginBottom: '12px',
+    }),
+    optionEmoji: {
+      fontSize: '32px',
+    },
+    optionLabel: (selected: boolean) => ({
+      fontSize: '18px',
+      fontWeight: 600,
+      color: selected ? '#000' : '#fff',
+    }),
+    optionDesc: (selected: boolean) => ({
+      fontSize: '14px',
+      color: selected ? 'rgba(0,0,0,0.7)' : '#888',
+    }),
+    summaryCard: {
+      backgroundColor: '#1a1a1a',
+      borderRadius: '16px',
+      padding: '20px',
+      marginBottom: '24px',
+    },
+    summaryRow: (hasBorder: boolean) => ({
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      padding: '12px 0',
+      borderBottom: hasBorder ? '1px solid #333' : 'none',
+    }),
+    summaryLabel: {
+      color: '#888',
+      fontSize: '16px',
+    },
+    summaryValue: (highlight: boolean) => ({
+      color: highlight ? '#d4af37' : '#fff',
+      fontSize: '16px',
+      fontWeight: 600,
+    }),
+    infoBox: {
+      backgroundColor: 'rgba(212, 175, 55, 0.1)',
+      border: '1px solid rgba(212, 175, 55, 0.3)',
+      borderRadius: '16px',
+      padding: '20px',
+    },
+    infoText: {
+      color: '#fff',
+      fontSize: '15px',
+      lineHeight: 1.5,
+    },
+    infoHighlight: {
+      color: '#d4af37',
+      fontWeight: 700,
+    },
+  };
+
   return (
-    <div
-      className="min-h-[100dvh] bg-[#0a0a0a] flex flex-col"
-      style={{ paddingTop: 'env(safe-area-inset-top)' }}
-    >
+    <div style={styles.container}>
       {/* Header */}
-      <header className="shrink-0 px-6 pt-4 pb-2">
-        <div className="flex items-center justify-between">
+      <header style={styles.header}>
+        <div style={styles.nav}>
           {step > 1 ? (
-            <button
-              onClick={prevStep}
-              className="flex items-center gap-1 text-[#d4af37] text-base font-medium active:opacity-70"
-            >
+            <button onClick={prevStep} style={styles.backButton}>
               <ChevronLeft size={20} strokeWidth={2.5} />
               Atrás
             </button>
           ) : (
-            <div className="w-16" />
+            <div style={{ width: 64 }} />
           )}
-          <span className="text-[#888] text-sm">{step}/3</span>
-          <div className="w-16" />
+          <span style={styles.stepIndicator}>{step}/3</span>
+          <div style={{ width: 64 }} />
         </div>
-
-        {/* Progress bar */}
-        <div className="flex gap-2 mt-4">
+        <div style={styles.progressContainer}>
           {[1, 2, 3].map((s) => (
-            <div
-              key={s}
-              className={`h-1 flex-1 rounded-full transition-all duration-300 ${
-                s <= step ? 'bg-[#d4af37]' : 'bg-[#333]'
-              }`}
-            />
+            <div key={s} style={styles.progressBar(s <= step)} />
           ))}
         </div>
       </header>
 
       {/* Content */}
-      <main className="flex-1 px-6 pt-6 overflow-y-auto">
+      <main style={styles.main}>
         {step === 1 && (
-          <div className="animate-fade-in">
-            <h1 className="text-[28px] font-bold text-white leading-tight">
+          <div>
+            <h1 style={styles.title}>
               Bienvenido a<br />
-              <span className="text-[#d4af37]">Achilles</span>
+              <span style={styles.titleGold}>Achilles</span>
             </h1>
-            <p className="text-[#888] text-base mt-2 mb-8">
-              Construye el físico de un guerrero griego
-            </p>
+            <p style={styles.subtitle}>Construye el físico de un guerrero griego</p>
 
-            <div className="space-y-6">
-              {/* Nombre */}
-              <div>
-                <label className="text-[#888] text-sm font-medium block mb-2">
-                  Tu nombre
-                </label>
+            <div>
+              <label style={styles.label}>Tu nombre</label>
+              <div style={styles.inputContainer}>
                 <input
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="¿Cómo te llamas?"
                   autoFocus
-                  className="w-full bg-[#1a1a1a] border-2 border-[#333] rounded-xl px-4 py-4 text-white text-lg placeholder:text-[#555] focus:outline-none focus:border-[#d4af37] transition-colors"
+                  style={{ ...styles.input, paddingRight: '16px' }}
                 />
               </div>
 
-              {/* Edad y Altura */}
-              <div className="grid grid-cols-2 gap-4">
+              <div style={styles.gridRow}>
                 <div>
-                  <label className="text-[#888] text-sm font-medium block mb-2">
-                    Edad
-                  </label>
-                  <div className="relative">
+                  <label style={styles.label}>Edad</label>
+                  <div style={{ position: 'relative' }}>
                     <input
                       type="number"
                       inputMode="numeric"
                       value={age}
                       onChange={(e) => setAge(e.target.value)}
-                      className="w-full bg-[#1a1a1a] border-2 border-[#333] rounded-xl px-4 py-4 text-white text-lg pr-16 focus:outline-none focus:border-[#d4af37] transition-colors"
+                      style={styles.input}
                     />
-                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[#666] text-base">
-                      años
-                    </span>
+                    <span style={styles.inputSuffix}>años</span>
                   </div>
                 </div>
                 <div>
-                  <label className="text-[#888] text-sm font-medium block mb-2">
-                    Altura
-                  </label>
-                  <div className="relative">
+                  <label style={styles.label}>Altura</label>
+                  <div style={{ position: 'relative' }}>
                     <input
                       type="number"
                       inputMode="numeric"
                       value={height}
                       onChange={(e) => setHeight(e.target.value)}
-                      className="w-full bg-[#1a1a1a] border-2 border-[#333] rounded-xl px-4 py-4 text-white text-lg pr-12 focus:outline-none focus:border-[#d4af37] transition-colors"
+                      style={styles.input}
                     />
-                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[#666] text-base">
-                      cm
-                    </span>
+                    <span style={styles.inputSuffix}>cm</span>
                   </div>
                 </div>
               </div>
 
-              {/* Peso */}
-              <div>
-                <label className="text-[#888] text-sm font-medium block mb-2">
-                  Peso actual
-                </label>
-                <div className="relative">
-                  <input
-                    type="number"
-                    inputMode="decimal"
-                    value={bodyweight}
-                    onChange={(e) => setBodyweight(e.target.value)}
-                    className="w-full bg-[#1a1a1a] border-2 border-[#333] rounded-xl px-4 py-4 text-white text-lg pr-12 focus:outline-none focus:border-[#d4af37] transition-colors"
-                  />
-                  <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[#666] text-base">
-                    kg
-                  </span>
-                </div>
+              <label style={styles.label}>Peso actual</label>
+              <div style={{ position: 'relative' }}>
+                <input
+                  type="number"
+                  inputMode="decimal"
+                  value={bodyweight}
+                  onChange={(e) => setBodyweight(e.target.value)}
+                  style={styles.input}
+                />
+                <span style={styles.inputSuffix}>kg</span>
               </div>
             </div>
           </div>
         )}
 
         {step === 2 && (
-          <div className="animate-fade-in">
-            <h1 className="text-[28px] font-bold text-white leading-tight">
-              Tu objetivo
-            </h1>
-            <p className="text-[#888] text-base mt-2 mb-8">
-              Personalizamos el programa para ti
-            </p>
+          <div>
+            <h1 style={styles.title}>Tu objetivo</h1>
+            <p style={styles.subtitle}>Personalizamos el programa para ti</p>
 
-            <div className="space-y-6">
-              {/* Experiencia */}
-              <div>
-                <label className="text-[#888] text-sm font-medium block mb-2">
-                  Años de experiencia en el gym
-                </label>
-                <div className="relative">
-                  <input
-                    type="number"
-                    inputMode="numeric"
-                    value={experienceYears}
-                    onChange={(e) => setExperienceYears(e.target.value)}
-                    className="w-full bg-[#1a1a1a] border-2 border-[#333] rounded-xl px-4 py-4 text-white text-lg pr-16 focus:outline-none focus:border-[#d4af37] transition-colors"
-                  />
-                  <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[#666] text-base">
-                    años
-                  </span>
-                </div>
-              </div>
+            <label style={styles.label}>Años de experiencia</label>
+            <div style={{ position: 'relative', marginBottom: '24px' }}>
+              <input
+                type="number"
+                inputMode="numeric"
+                value={experienceYears}
+                onChange={(e) => setExperienceYears(e.target.value)}
+                style={styles.input}
+              />
+              <span style={styles.inputSuffix}>años</span>
+            </div>
 
-              {/* Objetivo */}
-              <div>
-                <label className="text-[#888] text-sm font-medium block mb-3">
-                  ¿Qué quieres lograr?
-                </label>
-                <div className="space-y-3">
-                  {[
-                    { value: 'bulk', emoji: '💪', label: 'Ganar músculo', desc: 'Superávit calórico para crecer' },
-                    { value: 'cut', emoji: '🔥', label: 'Definir', desc: 'Déficit para quemar grasa' },
-                    { value: 'maintain', emoji: '⚖️', label: 'Mantener', desc: 'Recomposición corporal' }
-                  ].map((option) => (
-                    <button
-                      key={option.value}
-                      onClick={() => setPhase(option.value as typeof phase)}
-                      className={`w-full p-4 rounded-2xl text-left transition-all active:scale-[0.98] flex items-center gap-4 ${
-                        phase === option.value
-                          ? 'bg-[#d4af37] shadow-lg shadow-[#d4af37]/30'
-                          : 'bg-[#1a1a1a] border-2 border-[#333]'
-                      }`}
-                    >
-                      <span className="text-3xl">{option.emoji}</span>
-                      <div className="flex-1">
-                        <p className={`text-lg font-semibold ${
-                          phase === option.value ? 'text-black' : 'text-white'
-                        }`}>
-                          {option.label}
-                        </p>
-                        <p className={`text-sm ${
-                          phase === option.value ? 'text-black/70' : 'text-[#888]'
-                        }`}>
-                          {option.desc}
-                        </p>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </div>
+            <label style={styles.label}>¿Qué quieres lograr?</label>
+            <div style={{ marginTop: '12px' }}>
+              {[
+                { value: 'bulk', emoji: '💪', label: 'Ganar músculo', desc: 'Superávit calórico' },
+                { value: 'cut', emoji: '🔥', label: 'Definir', desc: 'Déficit controlado' },
+                { value: 'maintain', emoji: '⚖️', label: 'Mantener', desc: 'Recomposición' }
+              ].map((option) => (
+                <button
+                  key={option.value}
+                  onClick={() => setPhase(option.value as typeof phase)}
+                  style={styles.optionButton(phase === option.value)}
+                >
+                  <span style={styles.optionEmoji}>{option.emoji}</span>
+                  <div>
+                    <p style={styles.optionLabel(phase === option.value)}>{option.label}</p>
+                    <p style={styles.optionDesc(phase === option.value)}>{option.desc}</p>
+                  </div>
+                </button>
+              ))}
             </div>
           </div>
         )}
 
         {step === 3 && (
-          <div className="animate-fade-in">
-            <h1 className="text-[28px] font-bold text-white leading-tight">
-              ¡Listo, {name || 'Guerrero'}!
-            </h1>
-            <p className="text-[#888] text-base mt-2 mb-8">
-              Tu plan personalizado
-            </p>
+          <div>
+            <h1 style={styles.title}>¡Listo, {name || 'Guerrero'}!</h1>
+            <p style={styles.subtitle}>Tu plan personalizado</p>
 
-            {/* Plan summary */}
-            <div className="bg-[#1a1a1a] rounded-2xl p-5 mb-6">
-              <div className="space-y-4">
-                {[
-                  { label: 'Programa', value: 'Achilles 3-Day' },
-                  { label: 'Rutina', value: 'Push / Pull / Legs' },
-                  { label: 'Objetivo', value: phase === 'bulk' ? '💪 Volumen' : phase === 'cut' ? '🔥 Definición' : '⚖️ Mantener', highlight: true },
-                  { label: 'Calorías/día', value: `~${Math.round(Number(bodyweight) * (phase === 'bulk' ? 33 : phase === 'cut' ? 26 : 30))} kcal` }
-                ].map((item, i) => (
-                  <div
-                    key={i}
-                    className={`flex items-center justify-between py-3 ${
-                      i < 3 ? 'border-b border-[#333]' : ''
-                    }`}
-                  >
-                    <span className="text-[#888] text-base">{item.label}</span>
-                    <span className={`text-base font-semibold ${
-                      item.highlight ? 'text-[#d4af37]' : 'text-white'
-                    }`}>
-                      {item.value}
-                    </span>
-                  </div>
-                ))}
-              </div>
+            <div style={styles.summaryCard}>
+              {[
+                { label: 'Programa', value: 'Achilles 3-Day', highlight: false },
+                { label: 'Rutina', value: 'Push / Pull / Legs', highlight: false },
+                { label: 'Objetivo', value: phase === 'bulk' ? '💪 Volumen' : phase === 'cut' ? '🔥 Definición' : '⚖️ Mantener', highlight: true },
+                { label: 'Calorías/día', value: `~${Math.round(Number(bodyweight) * (phase === 'bulk' ? 33 : phase === 'cut' ? 26 : 30))} kcal`, highlight: false }
+              ].map((item, i) => (
+                <div key={i} style={styles.summaryRow(i < 3)}>
+                  <span style={styles.summaryLabel}>{item.label}</span>
+                  <span style={styles.summaryValue(item.highlight)}>{item.value}</span>
+                </div>
+              ))}
             </div>
 
-            {/* Objetivo Achilles */}
-            <div className="bg-[#d4af37]/10 border border-[#d4af37]/30 rounded-2xl p-5">
-              <p className="text-[15px] text-white leading-relaxed">
-                <span className="text-[#d4af37] font-bold">Objetivo Achilles:</span> Desarrollar torso superior, hombros anchos y cintura estrecha. Ratio dorado 1.618.
+            <div style={styles.infoBox}>
+              <p style={styles.infoText}>
+                <span style={styles.infoHighlight}>Objetivo Achilles: </span>
+                Desarrollar torso superior, hombros anchos y cintura estrecha. Ratio dorado 1.618.
               </p>
             </div>
           </div>
         )}
       </main>
 
-      {/* Fixed bottom button */}
-      <div
-        className="shrink-0 px-6 pt-4 pb-6 bg-[#0a0a0a]"
-        style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 24px)' }}
-      >
+      {/* CTA Button */}
+      <div style={styles.footer}>
         <button
           onClick={step < 3 ? nextStep : handleComplete}
           disabled={loading}
-          className="w-full h-14 bg-[#d4af37] hover:bg-[#c9a432] active:bg-[#b8942d] active:scale-[0.98] text-black text-lg font-bold rounded-2xl flex items-center justify-center gap-2 transition-all disabled:opacity-50"
+          style={styles.ctaButton}
         >
           {loading ? (
-            <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
+            <div style={{
+              width: 20,
+              height: 20,
+              border: '2px solid rgba(0,0,0,0.3)',
+              borderTopColor: '#000',
+              borderRadius: '50%',
+              animation: 'spin 1s linear infinite',
+            }} />
           ) : (
             <>
               {step < 3 ? 'Continuar' : 'Comenzar'}
