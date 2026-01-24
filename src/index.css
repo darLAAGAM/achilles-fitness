@@ -13,6 +13,31 @@
   --color-success: #22c55e;
   --color-warning: #f59e0b;
   --color-error: #ef4444;
+
+  /* iPhone 17 Pro responsive variables */
+  --spacing-page: 1rem;
+  --spacing-card: 1rem;
+  --font-size-base: 16px;
+  --bottom-nav-height: 4rem;
+  --safe-area-top: env(safe-area-inset-top, 47px);
+  --safe-area-bottom: env(safe-area-inset-bottom, 34px);
+}
+
+/* iPhone 17 Pro specific (402px viewport width) */
+@media screen and (min-width: 390px) and (max-width: 430px) and (-webkit-device-pixel-ratio: 3) {
+  :root {
+    --spacing-page: 1.25rem;
+    --spacing-card: 1rem;
+    --font-size-base: 16px;
+  }
+}
+
+/* Landscape mode adjustments */
+@media screen and (orientation: landscape) and (max-height: 500px) {
+  :root {
+    --bottom-nav-height: 3.5rem;
+    --spacing-page: 0.75rem;
+  }
 }
 
 /* Base styles */
@@ -137,4 +162,127 @@ input[type="number"]::-webkit-outer-spin-button {
 
 input[type="number"] {
   -moz-appearance: textfield;
+}
+
+/* ===========================================
+   iPhone 17 Pro Responsive Optimizations
+   Viewport: 402 x 873 px | Pixel ratio: 3x
+   =========================================== */
+
+/* Dynamic Island safe area - iPhone 17 Pro */
+.safe-area-dynamic-island {
+  padding-top: max(env(safe-area-inset-top), 47px);
+}
+
+/* Optimized touch targets (minimum 44x44px for iPhone) */
+.touch-target {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+/* iPhone 17 Pro specific viewport */
+@media screen and (min-width: 390px) and (max-width: 430px) {
+  /* Page padding optimized for 402px width */
+  .page-responsive {
+    padding-left: var(--spacing-page);
+    padding-right: var(--spacing-page);
+  }
+
+  /* Card spacing */
+  .card-responsive {
+    padding: var(--spacing-card);
+  }
+
+  /* Grid layouts - ensure proper spacing on 402px */
+  .grid-responsive-2 {
+    gap: 0.75rem;
+  }
+
+  /* Macro rings size for iPhone 17 Pro */
+  .macro-ring-responsive {
+    width: 5.5rem;
+    height: 5.5rem;
+  }
+
+  /* Chart container height */
+  .chart-responsive {
+    height: 10rem;
+  }
+}
+
+/* Landscape mode - iPhone 17 Pro rotated */
+@media screen and (orientation: landscape) and (max-height: 500px) {
+  /* Reduce vertical padding in landscape */
+  .landscape-compact {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  /* Smaller bottom nav in landscape */
+  .bottom-nav-responsive {
+    height: var(--bottom-nav-height);
+  }
+
+  /* Modal adjustments for landscape */
+  .modal-responsive {
+    max-height: 95vh;
+  }
+
+  /* Hide macro labels in landscape to save space */
+  .macro-label-landscape {
+    display: none;
+  }
+
+  /* Horizontal macro layout in landscape */
+  .macro-container-landscape {
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 1rem;
+  }
+}
+
+/* Small iPhone SE / older devices fallback */
+@media screen and (max-width: 375px) {
+  :root {
+    --spacing-page: 0.75rem;
+    --spacing-card: 0.75rem;
+    --font-size-base: 15px;
+  }
+
+  .text-responsive-sm {
+    font-size: 0.875rem;
+  }
+}
+
+/* Retina display optimizations */
+@media (-webkit-min-device-pixel-ratio: 3) {
+  /* Sharper borders on high-DPI displays */
+  .border-sharp {
+    border-width: 0.5px;
+  }
+
+  /* Optimized shadows for OLED */
+  .shadow-oled {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  }
+}
+
+/* Standalone PWA mode (installed on home screen) */
+@media (display-mode: standalone) {
+  /* Remove any browser chrome spacing */
+  body {
+    padding-top: 0;
+  }
+
+  /* Full height in standalone */
+  #root {
+    min-height: 100dvh;
+  }
+}
+
+/* Prevent content from being hidden behind Dynamic Island */
+@supports (padding-top: env(safe-area-inset-top)) {
+  .header-safe {
+    padding-top: calc(env(safe-area-inset-top) + 0.5rem);
+  }
 }

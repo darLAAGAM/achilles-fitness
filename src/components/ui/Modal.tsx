@@ -34,25 +34,29 @@ export function Modal({ isOpen, onClose, title, children, fullScreen = false }: 
 
       {/* Modal content */}
       <div
-        className={`relative bg-[var(--color-surface)] rounded-t-3xl w-full max-w-lg animate-slide-up safe-area-bottom ${
-          fullScreen ? 'h-[90vh]' : 'max-h-[85vh]'
-        }`}
+        className={`
+          relative bg-[var(--color-surface)] rounded-t-3xl w-full max-w-lg animate-slide-up safe-area-bottom modal-responsive shadow-oled
+          ${fullScreen ? 'h-[90dvh]' : 'max-h-[85dvh]'}
+        `.trim().replace(/\s+/g, ' ')}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-[var(--color-border)]">
+        <div className="flex items-center justify-between p-4 border-b border-[var(--color-border)] border-sharp">
           <h2 className="text-lg font-bold text-[var(--color-text)]">
             {title}
           </h2>
           <button
             onClick={onClose}
-            className="p-2 text-[var(--color-text-secondary)] hover:text-[var(--color-text)] transition-colors"
+            className="p-2 touch-target text-[var(--color-text-secondary)] hover:text-[var(--color-text)] active:scale-95 transition-all"
           >
             <X size={24} />
           </button>
         </div>
 
         {/* Content */}
-        <div className="overflow-y-auto p-4" style={{ maxHeight: 'calc(85vh - 65px)' }}>
+        <div
+          className="overflow-y-auto p-[var(--spacing-page)]"
+          style={{ maxHeight: 'calc(85dvh - 65px)' }}
+        >
           {children}
         </div>
       </div>

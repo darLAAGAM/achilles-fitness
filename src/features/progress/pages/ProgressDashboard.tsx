@@ -92,63 +92,66 @@ export function ProgressDashboard() {
     <>
       <Header title="Progreso" subtitle="Tu transformación Achilles" />
       <PageContainer>
-        {/* Stats cards */}
-        <div className="grid grid-cols-2 gap-3 mb-4">
-          <Card>
-            <div className="flex items-center gap-2 mb-2">
-              <Scale size={18} className="text-[var(--color-primary)]" />
-              <span className="text-xs text-[var(--color-text-secondary)]">Peso actual</span>
+        {/* Stats cards - optimized for iPhone 17 Pro (402px width) */}
+        <div className="grid grid-cols-2 gap-3 grid-responsive-2 mb-4">
+          <Card className="card-responsive">
+            <div className="flex items-center gap-1.5 mb-1.5">
+              <Scale size={16} className="text-[var(--color-primary)] shrink-0" />
+              <span className="text-[11px] text-[var(--color-text-secondary)] truncate">Peso actual</span>
             </div>
-            <p className="text-2xl font-bold text-[var(--color-text)]">
-              {latestWeight || user?.bodyweight || '--'} <span className="text-sm font-normal">kg</span>
+            <p className="text-xl font-bold text-[var(--color-text)]">
+              {latestWeight || user?.bodyweight || '--'} <span className="text-xs font-normal">kg</span>
             </p>
             {weightChange !== 0 && (
-              <p className={`text-xs mt-1 ${weightChange > 0 ? 'text-[var(--color-success)]' : 'text-[var(--color-error)]'}`}>
+              <p className={`text-[11px] mt-0.5 ${weightChange > 0 ? 'text-[var(--color-success)]' : 'text-[var(--color-error)]'}`}>
                 {weightChange > 0 ? '+' : ''}{weightChange.toFixed(1)} kg
               </p>
             )}
           </Card>
 
-          <Card>
-            <div className="flex items-center gap-2 mb-2">
-              <TrendingUp size={18} className="text-[var(--color-primary)]" />
-              <span className="text-xs text-[var(--color-text-secondary)]">Volumen semanal</span>
+          <Card className="card-responsive">
+            <div className="flex items-center gap-1.5 mb-1.5">
+              <TrendingUp size={16} className="text-[var(--color-primary)] shrink-0" />
+              <span className="text-[11px] text-[var(--color-text-secondary)] truncate">Volumen semanal</span>
             </div>
-            <p className="text-2xl font-bold text-[var(--color-text)]">
-              {(totalVolume / 1000).toFixed(1)} <span className="text-sm font-normal">t</span>
+            <p className="text-xl font-bold text-[var(--color-text)]">
+              {(totalVolume / 1000).toFixed(1)} <span className="text-xs font-normal">t</span>
             </p>
-            <p className="text-xs text-[var(--color-text-secondary)] mt-1">
+            <p className="text-[11px] text-[var(--color-text-secondary)] mt-0.5">
               {workoutsThisWeek} entrenamientos
             </p>
           </Card>
         </div>
 
-        {/* Weight chart */}
+        {/* Weight chart - responsive for iPhone 17 Pro */}
         {chartData.length > 1 && (
-          <Card className="mb-4">
-            <h3 className="font-semibold text-[var(--color-text)] mb-3">Peso corporal</h3>
-            <div className="h-40">
+          <Card className="mb-4 card-responsive">
+            <h3 className="font-semibold text-[var(--color-text)] text-sm mb-2">Peso corporal</h3>
+            <div className="h-36 chart-responsive -ml-2">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={chartData}>
+                <LineChart data={chartData} margin={{ top: 5, right: 5, left: -10, bottom: 0 }}>
                   <XAxis
                     dataKey="date"
                     stroke="var(--color-text-secondary)"
-                    fontSize={10}
+                    fontSize={9}
                     tickLine={false}
                     axisLine={false}
+                    interval="preserveStartEnd"
                   />
                   <YAxis
                     stroke="var(--color-text-secondary)"
-                    fontSize={10}
+                    fontSize={9}
                     tickLine={false}
                     axisLine={false}
                     domain={['dataMin - 1', 'dataMax + 1']}
+                    width={30}
                   />
                   <Tooltip
                     contentStyle={{
                       backgroundColor: 'var(--color-surface-elevated)',
                       border: '1px solid var(--color-border)',
-                      borderRadius: '8px'
+                      borderRadius: '8px',
+                      fontSize: '12px'
                     }}
                     labelStyle={{ color: 'var(--color-text-secondary)' }}
                   />
@@ -157,8 +160,8 @@ export function ProgressDashboard() {
                     dataKey="weight"
                     stroke="var(--color-primary)"
                     strokeWidth={2}
-                    dot={{ fill: 'var(--color-primary)', strokeWidth: 0, r: 3 }}
-                    activeDot={{ r: 5, fill: 'var(--color-primary)' }}
+                    dot={{ fill: 'var(--color-primary)', strokeWidth: 0, r: 2.5 }}
+                    activeDot={{ r: 4, fill: 'var(--color-primary)' }}
                   />
                 </LineChart>
               </ResponsiveContainer>
@@ -194,14 +197,14 @@ export function ProgressDashboard() {
           </Card>
         )}
 
-        {/* Quick actions */}
-        <div className="grid grid-cols-2 gap-3">
-          <Button variant="secondary" onClick={() => setShowMetrics(true)}>
-            <Ruler size={18} className="mr-2" />
+        {/* Quick actions - touch-friendly for iPhone 17 Pro */}
+        <div className="grid grid-cols-2 gap-3 grid-responsive-2">
+          <Button variant="secondary" className="touch-target text-sm" onClick={() => setShowMetrics(true)}>
+            <Ruler size={16} className="mr-1.5 shrink-0" />
             Medidas
           </Button>
-          <Button variant="secondary" onClick={() => {}}>
-            <Camera size={18} className="mr-2" />
+          <Button variant="secondary" className="touch-target text-sm" onClick={() => {}}>
+            <Camera size={16} className="mr-1.5 shrink-0" />
             Fotos
           </Button>
         </div>

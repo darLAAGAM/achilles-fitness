@@ -169,27 +169,30 @@ export function MacroTracker() {
     icon: typeof Beef;
   }) => {
     const percentage = Math.min((current / target) * 100, 100);
-    const circumference = 2 * Math.PI * 35;
+    const radius = 32;
+    const circumference = 2 * Math.PI * radius;
     const strokeDashoffset = circumference - (percentage / 100) * circumference;
+    const size = 76; // Optimized for iPhone 17 Pro (402px / 3 rings with gaps)
+    const center = size / 2;
 
     return (
-      <div className="flex flex-col items-center">
-        <div className="relative w-20 h-20">
-          <svg className="w-full h-full transform -rotate-90">
+      <div className="flex flex-col items-center macro-container-landscape">
+        <div className="relative macro-ring-responsive" style={{ width: size, height: size }}>
+          <svg className="w-full h-full transform -rotate-90" viewBox={`0 0 ${size} ${size}`}>
             <circle
-              cx="40"
-              cy="40"
-              r="35"
+              cx={center}
+              cy={center}
+              r={radius}
               stroke="var(--color-border)"
-              strokeWidth="6"
+              strokeWidth="5"
               fill="none"
             />
             <circle
-              cx="40"
-              cy="40"
-              r="35"
+              cx={center}
+              cy={center}
+              r={radius}
               stroke={color}
-              strokeWidth="6"
+              strokeWidth="5"
               fill="none"
               strokeLinecap="round"
               strokeDasharray={circumference}
@@ -198,14 +201,14 @@ export function MacroTracker() {
             />
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <Icon size={16} style={{ color }} />
-            <span className="text-xs font-bold text-[var(--color-text)] mt-0.5">
+            <Icon size={14} style={{ color }} />
+            <span className="text-[11px] font-bold text-[var(--color-text)] mt-0.5">
               {Math.round(percentage)}%
             </span>
           </div>
         </div>
-        <p className="text-xs text-[var(--color-text-secondary)] mt-1">{label}</p>
-        <p className="text-xs font-medium text-[var(--color-text)]">
+        <p className="text-[11px] text-[var(--color-text-secondary)] mt-1 macro-label-landscape">{label}</p>
+        <p className="text-[11px] font-medium text-[var(--color-text)]">
           {current}/{target}g
         </p>
       </div>
