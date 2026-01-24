@@ -8,7 +8,7 @@ export interface User {
   height: number;
   age: number;
   experienceYears: number;
-  trainingDaysPerWeek: 3 | 4 | 5;
+  trainingDaysPerWeek: 3 | 4 | 5 | 6;
   preferredUnit: 'kg' | 'lbs';
   currentPhase: 'bulk' | 'cut' | 'maintain';
   targetBodyweight?: number;
@@ -16,6 +16,13 @@ export interface User {
   proteinTarget: number;
   carbTarget: number;
   fatTarget: number;
+  // Program selection
+  currentProgramId: string;
+  currentProgramPhase?: number;
+  programStartDate?: Date;
+  // Equipment availability
+  availableEquipment: Equipment[];
+  hasGymAccess: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -70,16 +77,37 @@ export interface Exercise {
 // ============================================
 // WORKOUT TYPES
 // ============================================
-export type WorkoutDay = 'push' | 'pull' | 'legs';
-export type Intensity = 'heavy' | 'medium' | 'light' | 'optional';
+export type WorkoutDay = 'push' | 'pull' | 'legs' | 'upper' | 'lower' | 'full' | 'arms' | 'chest' | 'back' | 'shoulders' | 'rest';
+export type Intensity = 'heavy' | 'medium' | 'light' | 'optional' | 'explosive';
+export type TrainingStyle = 'standard' | 'circuit' | 'superset' | 'hiit' | 'pyramid';
+
+export interface ProgramPhase {
+  id: string;
+  name: string;
+  description: string;
+  weeks: number;
+  focus: 'strength' | 'hypertrophy' | 'explosivity' | 'conditioning' | 'fat_loss';
+  trainingStyle: TrainingStyle;
+  cardioType?: 'steady_state' | 'hiit' | 'none';
+  cardioDuration?: number; // minutes
+  cardioFrequency?: number; // days per week
+  notes?: string[];
+}
 
 export interface WorkoutProgram {
   id: string;
   name: string;
   description: string;
+  author: string;
+  difficulty: 'beginner' | 'intermediate' | 'advanced';
+  goal: 'muscle_gain' | 'fat_loss' | 'strength' | 'athletic' | 'general_fitness';
   daysPerWeek: number;
   weeks: number;
+  equipmentRequired: Equipment[];
+  minEquipmentRequired?: Equipment[]; // minimum equipment needed
+  phases?: ProgramPhase[];
   workouts: WorkoutTemplate[];
+  nutritionGuidelines?: NutritionGuidelines;
 }
 
 export interface WorkoutTemplate {
@@ -87,6 +115,12 @@ export interface WorkoutTemplate {
   name: string;
   type: WorkoutDay;
   dayOfWeek?: number;
+  phaseId?: string; // for programs with phases
+  trainingStyle?: TrainingStyle;
+  isCircuit?: boolean;
+  circuitRounds?: number; // how many times to repeat the circuit
+  restBetweenRounds?: number; // seconds rest between circuit rounds
+  estimatedDuration?: number; // minutes
   exercises: ExerciseTemplate[];
 }
 
@@ -99,6 +133,15 @@ export interface ExerciseTemplate {
   targetRepsMax: number;
   restSeconds: number;
   notes?: string;
+  // Circuit training
+  isCircuitExercise?: boolean;
+  durationSeconds?: number; // for timed exercises (e.g., hold 60 seconds)
+  // Supersets
+  supersetWith?: string; // exerciseId to superset with
+  // Alternative exercises (for equipment flexibility)
+  alternativeExercises?: string[]; // array of exerciseIds
+  // Tempo training
+  tempo?: string; // e.g., "3-1-2-0" (eccentric-pause-concentric-pause)
 }
 
 export interface WorkoutSession {
@@ -226,12 +269,25 @@ export interface DailyNutritionLog {
   proteinVsTarget: number;
 }
 
-export type FastingType = '16/8' | '18/6' | '12/12';
+export type FastingType = '16/8' | '18/6' | '20/4' | '12/12' | 'warrior';
 
 export interface FastingWindow {
   type: FastingType;
   eatingWindowStart: string;
   eatingWindowEnd: string;
+}
+
+export interface NutritionGuidelines {
+  recommendedFasting?: FastingType;
+  proteinPerKg: number; // grams per kg bodyweight
+  mealFrequency?: number; // meals per day
+  preworkoutTiming?: number; // minutes before workout
+  postworkoutTiming?: number; // minutes after workout
+  hydrationLiters?: number; // daily water intake
+  supplements?: string[];
+  avoidFoods?: string[];
+  recommendedFoods?: string[];
+  notes?: string[];
 }
 
 // ============================================

@@ -14,18 +14,20 @@ export function ExerciseCard({ exercise, template, completedSets, onClick }: Exe
   const isComplete = workingSets.length >= template.targetSets;
   const hasPersonalRecord = completedSets.some(s => s.isPersonalRecord);
 
-  const intensityColors = {
+  const intensityColors: Record<string, string> = {
     heavy: 'text-red-500',
     medium: 'text-yellow-500',
     light: 'text-green-500',
-    optional: 'text-[var(--color-text-secondary)]'
+    optional: 'text-[var(--color-text-secondary)]',
+    explosive: 'text-orange-500'
   };
 
-  const intensityLabels = {
+  const intensityLabels: Record<string, string> = {
     heavy: 'Heavy',
     medium: 'Medium',
     light: 'Light',
-    optional: 'Opcional'
+    optional: 'Opcional',
+    explosive: 'Explosivo'
   };
 
   return (

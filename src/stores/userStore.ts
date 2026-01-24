@@ -76,6 +76,13 @@ export const useUserStore = create<UserState>()(
           proteinTarget: data.proteinTarget || 160,
           carbTarget: data.carbTarget || 280,
           fatTarget: data.fatTarget || 70,
+          // Program selection
+          currentProgramId: data.currentProgramId || 'achilles-3day',
+          currentProgramPhase: data.currentProgramPhase,
+          programStartDate: data.programStartDate,
+          // Equipment
+          availableEquipment: data.availableEquipment || ['barbell', 'dumbbell', 'cable', 'machine', 'bodyweight'],
+          hasGymAccess: data.hasGymAccess ?? true,
           createdAt: new Date(),
           updatedAt: new Date()
         };
