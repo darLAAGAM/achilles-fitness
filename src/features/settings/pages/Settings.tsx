@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { User, Target, Dumbbell, Download, Trash2, Info, ChevronRight, X, ChevronLeft } from 'lucide-react';
+import { User, Target, Dumbbell, Download, Trash2, Info, ChevronRight, X } from 'lucide-react';
 import { useUserStore } from '../../../stores/userStore';
 import { exportData, clearDatabase } from '../../../services/db/database';
 

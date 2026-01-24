@@ -1,5 +1,6 @@
-import { useEffect, useState, CSSProperties } from 'react';
-import { Play, CheckCircle2, Calendar, Zap, ChevronRight, Trophy, Flame } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import type { CSSProperties } from 'react';
+import { Play, CheckCircle2, Zap, ChevronRight, Trophy, Flame, Dumbbell } from 'lucide-react';
 import { useWorkoutStore } from '../../../stores/workoutStore';
 import { useUserStore } from '../../../stores/userStore';
 import { achillesTemplates } from '../../../data/achilles-program';
@@ -7,6 +8,21 @@ import { exercises as exerciseData } from '../../../data/exercises';
 import { db } from '../../../services/db/database';
 import type { WorkoutTemplate, Exercise, ExerciseTemplate, WorkoutSet } from '../../../types';
 import { ExerciseDetail } from './ExerciseDetail';
+import { format, startOfWeek, addDays, isToday, isSameDay } from 'date-fns';
+import { es } from 'date-fns/locale';
+
+// ============================================
+// TYPES
+// ============================================
+type WorkoutType = 'push' | 'pull' | 'legs' | 'rest';
+
+interface WeekDay {
+  date: Date;
+  dayName: string;
+  dayNumber: number;
+  workoutType: WorkoutType;
+  isToday: boolean;
+}
 
 // ============================================
 // STYLES
@@ -22,6 +38,10 @@ const colors = {
   intensityHeavy: '#ef4444',
   intensityMedium: '#eab308',
   intensityLight: '#22c55e',
+  push: '#ef4444',
+  pull: '#3b82f6',
+  legs: '#22c55e',
+  rest: '#666666',
 };
 
 const styles: Record<string, CSSProperties> = {
@@ -32,11 +52,15 @@ const styles: Record<string, CSSProperties> = {
     paddingBottom: 'calc(80px + env(safe-area-inset-bottom))',
   },
   header: {
-    padding: '24px',
-    paddingTop: 'calc(16px + env(safe-area-inset-top))',
+    padding: '20px 24px 16px',
+  },
+  headerRow: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   headerTitle: {
-    fontSize: '32px',
+    fontSize: '28px',
     fontWeight: '700',
     color: colors.text,
     margin: 0,
@@ -45,6 +69,61 @@ const styles: Record<string, CSSProperties> = {
   headerSubtitle: {
     fontSize: '14px',
     color: colors.textSecondary,
+    marginTop: '2px',
+    textTransform: 'capitalize' as const,
+  },
+  weekLabel: {
+    fontSize: '13px',
+    color: colors.accent,
+    fontWeight: '600',
+  },
+  // Calendar styles
+  calendarCard: {
+    backgroundColor: colors.card,
+    borderRadius: '20px',
+    padding: '16px',
+    margin: '0 24px 16px',
+  },
+  calendarGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(7, 1fr)',
+    gap: '6px',
+  },
+  dayButton: {
+    display: 'flex',
+    flexDirection: 'column' as const,
+    alignItems: 'center',
+    padding: '10px 4px',
+    borderRadius: '12px',
+    border: 'none',
+    cursor: 'pointer',
+    transition: 'all 0.2s ease',
+    minWidth: 0,
+  },
+  dayName: {
+    fontSize: '11px',
+    fontWeight: '500',
+    marginBottom: '6px',
+    textTransform: 'uppercase' as const,
+  },
+  dayNumber: {
+    fontSize: '16px',
+    fontWeight: '700',
+    marginBottom: '4px',
+  },
+  dayWorkoutBadge: {
+    fontSize: '9px',
+    fontWeight: '600',
+    padding: '2px 6px',
+    borderRadius: '4px',
+    textTransform: 'uppercase' as const,
+    letterSpacing: '0.3px',
+  },
+  todayIndicator: {
+    width: '4px',
+    height: '4px',
+    borderRadius: '2px',
+    backgroundColor: colors.accent,
     marginTop: '4px',
   },
   content: {
@@ -104,44 +183,56 @@ const styles: Record<string, CSSProperties> = {
     borderRadius: '9999px',
     transition: 'width 0.5s ease',
   },
-  workoutInfoHeader: {
+  workoutHeader: {
     display: 'flex',
     alignItems: 'center',
-    gap: '12px',
+    gap: '16px',
     marginBottom: '16px',
   },
-  workoutIcon: {
-    width: '48px',
-    height: '48px',
-    borderRadius: '12px',
-    backgroundColor: `${colors.accent}33`,
+  workoutIconContainer: {
+    width: '56px',
+    height: '56px',
+    borderRadius: '16px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
   },
+  workoutInfo: {
+    flex: 1,
+  },
   workoutTitle: {
-    fontWeight: '600',
+    fontWeight: '700',
     color: colors.text,
-    fontSize: '16px',
+    fontSize: '20px',
     margin: 0,
   },
   workoutMeta: {
     fontSize: '14px',
     color: colors.textSecondary,
-    marginTop: '2px',
+    marginTop: '4px',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+  },
+  workoutTypeBadge: {
+    padding: '4px 10px',
+    borderRadius: '6px',
+    fontSize: '12px',
+    fontWeight: '600',
+    textTransform: 'uppercase' as const,
   },
   workoutDescription: {
     fontSize: '14px',
     color: colors.textSecondary,
-    marginBottom: '16px',
-    lineHeight: 1.5,
+    marginBottom: '20px',
+    lineHeight: 1.6,
   },
   button: {
     width: '100%',
     backgroundColor: colors.accent,
     color: '#000',
     border: 'none',
-    borderRadius: '12px',
+    borderRadius: '14px',
     padding: '16px 24px',
     fontSize: '16px',
     fontWeight: '600',
@@ -150,15 +241,15 @@ const styles: Record<string, CSSProperties> = {
     alignItems: 'center',
     justifyContent: 'center',
     gap: '8px',
-    transition: 'opacity 0.2s',
   },
   sectionTitle: {
-    fontSize: '12px',
-    fontWeight: '500',
+    fontSize: '13px',
+    fontWeight: '600',
     color: colors.textSecondary,
     textTransform: 'uppercase' as const,
-    letterSpacing: '0.05em',
+    letterSpacing: '0.5px',
     marginBottom: '12px',
+    marginTop: '8px',
   },
   exerciseRow: {
     display: 'flex',
@@ -236,6 +327,35 @@ const styles: Record<string, CSSProperties> = {
     paddingBottom: 'calc(16px + env(safe-area-inset-bottom))',
     background: `linear-gradient(to top, ${colors.background}, transparent)`,
   },
+  restDayCard: {
+    backgroundColor: colors.card,
+    borderRadius: '16px',
+    padding: '32px 24px',
+    textAlign: 'center' as const,
+  },
+  restDayIcon: {
+    width: '72px',
+    height: '72px',
+    borderRadius: '20px',
+    backgroundColor: 'rgba(102, 102, 102, 0.2)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: '0 auto 16px',
+  },
+  restDayTitle: {
+    fontSize: '22px',
+    fontWeight: '700',
+    color: colors.text,
+    margin: 0,
+    marginBottom: '8px',
+  },
+  restDaySubtitle: {
+    fontSize: '15px',
+    color: colors.textSecondary,
+    lineHeight: 1.5,
+    margin: 0,
+  },
   noUserCard: {
     backgroundColor: colors.card,
     borderRadius: '16px',
@@ -247,6 +367,55 @@ const styles: Record<string, CSSProperties> = {
     color: colors.textSecondary,
     fontSize: '14px',
   },
+};
+
+// ============================================
+// HELPERS
+// ============================================
+const getWorkoutTypeForDay = (dayOfWeek: number): WorkoutType => {
+  // 0 = Sunday, 1 = Monday, etc.
+  switch (dayOfWeek) {
+    case 1: return 'push';   // Lunes
+    case 2: return 'rest';   // Martes - Descanso
+    case 3: return 'pull';   // Miércoles
+    case 4: return 'rest';   // Jueves - Descanso
+    case 5: return 'legs';   // Viernes
+    case 6: return 'rest';   // Sábado - Descanso
+    case 0: return 'rest';   // Domingo - Descanso
+    default: return 'rest';
+  }
+};
+
+const getWorkoutColor = (type: WorkoutType): string => {
+  switch (type) {
+    case 'push': return colors.push;
+    case 'pull': return colors.pull;
+    case 'legs': return colors.legs;
+    default: return colors.rest;
+  }
+};
+
+const getWorkoutLabel = (type: WorkoutType): string => {
+  switch (type) {
+    case 'push': return 'Push';
+    case 'pull': return 'Pull';
+    case 'legs': return 'Legs';
+    default: return 'Rest';
+  }
+};
+
+const getWorkoutTemplate = (type: WorkoutType): WorkoutTemplate | null => {
+  if (type === 'rest') return null;
+  return achillesTemplates.find(t => t.type === type) || null;
+};
+
+const getWorkoutDescription = (type: WorkoutType): string => {
+  switch (type) {
+    case 'push': return 'Pecho, hombros y tríceps. Construye los hombros anchos del guerrero griego.';
+    case 'pull': return 'Espalda y bíceps. Desarrolla la V-taper característica de Achilles.';
+    case 'legs': return 'Piernas y core. La base atlética de un verdadero hoplita.';
+    default: return 'Día de recuperación. Tu cuerpo crece mientras descansas.';
+  }
 };
 
 // ============================================
@@ -262,25 +431,42 @@ export function TodayWorkout() {
     completeSession
   } = useWorkoutStore();
 
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [selectedExercise, setSelectedExercise] = useState<{
     exercise: Exercise;
     templateExercise: WorkoutTemplate['exercises'][0];
   } | null>(null);
 
-  // Get today's workout based on day of week
-  const today = new Date().getDay();
-  const todayTemplate = achillesTemplates.find(t => {
-    if (today === 1 || today === 2) return t.type === 'push'; // Lun, Mar
-    if (today === 3 || today === 4) return t.type === 'pull'; // Mie, Jue
-    if (today === 5 || today === 6 || today === 0) return t.type === 'legs'; // Vie, Sab, Dom
-    return false;
-  }) || achillesTemplates[0];
+  // Generate week days
+  const weekDays: WeekDay[] = (() => {
+    const weekStart = startOfWeek(new Date(), { weekStartsOn: 1 }); // Start on Monday
+    return Array.from({ length: 7 }, (_, i) => {
+      const date = addDays(weekStart, i);
+      const dayOfWeek = date.getDay();
+      return {
+        date,
+        dayName: format(date, 'EEE', { locale: es }),
+        dayNumber: date.getDate(),
+        workoutType: getWorkoutTypeForDay(dayOfWeek),
+        isToday: isToday(date),
+      };
+    });
+  })();
+
+  // Get selected day's workout
+  const selectedDayOfWeek = selectedDate.getDay();
+  const selectedWorkoutType = getWorkoutTypeForDay(selectedDayOfWeek);
+  const selectedTemplate = getWorkoutTemplate(selectedWorkoutType);
+  const isSelectedToday = isToday(selectedDate);
+
+  // Check if current session matches the selected workout
+  const isSessionForSelectedWorkout = currentSession && selectedTemplate
+    ? currentSession.workoutTemplateId === selectedTemplate.id
+    : false;
 
   useEffect(() => {
     const initializeData = async () => {
-      // Load exercises into store
       if (exercises.length === 0) {
-        // Seed exercises to DB if empty
         const existingExercises = await db.exercises.count();
         if (existingExercises === 0) {
           await db.exercises.bulkAdd(exerciseData);
@@ -288,7 +474,6 @@ export function TodayWorkout() {
         await loadExercises();
       }
 
-      // Seed templates if empty
       const existingTemplates = await db.workoutTemplates.count();
       if (existingTemplates === 0) {
         await db.workoutTemplates.bulkAdd(achillesTemplates);
@@ -299,7 +484,9 @@ export function TodayWorkout() {
   }, [exercises.length, loadExercises]);
 
   const handleStartWorkout = async () => {
-    await startSession(todayTemplate);
+    if (selectedTemplate) {
+      await startSession(selectedTemplate);
+    }
   };
 
   const handleCompleteWorkout = async () => {
@@ -311,18 +498,17 @@ export function TodayWorkout() {
   };
 
   const getCompletedExercisesCount = () => {
-    if (!currentSession) return 0;
-    return todayTemplate.exercises.filter(te => {
+    if (!isSessionForSelectedWorkout || !selectedTemplate) return 0;
+    return selectedTemplate.exercises.filter(te => {
       const sets = getExerciseSets(te.exerciseId).filter(s => !s.isWarmup);
       return sets.length >= te.targetSets;
     }).length;
   };
 
-  const totalExercises = todayTemplate.exercises.length;
+  const totalExercises = selectedTemplate?.exercises.length || 0;
   const completedExercises = getCompletedExercisesCount();
-  const progress = currentSession ? (completedExercises / totalExercises) * 100 : 0;
+  const progress = isSessionForSelectedWorkout && totalExercises > 0 ? (completedExercises / totalExercises) * 100 : 0;
 
-  // Get intensity color
   const getIntensityColor = (intensity: string) => {
     switch (intensity) {
       case 'heavy': return colors.intensityHeavy;
@@ -352,7 +538,6 @@ export function TodayWorkout() {
     );
   }
 
-  // Render Exercise Card inline
   const renderExerciseCard = (
     exercise: Exercise,
     template: ExerciseTemplate,
@@ -367,13 +552,12 @@ export function TodayWorkout() {
         key={template.exerciseId}
         style={isComplete ? styles.cardComplete : styles.cardClickable}
         onClick={() => {
-          if (currentSession) {
+          if (isSessionForSelectedWorkout) {
             setSelectedExercise({ exercise, templateExercise: template });
           }
         }}
       >
         <div style={styles.exerciseRow}>
-          {/* Progress indicator */}
           <div
             style={{
               ...styles.exerciseProgress,
@@ -383,7 +567,6 @@ export function TodayWorkout() {
             {workingSets.length}/{template.targetSets}
           </div>
 
-          {/* Exercise info */}
           <div style={styles.exerciseInfo}>
             <div style={styles.exerciseNameRow}>
               <h3 style={styles.exerciseName}>{exercise.name}</h3>
@@ -407,105 +590,190 @@ export function TodayWorkout() {
             </div>
             {workingSets.length > 0 && (
               <p style={styles.lastSet}>
-                Ultimo: {workingSets[workingSets.length - 1].weight}kg x {workingSets[workingSets.length - 1].reps}
+                Último: {workingSets[workingSets.length - 1].weight}kg x {workingSets[workingSets.length - 1].reps}
               </p>
             )}
           </div>
 
-          {/* Arrow */}
           <ChevronRight size={20} style={styles.arrow} />
         </div>
       </div>
     );
   };
 
+  const workoutColor = getWorkoutColor(selectedWorkoutType);
+
   return (
     <div style={styles.container}>
       {/* Header */}
       <div style={styles.header}>
-        <h1 style={styles.headerTitle}>{todayTemplate.name}</h1>
-        <p style={styles.headerSubtitle}>
-          {currentSession ? `${completedExercises}/${totalExercises} ejercicios` : 'Programa Achilles'}
-        </p>
+        <div style={styles.headerRow}>
+          <div>
+            <h1 style={styles.headerTitle}>Entreno</h1>
+            <p style={styles.headerSubtitle}>
+              {format(new Date(), "MMMM yyyy", { locale: es })}
+            </p>
+          </div>
+          <span style={styles.weekLabel}>Programa Achilles</span>
+        </div>
+      </div>
+
+      {/* Week Calendar */}
+      <div style={styles.calendarCard}>
+        <div style={styles.calendarGrid}>
+          {weekDays.map((day) => {
+            const isSelected = isSameDay(day.date, selectedDate);
+            const dayColor = getWorkoutColor(day.workoutType);
+
+            return (
+              <button
+                key={day.date.toISOString()}
+                onClick={() => setSelectedDate(day.date)}
+                style={{
+                  ...styles.dayButton,
+                  backgroundColor: isSelected ? dayColor : 'transparent',
+                  border: day.isToday && !isSelected ? `2px solid ${colors.accent}` : '2px solid transparent',
+                }}
+              >
+                <span style={{
+                  ...styles.dayName,
+                  color: isSelected ? '#000' : colors.textSecondary,
+                }}>
+                  {day.dayName.slice(0, 2)}
+                </span>
+                <span style={{
+                  ...styles.dayNumber,
+                  color: isSelected ? '#000' : colors.text,
+                }}>
+                  {day.dayNumber}
+                </span>
+                <span style={{
+                  ...styles.dayWorkoutBadge,
+                  backgroundColor: isSelected ? 'rgba(0,0,0,0.2)' : `${dayColor}22`,
+                  color: isSelected ? '#000' : dayColor,
+                }}>
+                  {getWorkoutLabel(day.workoutType)}
+                </span>
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* Content */}
       <div style={styles.content}>
-        {/* Progress card */}
-        {currentSession && (
-          <div style={styles.card}>
-            <div style={styles.progressHeader}>
-              <div style={styles.progressLabel}>
-                <Zap size={18} color={colors.accent} />
-                <span style={styles.progressLabelText}>Progreso</span>
-              </div>
-              <span style={styles.progressPercent}>{Math.round(progress)}%</span>
+        {/* Rest Day */}
+        {selectedWorkoutType === 'rest' && (
+          <div style={styles.restDayCard}>
+            <div style={styles.restDayIcon}>
+              <span style={{ fontSize: '32px' }}>😴</span>
             </div>
-            <div style={styles.progressBarContainer}>
-              <div
-                style={{
-                  ...styles.progressBarFill,
-                  width: `${progress}%`,
-                }}
-              />
-            </div>
-          </div>
-        )}
-
-        {/* Workout info when not started */}
-        {!currentSession && (
-          <div style={styles.card}>
-            <div style={styles.workoutInfoHeader}>
-              <div style={styles.workoutIcon}>
-                <Calendar size={24} color={colors.accent} />
-              </div>
-              <div>
-                <h3 style={styles.workoutTitle}>Hoy: {todayTemplate.name}</h3>
-                <p style={styles.workoutMeta}>{totalExercises} ejercicios - ~60 min</p>
-              </div>
-            </div>
-            <p style={styles.workoutDescription}>
-              {todayTemplate.type === 'push' && 'Enfoque en pecho, hombros y triceps para los hombros anchos de Achilles.'}
-              {todayTemplate.type === 'pull' && 'Espalda y biceps para la V-taper del guerrero griego.'}
-              {todayTemplate.type === 'legs' && 'Piernas y core para la base atletica de un hoplita.'}
+            <h2 style={styles.restDayTitle}>Día de Descanso</h2>
+            <p style={styles.restDaySubtitle}>
+              {getWorkoutDescription('rest')}
             </p>
-            <button style={styles.button} onClick={handleStartWorkout}>
-              <Play size={20} />
-              Comenzar Entreno
-            </button>
           </div>
         )}
 
-        {/* Exercise list */}
-        <div>
-          <h2 style={styles.sectionTitle}>Ejercicios</h2>
-          {todayTemplate.exercises.map((templateExercise) => {
-            const exercise = exercises.find(e => e.id === templateExercise.exerciseId);
-            if (!exercise) return null;
+        {/* Workout Day */}
+        {selectedTemplate && (
+          <>
+            {/* Progress card (only when session active for this workout) */}
+            {isSessionForSelectedWorkout && (
+              <div style={styles.card}>
+                <div style={styles.progressHeader}>
+                  <div style={styles.progressLabel}>
+                    <Zap size={18} color={colors.accent} />
+                    <span style={styles.progressLabelText}>Progreso</span>
+                  </div>
+                  <span style={styles.progressPercent}>{Math.round(progress)}%</span>
+                </div>
+                <div style={styles.progressBarContainer}>
+                  <div
+                    style={{
+                      ...styles.progressBarFill,
+                      width: `${progress}%`,
+                    }}
+                  />
+                </div>
+              </div>
+            )}
 
-            return renderExerciseCard(
-              exercise,
-              templateExercise,
-              getExerciseSets(exercise.id)
-            );
-          })}
-        </div>
+            {/* Workout info card (show when no session or session is for different workout) */}
+            {!isSessionForSelectedWorkout && (
+              <div style={styles.card}>
+                <div style={styles.workoutHeader}>
+                  <div style={{
+                    ...styles.workoutIconContainer,
+                    backgroundColor: `${workoutColor}22`,
+                  }}>
+                    <Dumbbell size={28} color={workoutColor} />
+                  </div>
+                  <div style={styles.workoutInfo}>
+                    <h2 style={styles.workoutTitle}>{selectedTemplate.name}</h2>
+                    <div style={styles.workoutMeta}>
+                      <span style={{
+                        ...styles.workoutTypeBadge,
+                        backgroundColor: `${workoutColor}22`,
+                        color: workoutColor,
+                      }}>
+                        {selectedWorkoutType}
+                      </span>
+                      <span>{totalExercises} ejercicios</span>
+                      <span>~60 min</span>
+                    </div>
+                  </div>
+                </div>
+                <p style={styles.workoutDescription}>
+                  {getWorkoutDescription(selectedWorkoutType)}
+                </p>
+                {!isSelectedToday && (
+                  <p style={{
+                    fontSize: '13px',
+                    color: colors.accent,
+                    marginBottom: '16px',
+                    textAlign: 'center' as const,
+                  }}>
+                    Programado para {format(selectedDate, "EEEE d", { locale: es })}
+                  </p>
+                )}
+                <button style={styles.button} onClick={handleStartWorkout}>
+                  <Play size={20} />
+                  {isSelectedToday ? 'Comenzar Entreno' : 'Entrenar Ahora'}
+                </button>
+              </div>
+            )}
 
-        {/* Complete workout button */}
-        {currentSession && progress === 100 && (
-          <div style={styles.completeButtonContainer}>
-            <button style={styles.button} onClick={handleCompleteWorkout}>
-              <CheckCircle2 size={20} />
-              Completar Entreno
-            </button>
-          </div>
+            {/* Exercise list */}
+            <h2 style={styles.sectionTitle}>Ejercicios</h2>
+            {selectedTemplate.exercises.map((templateExercise) => {
+              const exercise = exercises.find(e => e.id === templateExercise.exerciseId);
+              if (!exercise) return null;
+
+              return renderExerciseCard(
+                exercise,
+                templateExercise,
+                isSessionForSelectedWorkout ? getExerciseSets(exercise.id) : []
+              );
+            })}
+
+            {/* Complete workout button */}
+            {isSessionForSelectedWorkout && progress === 100 && (
+              <div style={styles.completeButtonContainer}>
+                <button style={styles.button} onClick={handleCompleteWorkout}>
+                  <CheckCircle2 size={20} />
+                  Completar Entreno
+                </button>
+              </div>
+            )}
+          </>
         )}
 
-        {/* Greeting when no user */}
+        {/* No user message */}
         {!user && (
           <div style={styles.noUserCard}>
             <p style={styles.noUserText}>
-              Configura tu perfil para comenzar tu transformacion Achilles
+              Configura tu perfil para comenzar tu transformación Achilles
             </p>
           </div>
         )}

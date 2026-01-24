@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Save, Target } from 'lucide-react';
-import { Header, PageContainer } from '../../../components/layout';
-import { Card, Button, Input } from '../../../components/ui';
+import { ChevronLeft, Save, Target } from 'lucide-react';
 import { db } from '../../../services/db/database';
 import { useUserStore } from '../../../stores/userStore';
 import type { ProgressEntry, BodyMeasurements } from '../../../types';
@@ -11,6 +9,187 @@ import { calculateAdonisIndex, getAdonisRating } from '../../../data/achilles-pr
 interface BodyMetricsProps {
   onBack: () => void;
 }
+
+const styles = {
+  page: {
+    minHeight: '100vh',
+    backgroundColor: '#0a0a0a',
+  } as React.CSSProperties,
+  header: {
+    position: 'sticky' as const,
+    top: 0,
+    backgroundColor: '#0a0a0a',
+    borderBottom: '1px solid #2a2a2a',
+    zIndex: 40,
+    paddingTop: 'env(safe-area-inset-top)',
+  } as React.CSSProperties,
+  headerContent: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    height: '56px',
+    padding: '0 16px',
+    maxWidth: '500px',
+    margin: '0 auto',
+  } as React.CSSProperties,
+  backButton: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '40px',
+    height: '40px',
+    marginLeft: '-8px',
+    background: 'none',
+    border: 'none',
+    color: '#888',
+    cursor: 'pointer',
+  } as React.CSSProperties,
+  headerTitle: {
+    fontSize: '16px',
+    fontWeight: 700,
+    color: '#fff',
+    margin: 0,
+    flex: 1,
+    textAlign: 'center' as const,
+  } as React.CSSProperties,
+  saveButton: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '4px',
+    padding: '8px 12px',
+    backgroundColor: '#d4af37',
+    color: '#000',
+    border: 'none',
+    borderRadius: '10px',
+    fontSize: '14px',
+    fontWeight: 600,
+    cursor: 'pointer',
+  } as React.CSSProperties,
+  container: {
+    padding: '16px 16px calc(env(safe-area-inset-bottom) + 100px) 16px',
+    maxWidth: '500px',
+    margin: '0 auto',
+  } as React.CSSProperties,
+  card: {
+    backgroundColor: '#1a1a1a',
+    borderRadius: '16px',
+    padding: '16px',
+    marginBottom: '16px',
+  } as React.CSSProperties,
+  cardGold: {
+    backgroundColor: 'rgba(212, 175, 55, 0.1)',
+    border: '1px solid rgba(212, 175, 55, 0.3)',
+  } as React.CSSProperties,
+  cardTitle: {
+    fontWeight: 600,
+    color: '#fff',
+    fontSize: '16px',
+    marginBottom: '12px',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+  } as React.CSSProperties,
+  cardTitleRow: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: '16px',
+  } as React.CSSProperties,
+  cardHint: {
+    fontSize: '12px',
+    color: '#888',
+  } as React.CSSProperties,
+  inputGroup: {
+    marginBottom: '12px',
+  } as React.CSSProperties,
+  label: {
+    display: 'block',
+    fontSize: '12px',
+    color: '#888',
+    marginBottom: '6px',
+  } as React.CSSProperties,
+  inputWrapper: {
+    position: 'relative' as const,
+  } as React.CSSProperties,
+  input: {
+    width: '100%',
+    backgroundColor: '#2a2a2a',
+    border: '1px solid #3a3a3a',
+    borderRadius: '12px',
+    padding: '14px 16px',
+    paddingRight: '48px',
+    color: '#fff',
+    fontSize: '16px',
+    outline: 'none',
+    boxSizing: 'border-box' as const,
+  } as React.CSSProperties,
+  inputSuffix: {
+    position: 'absolute' as const,
+    right: '16px',
+    top: '50%',
+    transform: 'translateY(-50%)',
+    color: '#888',
+    fontSize: '14px',
+  } as React.CSSProperties,
+  grid2: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(2, 1fr)',
+    gap: '12px',
+  } as React.CSSProperties,
+  adonisValue: {
+    display: 'flex',
+    alignItems: 'baseline',
+    gap: '8px',
+  } as React.CSSProperties,
+  adonisNumber: {
+    fontSize: '32px',
+    fontWeight: 700,
+    color: '#d4af37',
+  } as React.CSSProperties,
+  adonisIdeal: {
+    fontSize: '14px',
+    color: '#888',
+  } as React.CSSProperties,
+  adonisRating: {
+    fontSize: '14px',
+    color: '#fff',
+    marginTop: '8px',
+  } as React.CSSProperties,
+  tipsCard: {
+    backgroundColor: '#1a1a1a',
+    borderRadius: '16px',
+    padding: '16px',
+  } as React.CSSProperties,
+  tipsTitle: {
+    fontSize: '14px',
+    fontWeight: 500,
+    color: '#fff',
+    marginBottom: '8px',
+  } as React.CSSProperties,
+  tipsList: {
+    listStyle: 'none',
+    padding: 0,
+    margin: 0,
+  } as React.CSSProperties,
+  tipsItem: {
+    fontSize: '13px',
+    color: '#888',
+    marginBottom: '4px',
+    display: 'flex',
+    gap: '6px',
+  } as React.CSSProperties,
+  iconGold: {
+    color: '#d4af37',
+  } as React.CSSProperties,
+  spinner: {
+    width: '16px',
+    height: '16px',
+    border: '2px solid rgba(0,0,0,0.3)',
+    borderTopColor: '#000',
+    borderRadius: '50%',
+    animation: 'spin 1s linear infinite',
+  } as React.CSSProperties,
+};
 
 export function BodyMetrics({ onBack }: BodyMetricsProps) {
   const { user, updateUser } = useUserStore();
@@ -90,93 +269,112 @@ export function BodyMetrics({ onBack }: BodyMetricsProps) {
   ];
 
   return (
-    <>
-      <Header
-        title="Medidas corporales"
-        showBack
-        onBack={onBack}
-        rightAction={
-          <Button size="sm" onClick={handleSave} loading={saving}>
-            <Save size={16} className="mr-1" />
-            Guardar
-          </Button>
-        }
-      />
-      <PageContainer>
+    <div style={styles.page}>
+      {/* Header */}
+      <header style={styles.header}>
+        <div style={styles.headerContent}>
+          <button onClick={onBack} style={styles.backButton}>
+            <ChevronLeft size={24} />
+          </button>
+          <h1 style={styles.headerTitle}>Medidas corporales</h1>
+          <button onClick={handleSave} disabled={saving} style={styles.saveButton}>
+            {saving ? (
+              <div style={styles.spinner} />
+            ) : (
+              <>
+                <Save size={16} />
+                Guardar
+              </>
+            )}
+          </button>
+        </div>
+      </header>
+
+      <div style={styles.container}>
         {/* Bodyweight */}
-        <Card className="mb-4">
-          <h3 className="font-semibold text-[var(--color-text)] mb-3">Peso corporal</h3>
-          <Input
-            type="number"
-            value={bodyweight}
-            onChange={(e) => setBodyweight(e.target.value)}
-            suffix="kg"
-            placeholder="80"
-          />
-        </Card>
+        <div style={styles.card}>
+          <h3 style={styles.cardTitle}>Peso corporal</h3>
+          <div style={styles.inputWrapper}>
+            <input
+              type="number"
+              inputMode="decimal"
+              value={bodyweight}
+              onChange={(e) => setBodyweight(e.target.value)}
+              placeholder="80"
+              style={styles.input}
+            />
+            <span style={styles.inputSuffix}>kg</span>
+          </div>
+        </div>
 
         {/* Adonis Index */}
         {adonisIndex && (
-          <Card className="mb-4 bg-[var(--color-primary)]/10 border-[var(--color-primary)]/30">
-            <div className="flex items-center gap-2 mb-2">
-              <Target size={18} className="text-[var(--color-primary)]" />
-              <h3 className="font-semibold text-[var(--color-text)]">Índice de Adonis</h3>
+          <div style={{ ...styles.card, ...styles.cardGold }}>
+            <div style={styles.cardTitle}>
+              <Target size={18} style={styles.iconGold} />
+              Índice de Adonis
             </div>
-            <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-bold text-[var(--color-primary)]">
-                {adonisIndex.toFixed(2)}
-              </span>
-              <span className="text-sm text-[var(--color-text-secondary)]">
-                (ideal: 1.618)
-              </span>
+            <div style={styles.adonisValue}>
+              <span style={styles.adonisNumber}>{adonisIndex.toFixed(2)}</span>
+              <span style={styles.adonisIdeal}>(ideal: 1.618)</span>
             </div>
-            <p className="text-sm text-[var(--color-text)] mt-2">
-              {adonisRating}
-            </p>
-          </Card>
+            <p style={styles.adonisRating}>{adonisRating}</p>
+          </div>
         )}
 
         {/* Circumferences */}
-        <Card>
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-[var(--color-text)]">Circunferencias (cm)</h3>
-            <span className="text-xs text-[var(--color-text-secondary)]">
-              Mide en ayunas
-            </span>
+        <div style={styles.card}>
+          <div style={styles.cardTitleRow}>
+            <h3 style={{ ...styles.cardTitle, marginBottom: 0 }}>Circunferencias (cm)</h3>
+            <span style={styles.cardHint}>Mide en ayunas</span>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div style={styles.grid2}>
             {measurementFields.map(({ key, label, placeholder }) => (
-              <div key={key}>
-                <label className="text-xs text-[var(--color-text-secondary)] mb-1 block">
-                  {label}
-                </label>
-                <input
-                  type="number"
-                  value={measurements[key] || ''}
-                  onChange={(e) => updateMeasurement(key, e.target.value)}
-                  placeholder={placeholder}
-                  className="w-full bg-[var(--color-surface-elevated)] border border-[var(--color-border)] rounded-lg px-3 py-2 text-[var(--color-text)] placeholder:text-[var(--color-text-secondary)]/50 focus:outline-none focus:border-[var(--color-primary)] text-sm"
-                />
+              <div key={key} style={styles.inputGroup}>
+                <label style={styles.label}>{label}</label>
+                <div style={styles.inputWrapper}>
+                  <input
+                    type="number"
+                    inputMode="decimal"
+                    value={measurements[key] || ''}
+                    onChange={(e) => updateMeasurement(key, e.target.value)}
+                    placeholder={placeholder}
+                    style={{ ...styles.input, paddingRight: '16px' }}
+                  />
+                </div>
               </div>
             ))}
           </div>
-        </Card>
+        </div>
 
         {/* Tips */}
-        <Card className="mt-4 bg-[var(--color-surface)]">
-          <h4 className="text-sm font-medium text-[var(--color-text)] mb-2">
-            Consejos para medir
-          </h4>
-          <ul className="text-xs text-[var(--color-text-secondary)] space-y-1">
-            <li>• Mide siempre a la misma hora (idealmente en ayunas por la mañana)</li>
-            <li>• Usa una cinta métrica flexible</li>
-            <li>• Hombros: punto más ancho con brazos relajados</li>
-            <li>• Cintura: a la altura del ombligo, relajado</li>
-            <li>• Bíceps: flexionado, en el punto más grueso</li>
+        <div style={styles.tipsCard}>
+          <h4 style={styles.tipsTitle}>Consejos para medir</h4>
+          <ul style={styles.tipsList}>
+            <li style={styles.tipsItem}>
+              <span style={styles.iconGold}>•</span>
+              Mide siempre a la misma hora (idealmente en ayunas por la mañana)
+            </li>
+            <li style={styles.tipsItem}>
+              <span style={styles.iconGold}>•</span>
+              Usa una cinta métrica flexible
+            </li>
+            <li style={styles.tipsItem}>
+              <span style={styles.iconGold}>•</span>
+              Hombros: punto más ancho con brazos relajados
+            </li>
+            <li style={styles.tipsItem}>
+              <span style={styles.iconGold}>•</span>
+              Cintura: a la altura del ombligo, relajado
+            </li>
+            <li style={styles.tipsItem}>
+              <span style={styles.iconGold}>•</span>
+              Bíceps: flexionado, en el punto más grueso
+            </li>
           </ul>
-        </Card>
-      </PageContainer>
-    </>
+        </div>
+      </div>
+    </div>
   );
 }

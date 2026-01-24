@@ -1,4 +1,5 @@
-import { useState, useEffect, CSSProperties } from 'react';
+import { useState, useEffect } from 'react';
+import type { CSSProperties } from 'react';
 import { Plus, Utensils, Apple, Beef, Wheat, Droplet, X } from 'lucide-react';
 import { useUserStore } from '../../../stores/userStore';
 import { db } from '../../../services/db/database';
