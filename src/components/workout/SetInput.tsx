@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Minus, Plus, Check, Trash2 } from 'lucide-react';
-import { Button } from '../ui/Button';
 
 interface SetInputProps {
   setNumber: number;
@@ -77,8 +76,9 @@ export function SetInput({
   }
 
   return (
-    <div className="flex items-center gap-2 p-3 rounded-xl bg-[var(--color-surface-elevated)]">
-      <div className={`w-7 h-7 shrink-0 rounded-lg flex items-center justify-center text-sm font-bold ${
+    <div className="flex items-center gap-1.5 p-2.5 rounded-xl bg-[var(--color-surface-elevated)]">
+      {/* Set number badge */}
+      <div className={`w-6 h-6 shrink-0 rounded-md flex items-center justify-center text-xs font-bold ${
         isWarmup
           ? 'bg-[var(--color-warning)]/20 text-[var(--color-warning)]'
           : 'bg-[var(--color-border)] text-[var(--color-text)]'
@@ -86,60 +86,67 @@ export function SetInput({
         {isWarmup ? 'W' : setNumber}
       </div>
 
-      {/* Weight */}
-      <div className="flex items-center gap-0.5 flex-1 min-w-0">
+      {/* Weight controls */}
+      <div className="flex items-center flex-1 min-w-0">
         <button
           onClick={() => adjustWeight(-2.5)}
-          className="w-7 h-7 shrink-0 rounded-lg bg-[var(--color-surface)] flex items-center justify-center text-[var(--color-text-secondary)] active:scale-95 transition-transform"
+          className="w-6 h-6 shrink-0 rounded-md bg-[var(--color-surface)] flex items-center justify-center text-[var(--color-text-secondary)] active:scale-95 transition-transform"
         >
-          <Minus size={14} />
+          <Minus size={12} />
         </button>
-        <input
-          type="number"
-          value={weight}
-          onChange={(e) => setWeight(Number(e.target.value))}
-          className="w-12 min-w-0 h-7 rounded-lg bg-[var(--color-surface)] text-center text-[var(--color-text)] font-semibold text-sm border-none focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
-        />
+        <div className="flex flex-col items-center mx-0.5 min-w-0">
+          <input
+            type="number"
+            value={weight}
+            onChange={(e) => setWeight(Number(e.target.value))}
+            className="w-11 h-6 rounded-md bg-[var(--color-surface)] text-center text-[var(--color-text)] font-semibold text-xs border-none focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]"
+          />
+          <span className="text-[8px] text-[var(--color-text-secondary)] -mt-0.5">kg</span>
+        </div>
         <button
           onClick={() => adjustWeight(2.5)}
-          className="w-7 h-7 shrink-0 rounded-lg bg-[var(--color-surface)] flex items-center justify-center text-[var(--color-text-secondary)] active:scale-95 transition-transform"
+          className="w-6 h-6 shrink-0 rounded-md bg-[var(--color-surface)] flex items-center justify-center text-[var(--color-text-secondary)] active:scale-95 transition-transform"
         >
-          <Plus size={14} />
+          <Plus size={12} />
         </button>
-        <span className="text-[10px] text-[var(--color-text-secondary)] w-4 shrink-0">kg</span>
       </div>
 
-      {/* Reps */}
-      <div className="flex items-center gap-0.5 flex-1 min-w-0">
+      {/* Separator */}
+      <span className="text-[var(--color-text-secondary)] text-xs">×</span>
+
+      {/* Reps controls */}
+      <div className="flex items-center flex-1 min-w-0">
         <button
           onClick={() => adjustReps(-1)}
-          className="w-7 h-7 shrink-0 rounded-lg bg-[var(--color-surface)] flex items-center justify-center text-[var(--color-text-secondary)] active:scale-95 transition-transform"
+          className="w-6 h-6 shrink-0 rounded-md bg-[var(--color-surface)] flex items-center justify-center text-[var(--color-text-secondary)] active:scale-95 transition-transform"
         >
-          <Minus size={14} />
+          <Minus size={12} />
         </button>
-        <input
-          type="number"
-          value={reps}
-          onChange={(e) => setReps(Number(e.target.value))}
-          className="w-10 min-w-0 h-7 rounded-lg bg-[var(--color-surface)] text-center text-[var(--color-text)] font-semibold text-sm border-none focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
-        />
+        <div className="flex flex-col items-center mx-0.5 min-w-0">
+          <input
+            type="number"
+            value={reps}
+            onChange={(e) => setReps(Number(e.target.value))}
+            className="w-9 h-6 rounded-md bg-[var(--color-surface)] text-center text-[var(--color-text)] font-semibold text-xs border-none focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]"
+          />
+          <span className="text-[8px] text-[var(--color-text-secondary)] -mt-0.5">reps</span>
+        </div>
         <button
           onClick={() => adjustReps(1)}
-          className="w-7 h-7 shrink-0 rounded-lg bg-[var(--color-surface)] flex items-center justify-center text-[var(--color-text-secondary)] active:scale-95 transition-transform"
+          className="w-6 h-6 shrink-0 rounded-md bg-[var(--color-surface)] flex items-center justify-center text-[var(--color-text-secondary)] active:scale-95 transition-transform"
         >
-          <Plus size={14} />
+          <Plus size={12} />
         </button>
       </div>
 
       {/* Complete button */}
-      <Button
-        size="sm"
+      <button
         onClick={() => onComplete(weight, reps)}
         disabled={weight === 0 || reps === 0}
-        className="!p-1.5 !min-w-[32px] shrink-0"
+        className="w-9 h-9 shrink-0 rounded-xl bg-[var(--color-primary)] flex items-center justify-center text-black active:scale-95 transition-transform disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        <Check size={16} />
-      </Button>
+        <Check size={18} strokeWidth={3} />
+      </button>
     </div>
   );
 }

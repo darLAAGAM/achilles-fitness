@@ -1,5 +1,5 @@
 import { useEffect, useCallback } from 'react';
-import { Play, Pause, RotateCcw, Plus, Minus } from 'lucide-react';
+import { Play, Pause, RotateCcw, Plus, Minus, SkipForward } from 'lucide-react';
 import { useWorkoutStore } from '../../stores/workoutStore';
 
 interface RestTimerProps {
@@ -62,6 +62,11 @@ export function RestTimer({ defaultSeconds = 90, nextExercise, onComplete }: Res
     startRestTimer(newTime);
     stopRestTimer();
     startRestTimer(newTime);
+  };
+
+  const handleSkip = () => {
+    stopRestTimer();
+    onComplete?.();
   };
 
   const progress = restTimerActive
@@ -135,7 +140,23 @@ export function RestTimer({ defaultSeconds = 90, nextExercise, onComplete }: Res
         >
           {restTimerActive ? <Pause size={28} /> : <Play size={28} className="ml-1" />}
         </button>
+        <button
+          onClick={handleSkip}
+          className="w-12 h-12 rounded-full bg-[var(--color-surface-elevated)] flex items-center justify-center text-[var(--color-text-secondary)] active:scale-95 transition-transform"
+        >
+          <SkipForward size={20} />
+        </button>
       </div>
+
+      {/* Skip rest button */}
+      {restTimerActive && (
+        <button
+          onClick={handleSkip}
+          className="mt-2 px-6 py-2 rounded-full bg-[var(--color-surface-elevated)] text-[var(--color-text-secondary)] text-sm font-medium active:scale-95 transition-transform"
+        >
+          Saltar descanso
+        </button>
+      )}
 
       {/* Next exercise preview */}
       {nextExercise && (
