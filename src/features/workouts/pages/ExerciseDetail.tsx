@@ -450,6 +450,14 @@ function SetInputInline({
   const [weight, setWeight] = useState(completedWeight ?? defaultWeight);
   const [reps, setReps] = useState(completedReps ?? defaultReps);
 
+  // Sync with new defaults when they change (e.g., switching exercises)
+  useEffect(() => {
+    if (!completed) {
+      setWeight(completedWeight ?? defaultWeight);
+      setReps(completedReps ?? defaultReps);
+    }
+  }, [defaultWeight, defaultReps, completed, completedWeight, completedReps]);
+
   const adjustWeight = (delta: number) => {
     setWeight(prev => Math.max(0, prev + delta));
   };
@@ -486,51 +494,166 @@ function SetInputInline({
   }
 
   return (
-    <div style={styles.setRow}>
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '8px',
+      padding: '12px',
+      borderRadius: '12px',
+      backgroundColor: '#2a2a2a',
+      marginBottom: '8px',
+    }}>
+      {/* Row 1: Set number + Weight + Reps inputs */}
       <div style={{
-        ...styles.setNumber,
-        ...(isWarmup ? styles.setNumberWarmup : styles.setNumberPending)
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px',
       }}>
-        {isWarmup ? 'W' : setNumber}
+        {/* Set number */}
+        <div style={{
+          ...styles.setNumber,
+          ...(isWarmup ? styles.setNumberWarmup : styles.setNumberPending),
+          width: '28px',
+          height: '28px',
+          fontSize: '12px',
+        }}>
+          {isWarmup ? 'W' : setNumber}
+        </div>
+        
+        {/* Weight control */}
+        <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '4px' }}>
+          <button onClick={() => adjustWeight(-2.5)} style={{
+            width: '28px',
+            height: '28px',
+            borderRadius: '6px',
+            backgroundColor: '#1a1a1a',
+            border: 'none',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#888',
+            cursor: 'pointer',
+            flexShrink: 0,
+          }}>
+            <Minus size={14} />
+          </button>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 }}>
+            <input
+              type="number"
+              value={weight}
+              onChange={(e) => setWeight(Number(e.target.value))}
+              style={{
+                width: '100%',
+                maxWidth: '60px',
+                height: '28px',
+                borderRadius: '6px',
+                backgroundColor: '#1a1a1a',
+                border: 'none',
+                textAlign: 'center',
+                color: '#fff',
+                fontWeight: 600,
+                fontSize: '14px',
+              }}
+            />
+            <span style={{ fontSize: '10px', color: '#888', marginTop: '2px' }}>kg</span>
+          </div>
+          <button onClick={() => adjustWeight(2.5)} style={{
+            width: '28px',
+            height: '28px',
+            borderRadius: '6px',
+            backgroundColor: '#1a1a1a',
+            border: 'none',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#888',
+            cursor: 'pointer',
+            flexShrink: 0,
+          }}>
+            <Plus size={14} />
+          </button>
+        </div>
+
+        <span style={{ color: '#888', fontSize: '14px' }}>×</span>
+
+        {/* Reps control */}
+        <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '4px' }}>
+          <button onClick={() => adjustReps(-1)} style={{
+            width: '28px',
+            height: '28px',
+            borderRadius: '6px',
+            backgroundColor: '#1a1a1a',
+            border: 'none',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#888',
+            cursor: 'pointer',
+            flexShrink: 0,
+          }}>
+            <Minus size={14} />
+          </button>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 }}>
+            <input
+              type="number"
+              value={reps}
+              onChange={(e) => setReps(Number(e.target.value))}
+              style={{
+                width: '100%',
+                maxWidth: '50px',
+                height: '28px',
+                borderRadius: '6px',
+                backgroundColor: '#1a1a1a',
+                border: 'none',
+                textAlign: 'center',
+                color: '#fff',
+                fontWeight: 600,
+                fontSize: '14px',
+              }}
+            />
+            <span style={{ fontSize: '10px', color: '#888', marginTop: '2px' }}>reps</span>
+          </div>
+          <button onClick={() => adjustReps(1)} style={{
+            width: '28px',
+            height: '28px',
+            borderRadius: '6px',
+            backgroundColor: '#1a1a1a',
+            border: 'none',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#888',
+            cursor: 'pointer',
+            flexShrink: 0,
+          }}>
+            <Plus size={14} />
+          </button>
+        </div>
       </div>
-      <div style={styles.inputRow}>
-        <button onClick={() => adjustWeight(-2.5)} style={styles.adjustButton}>
-          <Minus size={16} />
-        </button>
-        <input
-          type="number"
-          value={weight}
-          onChange={(e) => setWeight(Number(e.target.value))}
-          style={styles.numberInput}
-        />
-        <button onClick={() => adjustWeight(2.5)} style={styles.adjustButton}>
-          <Plus size={16} />
-        </button>
-        <span style={styles.inputLabel}>kg</span>
-      </div>
-      <div style={styles.inputRow}>
-        <button onClick={() => adjustReps(-1)} style={styles.adjustButton}>
-          <Minus size={16} />
-        </button>
-        <input
-          type="number"
-          value={reps}
-          onChange={(e) => setReps(Number(e.target.value))}
-          style={{ ...styles.numberInput, width: '48px' }}
-        />
-        <button onClick={() => adjustReps(1)} style={styles.adjustButton}>
-          <Plus size={16} />
-        </button>
-      </div>
+
+      {/* Row 2: Complete button (full width) */}
       <button
         onClick={() => onComplete(weight, reps)}
         style={{
-          ...styles.checkButton,
+          width: '100%',
+          height: '44px',
+          borderRadius: '10px',
+          backgroundColor: '#d4af37',
+          border: 'none',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '8px',
+          color: '#000',
+          fontWeight: 600,
+          fontSize: '14px',
+          cursor: 'pointer',
           opacity: weight === 0 || reps === 0 ? 0.4 : 1,
         }}
         disabled={weight === 0 || reps === 0}
       >
         <Check size={18} />
+        Completar serie
       </button>
     </div>
   );
@@ -547,8 +670,11 @@ function RestTimerInline({
   const {
     restTimerActive,
     restTimeRemaining,
+    restTimerDefault,
     startRestTimer,
+    pauseRestTimer,
     stopRestTimer,
+    setRestTime,
     tickRestTimer
   } = useWorkoutStore();
 
@@ -583,7 +709,7 @@ function RestTimerInline({
   };
 
   const handlePause = () => {
-    stopRestTimer();
+    pauseRestTimer();
   };
 
   const handleReset = () => {
@@ -591,15 +717,20 @@ function RestTimerInline({
     startRestTimer(defaultSeconds);
   };
 
-  const adjustTime = (delta: number) => {
-    const newTime = Math.max(0, (restTimeRemaining || defaultSeconds) + delta);
-    startRestTimer(newTime);
+  const handleSkip = () => {
     stopRestTimer();
-    startRestTimer(newTime);
+    onComplete?.();
   };
 
-  const progress = restTimerActive
-    ? ((defaultSeconds - restTimeRemaining) / defaultSeconds) * 100
+  const adjustTime = (delta: number) => {
+    const currentTime = restTimeRemaining || defaultSeconds;
+    const newTime = Math.max(0, currentTime + delta);
+    setRestTime(newTime);
+  };
+
+  const timerDefault = restTimerDefault || defaultSeconds;
+  const progress = restTimerActive || restTimeRemaining > 0
+    ? ((timerDefault - restTimeRemaining) / timerDefault) * 100
     : 0;
 
   return (
@@ -655,6 +786,23 @@ function RestTimerInline({
           {restTimerActive ? <Pause size={28} /> : <Play size={28} style={{ marginLeft: '4px' }} />}
         </button>
       </div>
+      {/* Skip rest button */}
+      <button
+        onClick={handleSkip}
+        style={{
+          marginTop: '8px',
+          padding: '12px 24px',
+          backgroundColor: '#2a2a2a',
+          border: 'none',
+          borderRadius: '24px',
+          color: '#888',
+          fontSize: '14px',
+          fontWeight: 500,
+          cursor: 'pointer',
+        }}
+      >
+        Saltar descanso
+      </button>
     </div>
   );
 }

@@ -1,12 +1,14 @@
 import { useState } from 'react';
-import { User, Target, Dumbbell, Download, Trash2, Info, ChevronRight, X } from 'lucide-react';
+import { User, Target, Dumbbell, Download, Trash2, Info, ChevronRight, X, Repeat } from 'lucide-react';
 import { useUserStore } from '../../../stores/userStore';
 import { exportData, clearDatabase } from '../../../services/db/database';
+import { allPrograms, getProgramById } from '../../../data/programs';
 
 export function Settings() {
-  const { user, updateUser, setOnboarded } = useUserStore();
+  const { user, updateUser, setOnboarded, changeProgram } = useUserStore();
   const [showProfile, setShowProfile] = useState(false);
   const [showGoals, setShowGoals] = useState(false);
+  const [showProgram, setShowProgram] = useState(false);
   const [showAbout, setShowAbout] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
@@ -400,6 +402,13 @@ export function Settings() {
     },
   };
 
+  const currentProgram = getProgramById(user?.currentProgramId || 'achilles-3day');
+
+  const handleChangeProgram = async (programId: string) => {
+    await changeProgram(programId);
+    setShowProgram(false);
+  };
+
   const settingsItems = [
     {
       icon: User,
@@ -412,6 +421,12 @@ export function Settings() {
       label: 'Objetivos',
       description: 'Fase, calorias y macros',
       onClick: () => setShowGoals(true)
+    },
+    {
+      icon: Repeat,
+      label: 'Cambiar programa',
+      description: currentProgram?.name || 'Selecciona un programa',
+      onClick: () => setShowProgram(true)
     },
     {
       icon: Download,
@@ -447,7 +462,7 @@ export function Settings() {
             <p style={styles.profileStats}>
               {user?.bodyweight || '--'}kg • {user?.experienceYears || '--'}+ anos
             </p>
-            <p style={styles.profileProgram}>Programa Achilles 3-Day</p>
+            <p style={styles.profileProgram}>{currentProgram?.name || 'Sin programa'}</p>
           </div>
         </div>
 
@@ -634,6 +649,81 @@ export function Settings() {
                 Disenado para alcanzar el fisico de Brad Pitt en Troya.
               </p>
               <p style={styles.aboutHighlight}>Indice de Adonis: 1.618</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Program Selection Modal */}
+      {showProgram && (
+        <div style={styles.modalOverlay} onClick={() => setShowProgram(false)}>
+          <div style={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <div style={styles.modalHeader}>
+              <h2 style={styles.modalTitle}>Cambiar programa</h2>
+              <button style={styles.modalClose} onClick={() => setShowProgram(false)}>
+                <X size={18} color="#fff" />
+              </button>
+            </div>
+
+            <p style={{ color: '#888', fontSize: '14px', marginBottom: '20px', lineHeight: 1.5 }}>
+              Tu historial de entrenamientos y PRs se mantienen al cambiar de programa.
+            </p>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {allPrograms.map((program) => {
+                const isSelected = user?.currentProgramId === program.id;
+                return (
+                  <button
+                    key={program.id}
+                    onClick={() => handleChangeProgram(program.id)}
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'flex-start',
+                      gap: '4px',
+                      padding: '16px',
+                      borderRadius: '12px',
+                      border: isSelected ? '2px solid #d4af37' : '2px solid #333',
+                      backgroundColor: isSelected ? 'rgba(212, 175, 55, 0.1)' : '#0a0a0a',
+                      cursor: 'pointer',
+                      textAlign: 'left',
+                      width: '100%',
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', width: '100%' }}>
+                      <span style={{
+                        fontSize: '16px',
+                        fontWeight: 600,
+                        color: isSelected ? '#d4af37' : '#fff',
+                        flex: 1,
+                      }}>
+                        {program.name}
+                      </span>
+                      {isSelected && (
+                        <span style={{
+                          fontSize: '12px',
+                          color: '#d4af37',
+                          fontWeight: 600,
+                          backgroundColor: 'rgba(212, 175, 55, 0.2)',
+                          padding: '4px 8px',
+                          borderRadius: '6px',
+                        }}>
+                          Actual
+                        </span>
+                      )}
+                    </div>
+                    <span style={{
+                      fontSize: '13px',
+                      color: '#888',
+                    }}>
+                      {program.daysPerWeek} días/semana • {program.weeks} semanas • {
+                        program.difficulty === 'beginner' ? 'Principiante' :
+                        program.difficulty === 'intermediate' ? 'Intermedio' : 'Avanzado'
+                      }
+                    </span>
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>

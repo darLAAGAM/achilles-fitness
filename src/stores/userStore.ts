@@ -19,6 +19,7 @@ interface UserState {
   startWorkout: (workoutId: string) => void;
   endWorkout: () => void;
   initializeUser: (data: Partial<User>) => Promise<void>;
+  changeProgram: (programId: string, startPhase?: number) => Promise<void>;
 }
 
 export const useUserStore = create<UserState>()(
@@ -89,6 +90,22 @@ export const useUserStore = create<UserState>()(
 
         await db.users.put(user);
         set({ user, isOnboarded: true });
+      },
+
+      changeProgram: async (programId, startPhase) => {
+        const currentUser = get().user;
+        if (!currentUser) return;
+
+        const updatedUser = {
+          ...currentUser,
+          currentProgramId: programId,
+          currentProgramPhase: startPhase ?? 0,
+          programStartDate: new Date(),
+          updatedAt: new Date()
+        };
+
+        await db.users.put(updatedUser);
+        set({ user: updatedUser });
       }
     }),
     {

@@ -11,6 +11,7 @@ interface WorkoutState {
   currentExerciseIndex: number;
   restTimerActive: boolean;
   restTimeRemaining: number;
+  restTimerDefault: number;
 
   // Actions
   loadExercises: () => Promise<void>;
@@ -22,7 +23,9 @@ interface WorkoutState {
   deleteSet: (setId: string) => Promise<void>;
   setCurrentExercise: (index: number) => void;
   startRestTimer: (seconds: number) => void;
+  pauseRestTimer: () => void;
   stopRestTimer: () => void;
+  setRestTime: (seconds: number) => void;
   tickRestTimer: () => void;
   getExerciseById: (id: string) => Exercise | undefined;
   getPersonalRecord: (exerciseId: string) => Promise<{ weight: number; reps: number } | null>;
@@ -36,6 +39,7 @@ export const useWorkoutStore = create<WorkoutState>((set, get) => ({
   currentExerciseIndex: 0,
   restTimerActive: false,
   restTimeRemaining: 0,
+  restTimerDefault: 90,
 
   loadExercises: async () => {
     const exercises = await db.exercises.toArray();
@@ -149,12 +153,21 @@ export const useWorkoutStore = create<WorkoutState>((set, get) => ({
 
   startRestTimer: (seconds) => set({
     restTimerActive: true,
-    restTimeRemaining: seconds
+    restTimeRemaining: seconds,
+    restTimerDefault: seconds
+  }),
+
+  pauseRestTimer: () => set({
+    restTimerActive: false
   }),
 
   stopRestTimer: () => set({
     restTimerActive: false,
     restTimeRemaining: 0
+  }),
+
+  setRestTime: (seconds) => set({
+    restTimeRemaining: seconds
   }),
 
   tickRestTimer: () => {

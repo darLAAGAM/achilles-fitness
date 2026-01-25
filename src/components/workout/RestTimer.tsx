@@ -12,8 +12,11 @@ export function RestTimer({ defaultSeconds = 90, nextExercise, onComplete }: Res
   const {
     restTimerActive,
     restTimeRemaining,
+    restTimerDefault,
     startRestTimer,
+    pauseRestTimer,
     stopRestTimer,
+    setRestTime,
     tickRestTimer
   } = useWorkoutStore();
 
@@ -49,7 +52,7 @@ export function RestTimer({ defaultSeconds = 90, nextExercise, onComplete }: Res
   };
 
   const handlePause = () => {
-    stopRestTimer();
+    pauseRestTimer();
   };
 
   const handleReset = () => {
@@ -58,10 +61,9 @@ export function RestTimer({ defaultSeconds = 90, nextExercise, onComplete }: Res
   };
 
   const adjustTime = (delta: number) => {
-    const newTime = Math.max(0, (restTimeRemaining || defaultSeconds) + delta);
-    startRestTimer(newTime);
-    stopRestTimer();
-    startRestTimer(newTime);
+    const currentTime = restTimeRemaining || defaultSeconds;
+    const newTime = Math.max(0, currentTime + delta);
+    setRestTime(newTime);
   };
 
   const handleSkip = () => {
@@ -69,8 +71,9 @@ export function RestTimer({ defaultSeconds = 90, nextExercise, onComplete }: Res
     onComplete?.();
   };
 
-  const progress = restTimerActive
-    ? ((defaultSeconds - restTimeRemaining) / defaultSeconds) * 100
+  const timerDefault = restTimerDefault || defaultSeconds;
+  const progress = restTimerActive || restTimeRemaining > 0
+    ? ((timerDefault - restTimeRemaining) / timerDefault) * 100
     : 0;
 
   return (

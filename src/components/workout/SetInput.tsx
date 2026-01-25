@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Minus, Plus, Check, Trash2 } from 'lucide-react';
 
 interface SetInputProps {
@@ -28,6 +28,14 @@ export function SetInput({
 }: SetInputProps) {
   const [weight, setWeight] = useState(completedWeight ?? defaultWeight);
   const [reps, setReps] = useState(completedReps ?? defaultReps);
+
+  // Sync with new defaults when they change (e.g., switching exercises)
+  useEffect(() => {
+    if (!completed) {
+      setWeight(completedWeight ?? defaultWeight);
+      setReps(completedReps ?? defaultReps);
+    }
+  }, [defaultWeight, defaultReps, completed, completedWeight, completedReps]);
 
   const adjustWeight = (delta: number) => {
     setWeight(prev => Math.max(0, prev + delta));
