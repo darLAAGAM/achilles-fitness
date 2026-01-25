@@ -10,7 +10,9 @@ interface WorkoutState {
   recentSessions: WorkoutSession[];
   currentExerciseIndex: number;
   restTimerActive: boolean;
-  restTimeRemaining: number;
+  restTimerStartedAt: number | null;  // timestamp when timer started
+  restTimerDuration: number;           // total duration in seconds
+  restTimerPausedRemaining: number;    // remaining seconds when paused
   restTimerDefault: number;
 
   // Actions
@@ -25,8 +27,8 @@ interface WorkoutState {
   startRestTimer: (seconds: number) => void;
   pauseRestTimer: () => void;
   stopRestTimer: () => void;
-  setRestTime: (seconds: number) => void;
-  tickRestTimer: () => void;
+  adjustRestTime: (delta: number) => void;
+  getRestTimeRemaining: () => number;
   getExerciseById: (id: string) => Exercise | undefined;
   getPersonalRecord: (exerciseId: string) => Promise<{ weight: number; reps: number } | null>;
 }
@@ -38,7 +40,9 @@ export const useWorkoutStore = create<WorkoutState>((set, get) => ({
   recentSessions: [],
   currentExerciseIndex: 0,
   restTimerActive: false,
-  restTimeRemaining: 0,
+  restTimerStartedAt: null,
+  restTimerDuration: 90,
+  restTimerPausedRemaining: 0,
   restTimerDefault: 90,
 
   loadExercises: async () => {
@@ -153,30 +157,61 @@ export const useWorkoutStore = create<WorkoutState>((set, get) => ({
 
   startRestTimer: (seconds) => set({
     restTimerActive: true,
-    restTimeRemaining: seconds,
+    restTimerStartedAt: Date.now(),
+    restTimerDuration: seconds,
+    restTimerPausedRemaining: 0,
     restTimerDefault: seconds
   }),
 
-  pauseRestTimer: () => set({
-    restTimerActive: false
-  }),
+  pauseRestTimer: () => {
+    const remaining = get().getRestTimeRemaining();
+    set({
+      restTimerActive: false,
+      restTimerStartedAt: null,
+      restTimerPausedRemaining: remaining
+    });
+  },
 
   stopRestTimer: () => set({
     restTimerActive: false,
-    restTimeRemaining: 0
+    restTimerStartedAt: null,
+    restTimerDuration: 0,
+    restTimerPausedRemaining: 0
   }),
 
-  setRestTime: (seconds) => set({
-    restTimeRemaining: seconds
-  }),
-
-  tickRestTimer: () => {
-    const { restTimeRemaining } = get();
-    if (restTimeRemaining > 0) {
-      set({ restTimeRemaining: restTimeRemaining - 1 });
+  adjustRestTime: (delta) => {
+    const { restTimerActive, restTimerStartedAt, restTimerDuration, restTimerPausedRemaining } = get();
+    
+    if (restTimerActive && restTimerStartedAt) {
+      // Timer running: adjust duration
+      const elapsed = Math.floor((Date.now() - restTimerStartedAt) / 1000);
+      const currentRemaining = Math.max(0, restTimerDuration - elapsed);
+      const newRemaining = Math.max(0, currentRemaining + delta);
+      // Adjust by changing the start time
+      set({
+        restTimerDuration: elapsed + newRemaining,
+        restTimerDefault: elapsed + newRemaining
+      });
     } else {
-      set({ restTimerActive: false });
+      // Timer paused or stopped: adjust paused remaining
+      const current = restTimerPausedRemaining || get().restTimerDefault;
+      const newTime = Math.max(0, current + delta);
+      set({
+        restTimerPausedRemaining: newTime,
+        restTimerDefault: newTime
+      });
     }
+  },
+
+  getRestTimeRemaining: () => {
+    const { restTimerActive, restTimerStartedAt, restTimerDuration, restTimerPausedRemaining, restTimerDefault } = get();
+    
+    if (restTimerActive && restTimerStartedAt) {
+      const elapsed = Math.floor((Date.now() - restTimerStartedAt) / 1000);
+      return Math.max(0, restTimerDuration - elapsed);
+    }
+    
+    return restTimerPausedRemaining || restTimerDefault;
   },
 
   getExerciseById: (id) => {

@@ -659,7 +659,7 @@ function SetInputInline({
   );
 }
 
-// Inline RestTimer component
+// Inline RestTimer component - uses timestamps to work correctly in background
 function RestTimerInline({
   defaultSeconds = 90,
   onComplete
@@ -669,34 +669,75 @@ function RestTimerInline({
 }) {
   const {
     restTimerActive,
-    restTimeRemaining,
     restTimerDefault,
     startRestTimer,
     pauseRestTimer,
     stopRestTimer,
-    setRestTime,
-    tickRestTimer
+    adjustRestTime,
+    getRestTimeRemaining
   } = useWorkoutStore();
 
-  useEffect(() => {
-    let interval: ReturnType<typeof setInterval> | null = null;
+  const [displayTime, setDisplayTime] = useState(getRestTimeRemaining());
+  const [hasCompleted, setHasCompleted] = useState(false);
 
-    if (restTimerActive && restTimeRemaining > 0) {
-      interval = setInterval(() => {
-        tickRestTimer();
-      }, 1000);
-    } else if (restTimeRemaining === 0 && restTimerActive) {
-      stopRestTimer();
-      if ('vibrate' in navigator) {
-        navigator.vibrate([200, 100, 200]);
-      }
-      onComplete?.();
+  useEffect(() => {
+    if (!restTimerActive) {
+      setDisplayTime(getRestTimeRemaining());
+      return;
     }
 
-    return () => {
-      if (interval) clearInterval(interval);
+    setHasCompleted(false);
+    
+    let animationId: number;
+    let lastUpdate = Date.now();
+    
+    const updateTimer = () => {
+      const now = Date.now();
+      if (now - lastUpdate >= 100) {
+        const remaining = getRestTimeRemaining();
+        setDisplayTime(remaining);
+        lastUpdate = now;
+        
+        if (remaining <= 0 && !hasCompleted) {
+          setHasCompleted(true);
+          stopRestTimer();
+          if ('vibrate' in navigator) {
+            navigator.vibrate([200, 100, 200]);
+          }
+          onComplete?.();
+          return;
+        }
+      }
+      
+      if (restTimerActive) {
+        animationId = requestAnimationFrame(updateTimer);
+      }
     };
-  }, [restTimerActive, restTimeRemaining, tickRestTimer, stopRestTimer, onComplete]);
+    
+    animationId = requestAnimationFrame(updateTimer);
+    
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        const remaining = getRestTimeRemaining();
+        setDisplayTime(remaining);
+        if (remaining <= 0 && !hasCompleted) {
+          setHasCompleted(true);
+          stopRestTimer();
+          if ('vibrate' in navigator) {
+            navigator.vibrate([200, 100, 200]);
+          }
+          onComplete?.();
+        }
+      }
+    };
+    
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    return () => {
+      cancelAnimationFrame(animationId);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [restTimerActive, getRestTimeRemaining, stopRestTimer, onComplete, hasCompleted]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -705,7 +746,9 @@ function RestTimerInline({
   };
 
   const handleStart = () => {
-    startRestTimer(restTimeRemaining || defaultSeconds);
+    setHasCompleted(false);
+    const currentTime = getRestTimeRemaining() || defaultSeconds;
+    startRestTimer(currentTime);
   };
 
   const handlePause = () => {
@@ -713,6 +756,7 @@ function RestTimerInline({
   };
 
   const handleReset = () => {
+    setHasCompleted(false);
     stopRestTimer();
     startRestTimer(defaultSeconds);
   };
@@ -722,15 +766,14 @@ function RestTimerInline({
     onComplete?.();
   };
 
-  const adjustTime = (delta: number) => {
-    const currentTime = restTimeRemaining || defaultSeconds;
-    const newTime = Math.max(0, currentTime + delta);
-    setRestTime(newTime);
+  const handleAdjustTime = (delta: number) => {
+    adjustRestTime(delta);
+    setDisplayTime(getRestTimeRemaining());
   };
 
   const timerDefault = restTimerDefault || defaultSeconds;
-  const progress = restTimerActive || restTimeRemaining > 0
-    ? ((timerDefault - restTimeRemaining) / timerDefault) * 100
+  const progress = restTimerActive || displayTime > 0
+    ? ((timerDefault - displayTime) / timerDefault) * 100
     : 0;
 
   return (
@@ -759,7 +802,7 @@ function RestTimerInline({
         </svg>
         <div style={styles.timerCenter}>
           <span style={styles.timerTime}>
-            {formatTime(restTimeRemaining || defaultSeconds)}
+            {formatTime(displayTime)}
           </span>
           <span style={styles.timerLabel}>
             {restTimerActive ? 'Descansando' : 'Descanso'}
@@ -767,11 +810,11 @@ function RestTimerInline({
         </div>
       </div>
       <div style={styles.timerAdjust}>
-        <button onClick={() => adjustTime(-15)} style={styles.timerAdjustButton}>
+        <button onClick={() => handleAdjustTime(-15)} style={styles.timerAdjustButton}>
           <Minus size={18} />
         </button>
         <span style={{ fontSize: '14px', color: '#888' }}>15s</span>
-        <button onClick={() => adjustTime(15)} style={styles.timerAdjustButton}>
+        <button onClick={() => handleAdjustTime(15)} style={styles.timerAdjustButton}>
           <Plus size={18} />
         </button>
       </div>

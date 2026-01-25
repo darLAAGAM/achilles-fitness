@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 import { Play, Pause, RotateCcw, Plus, Minus, SkipForward } from 'lucide-react';
 import { useWorkoutStore } from '../../stores/workoutStore';
 
@@ -11,35 +11,82 @@ interface RestTimerProps {
 export function RestTimer({ defaultSeconds = 90, nextExercise, onComplete }: RestTimerProps) {
   const {
     restTimerActive,
-    restTimeRemaining,
     restTimerDefault,
     startRestTimer,
     pauseRestTimer,
     stopRestTimer,
-    setRestTime,
-    tickRestTimer
+    adjustRestTime,
+    getRestTimeRemaining
   } = useWorkoutStore();
 
-  useEffect(() => {
-    let interval: ReturnType<typeof setInterval> | null = null;
+  // Local state for display, updated frequently
+  const [displayTime, setDisplayTime] = useState(getRestTimeRemaining());
+  const [hasCompleted, setHasCompleted] = useState(false);
 
-    if (restTimerActive && restTimeRemaining > 0) {
-      interval = setInterval(() => {
-        tickRestTimer();
-      }, 1000);
-    } else if (restTimeRemaining === 0 && restTimerActive) {
-      stopRestTimer();
-      // Vibrate if supported
-      if ('vibrate' in navigator) {
-        navigator.vibrate([200, 100, 200]);
-      }
-      onComplete?.();
+  // Update display time frequently when timer is active
+  useEffect(() => {
+    if (!restTimerActive) {
+      setDisplayTime(getRestTimeRemaining());
+      return;
     }
 
-    return () => {
-      if (interval) clearInterval(interval);
+    setHasCompleted(false);
+    
+    // Use requestAnimationFrame for smooth updates that work in background
+    let animationId: number;
+    let lastUpdate = Date.now();
+    
+    const updateTimer = () => {
+      const now = Date.now();
+      // Update at least every 100ms for smooth display
+      if (now - lastUpdate >= 100) {
+        const remaining = getRestTimeRemaining();
+        setDisplayTime(remaining);
+        lastUpdate = now;
+        
+        // Check if timer completed
+        if (remaining <= 0 && !hasCompleted) {
+          setHasCompleted(true);
+          stopRestTimer();
+          // Vibrate if supported
+          if ('vibrate' in navigator) {
+            navigator.vibrate([200, 100, 200]);
+          }
+          onComplete?.();
+          return; // Stop the loop
+        }
+      }
+      
+      if (restTimerActive) {
+        animationId = requestAnimationFrame(updateTimer);
+      }
     };
-  }, [restTimerActive, restTimeRemaining, tickRestTimer, stopRestTimer, onComplete]);
+    
+    animationId = requestAnimationFrame(updateTimer);
+    
+    // Also use visibility change to update immediately when app comes back to foreground
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        const remaining = getRestTimeRemaining();
+        setDisplayTime(remaining);
+        if (remaining <= 0 && !hasCompleted) {
+          setHasCompleted(true);
+          stopRestTimer();
+          if ('vibrate' in navigator) {
+            navigator.vibrate([200, 100, 200]);
+          }
+          onComplete?.();
+        }
+      }
+    };
+    
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    return () => {
+      cancelAnimationFrame(animationId);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [restTimerActive, getRestTimeRemaining, stopRestTimer, onComplete, hasCompleted]);
 
   const formatTime = useCallback((seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -48,7 +95,9 @@ export function RestTimer({ defaultSeconds = 90, nextExercise, onComplete }: Res
   }, []);
 
   const handleStart = () => {
-    startRestTimer(restTimeRemaining || defaultSeconds);
+    setHasCompleted(false);
+    const currentTime = getRestTimeRemaining() || defaultSeconds;
+    startRestTimer(currentTime);
   };
 
   const handlePause = () => {
@@ -56,14 +105,14 @@ export function RestTimer({ defaultSeconds = 90, nextExercise, onComplete }: Res
   };
 
   const handleReset = () => {
+    setHasCompleted(false);
     stopRestTimer();
     startRestTimer(defaultSeconds);
   };
 
-  const adjustTime = (delta: number) => {
-    const currentTime = restTimeRemaining || defaultSeconds;
-    const newTime = Math.max(0, currentTime + delta);
-    setRestTime(newTime);
+  const handleAdjustTime = (delta: number) => {
+    adjustRestTime(delta);
+    setDisplayTime(getRestTimeRemaining());
   };
 
   const handleSkip = () => {
@@ -72,8 +121,8 @@ export function RestTimer({ defaultSeconds = 90, nextExercise, onComplete }: Res
   };
 
   const timerDefault = restTimerDefault || defaultSeconds;
-  const progress = restTimerActive || restTimeRemaining > 0
-    ? ((timerDefault - restTimeRemaining) / timerDefault) * 100
+  const progress = restTimerActive || displayTime > 0
+    ? ((timerDefault - displayTime) / timerDefault) * 100
     : 0;
 
   return (
@@ -99,12 +148,12 @@ export function RestTimer({ defaultSeconds = 90, nextExercise, onComplete }: Res
             strokeLinecap="round"
             strokeDasharray={440}
             strokeDashoffset={440 - (440 * progress) / 100}
-            className="transition-all duration-1000"
+            className="transition-all duration-300"
           />
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           <span className="text-4xl font-bold text-[var(--color-text)]">
-            {formatTime(restTimeRemaining || defaultSeconds)}
+            {formatTime(displayTime)}
           </span>
           <span className="text-xs text-[var(--color-text-secondary)] mt-1">
             {restTimerActive ? 'Descansando' : 'Descanso'}
@@ -115,14 +164,14 @@ export function RestTimer({ defaultSeconds = 90, nextExercise, onComplete }: Res
       {/* Time adjustment */}
       <div className="flex items-center gap-4">
         <button
-          onClick={() => adjustTime(-15)}
+          onClick={() => handleAdjustTime(-15)}
           className="w-10 h-10 rounded-full bg-[var(--color-surface-elevated)] flex items-center justify-center text-[var(--color-text-secondary)] active:scale-95 transition-transform"
         >
           <Minus size={18} />
         </button>
         <span className="text-sm text-[var(--color-text-secondary)]">15s</span>
         <button
-          onClick={() => adjustTime(15)}
+          onClick={() => handleAdjustTime(15)}
           className="w-10 h-10 rounded-full bg-[var(--color-surface-elevated)] flex items-center justify-center text-[var(--color-text-secondary)] active:scale-95 transition-transform"
         >
           <Plus size={18} />
