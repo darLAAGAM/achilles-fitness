@@ -3,6 +3,7 @@ import { BottomNav } from './components/layout';
 import { TodayWorkout } from './features/workouts';
 import { ProgressDashboard } from './features/progress';
 import { MacroTracker } from './features/nutrition';
+import { InsightsPage } from './features/insights';
 import { Settings, Onboarding } from './features/settings';
 
 const styles = {
@@ -27,6 +28,8 @@ function App() {
         return <ProgressDashboard />;
       case 'nutrition':
         return <MacroTracker />;
+      case 'insights':
+        return <InsightsPage />;
       case 'settings':
         return <Settings />;
       default:

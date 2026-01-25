@@ -1,4 +1,4 @@
-import { Dumbbell, TrendingUp, Apple, Settings } from 'lucide-react';
+import { Dumbbell, TrendingUp, Apple, Lightbulb, Settings } from 'lucide-react';
 import { useUserStore } from '../../stores/userStore';
 import type { Tab } from '../../types';
 
@@ -6,6 +6,7 @@ const tabs: { id: Tab; label: string; icon: typeof Dumbbell }[] = [
   { id: 'workout', label: 'Entreno', icon: Dumbbell },
   { id: 'progress', label: 'Progreso', icon: TrendingUp },
   { id: 'nutrition', label: 'Nutrición', icon: Apple },
+  { id: 'insights', label: 'Consejos', icon: Lightbulb },
   { id: 'settings', label: 'Ajustes', icon: Settings }
 ];
 

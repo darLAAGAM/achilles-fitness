@@ -303,7 +303,7 @@ export interface NutritionGuidelines {
 // ============================================
 // UI TYPES
 // ============================================
-export type Tab = 'workout' | 'progress' | 'nutrition' | 'settings';
+export type Tab = 'workout' | 'progress' | 'nutrition' | 'insights' | 'settings';
 
 export interface AppState {
   activeTab: Tab;
