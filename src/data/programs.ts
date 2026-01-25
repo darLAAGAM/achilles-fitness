@@ -1,12 +1,14 @@
 import type { WorkoutProgram, WorkoutTemplate, ProgramPhase, NutritionGuidelines, Equipment } from '../types';
 
 // ============================================
-// ACHILLES PROGRAM (3 Days/Week)
-// Based on B3 Bulking - Brad Pitt Troy Physique
+// ACHILLES 3.0 PROGRAM (5 Days/Week, 4 Phases)
+// Based on Alexander Cortes' Original Achilles Program
+// Brad Pitt Troy Physique - "Crafting The Body Of A DemiGod"
 // ============================================
 
 export const achillesNutrition: NutritionGuidelines = {
-  proteinPerKg: 2.0,
+  recommendedFasting: '16/8',
+  proteinPerKg: 2.2, // 1g per lb bodyweight
   mealFrequency: 4,
   preworkoutTiming: 60,
   postworkoutTiming: 30,
@@ -18,256 +20,1372 @@ export const achillesNutrition: NutritionGuidelines = {
     'Verduras verdes', 'Frutas', 'Huevos'
   ],
   notes: [
-    'Enfoque en proteína de alta calidad',
-    'Carbohidratos alrededor del entreno',
-    'Grasas saludables para hormonas'
+    'BULKING: Calorías = Peso corporal (lbs) x 15',
+    'CUTTING: Calorías = Peso corporal (lbs) x 11',
+    'Proteína = Peso corporal x 1g (bulk) o x 1.25g (cut)',
+    'Carbohidratos: 40% calorías (bulk) o 20% (cut)',
+    'Refeed cada 7-10 días durante cutting',
+    'Batido de proteína antes de dormir'
   ]
 };
 
-export const achillesTemplates: WorkoutTemplate[] = [
+// Achilles 4 Phases
+const achillesPhases: ProgramPhase[] = [
   {
-    id: 'achilles-push',
-    name: 'Push Day - Guerrero',
-    type: 'push',
+    id: 'achilles-phase1',
+    name: 'Fase I: Aclimatación',
+    description: '20 sets por grupo muscular. NO al fallo - deja 1-2 reps en reserva. Alta frecuencia para adaptación.',
+    weeks: 4,
+    focus: 'hypertrophy',
+    trainingStyle: 'standard',
+    cardioType: 'hiit',
+    cardioDuration: 20,
+    cardioFrequency: 2,
+    notes: [
+      '20 sets totales por grupo muscular superior',
+      'NO entrenar al fallo - deja 1-2 reps',
+      'Descanso 1-2 min entre sets, 3 min entre ejercicios',
+      'Entrenamientos de ritmo rápido',
+      'Cardio: 60 min aeróbico 1x/sem + 20 min HIIT 2x/sem'
+    ]
+  },
+  {
+    id: 'achilles-phase2',
+    name: 'Fase II: Sobrecarga Progresiva',
+    description: '12-16 sets por grupo. Ahora SÍ al fallo positivo. Énfasis en progresión de peso/reps.',
+    weeks: 4,
+    focus: 'hypertrophy',
+    trainingStyle: 'standard',
+    cardioType: 'hiit',
+    cardioDuration: 20,
+    cardioFrequency: 2,
+    notes: [
+      '12-16 sets totales por grupo muscular',
+      'Lleva sets al fallo positivo',
+      'Volumen reducido para compensar intensidad',
+      'Prioriza PRs en ejercicios principales',
+      'Cardio: 60 min aeróbico 1x/sem + 20 min HIIT 2x/sem'
+    ]
+  },
+  {
+    id: 'achilles-phase3',
+    name: 'Fase III: Intensidad Máxima',
+    description: '8 sets por grupo. Frecuencia 1x/semana. Enfócate en batir récords cada sesión.',
+    weeks: 4,
+    focus: 'strength',
+    trainingStyle: 'standard',
+    cardioType: 'hiit',
+    cardioDuration: 20,
+    cardioFrequency: 2,
+    notes: [
+      '8 sets por grupo muscular - 1x/semana',
+      'Busca PRs en peso o reps cada semana',
+      'Descansos más largos (2-3 min)',
+      'Máxima intensidad por set',
+      'Cardio: 60 min aeróbico 1x/sem + 20 min HIIT 2x/sem'
+    ]
+  },
+  {
+    id: 'achilles-phase4',
+    name: 'Fase IV: Man of Bronze (Opcional)',
+    description: 'Fase de densidad máxima. Menos ejercicios, MUCHOS sets. Lo más rápido posible.',
+    weeks: 4,
+    focus: 'hypertrophy',
+    trainingStyle: 'standard',
+    cardioType: 'none',
+    notes: [
+      'CERO cardio durante esta fase',
+      'Workouts cortos pero DENSOS',
+      'Velocidad y precisión en cada rep',
+      'Esquema 8x8 al estilo Vince Gironda',
+      'Solo hacer si has completado las 3 fases anteriores'
+    ]
+  }
+];
+
+// ============================================
+// ACHILLES PHASE I WORKOUTS (5 days, 20 sets/muscle)
+// ============================================
+const achillesPhase1Workouts: WorkoutTemplate[] = [
+  {
+    id: 'achilles-p1-legs',
+    name: 'Día 1 - Piernas (Fase I)',
+    type: 'legs',
     dayOfWeek: 1,
+    phaseId: 'achilles-phase1',
     estimatedDuration: 60,
     exercises: [
       {
-        exerciseId: 'incline-db-press',
+        exerciseId: 'leg-curls',
         order: 1,
-        intensity: 'heavy',
-        targetSets: 5,
-        targetRepsMin: 5,
-        targetRepsMax: 8,
-        restSeconds: 150,
-        notes: 'Enfócate en el pecho superior para los hombros anchos de Achilles',
-        alternativeExercises: ['incline-barbell-press', 'decline-pushups']
+        intensity: 'medium',
+        targetSets: 4,
+        targetRepsMin: 8,
+        targetRepsMax: 15,
+        restSeconds: 90,
+        notes: 'Sentado, tumbado o con stability ball'
       },
       {
-        exerciseId: 'flat-barbell-press',
+        exerciseId: 'weighted-step-ups',
         order: 2,
         intensity: 'medium',
         targetSets: 4,
-        targetRepsMin: 6,
+        targetRepsMin: 8,
+        targetRepsMax: 10,
+        restSeconds: 90,
+        notes: 'Con mancuernas o barra'
+      },
+      {
+        exerciseId: 'walking-lunges',
+        order: 3,
+        intensity: 'medium',
+        targetSets: 4,
+        targetRepsMin: 8,
         targetRepsMax: 12,
+        restSeconds: 90,
+        notes: 'Con mancuernas o barra en hombros'
+      },
+      {
+        exerciseId: 'romanian-deadlifts',
+        order: 4,
+        intensity: 'medium',
+        targetSets: 4,
+        targetRepsMin: 8,
+        targetRepsMax: 10,
         restSeconds: 120,
-        notes: 'Construye la base del pecho',
-        alternativeExercises: ['db-flat-press', 'pushups']
+        notes: 'Con barra - Stiff Leg Deadlift'
+      },
+      {
+        exerciseId: 'calf-raises',
+        order: 5,
+        intensity: 'light',
+        targetSets: 8,
+        targetRepsMin: 10,
+        targetRepsMax: 15,
+        restSeconds: 60,
+        notes: '4 sets sentado + 4 sets de pie'
+      }
+    ]
+  },
+  {
+    id: 'achilles-p1-chest-shoulders1',
+    name: 'Día 2 - Pecho + Hombros (Fase I)',
+    type: 'push',
+    dayOfWeek: 2,
+    phaseId: 'achilles-phase1',
+    estimatedDuration: 60,
+    exercises: [
+      {
+        exerciseId: 'incline-barbell-press',
+        order: 1,
+        intensity: 'heavy',
+        targetSets: 4,
+        targetRepsMin: 5,
+        targetRepsMax: 8,
+        restSeconds: 150,
+        notes: 'Movimiento principal - enfoque pecho superior'
+      },
+      {
+        exerciseId: 'db-flat-press',
+        order: 2,
+        intensity: 'medium',
+        targetSets: 3,
+        targetRepsMin: 10,
+        targetRepsMax: 15,
+        restSeconds: 90
       },
       {
         exerciseId: 'cable-flyes',
         order: 3,
         intensity: 'light',
-        targetSets: 3,
+        targetSets: 2,
         targetRepsMin: 10,
-        targetRepsMax: 20,
-        restSeconds: 90,
-        notes: 'Pump y definición, siente el estiramiento',
-        alternativeExercises: ['incline-db-fly', 'deficit-pushups']
+        targetRepsMax: 15,
+        restSeconds: 60,
+        notes: 'Decline cable fly para pecho bajo'
       },
       {
         exerciseId: 'lateral-raises',
         order: 4,
-        intensity: 'optional',
+        intensity: 'medium',
         targetSets: 4,
-        targetRepsMin: 12,
-        targetRepsMax: 15,
-        restSeconds: 60,
-        notes: 'Clave para el índice de Adonis - hombros anchos'
-      },
-      {
-        exerciseId: 'tricep-pushdowns',
-        order: 5,
-        intensity: 'optional',
-        targetSets: 3,
         targetRepsMin: 10,
         targetRepsMax: 15,
         restSeconds: 60,
-        notes: 'Definición del brazo',
-        alternativeExercises: ['close-grip-pushups', 'bodyweight-skullcrusher']
+        notes: 'Incline DB lateral raise'
       },
       {
-        exerciseId: 'overhead-tricep-extension',
-        order: 6,
-        intensity: 'optional',
-        targetSets: 3,
-        targetRepsMin: 12,
+        exerciseId: 'rear-delt-flyes',
+        order: 5,
+        intensity: 'light',
+        targetSets: 4,
+        targetRepsMin: 10,
         targetRepsMax: 15,
         restSeconds: 60,
-        notes: 'Cabeza larga del tríceps para brazos completos'
+        notes: 'Bent over rear delt raise'
       }
     ]
   },
   {
-    id: 'achilles-pull',
-    name: 'Pull Day - Espartano',
+    id: 'achilles-p1-back-arms1',
+    name: 'Día 3 - Espalda + Brazos (Fase I)',
     type: 'pull',
     dayOfWeek: 3,
-    estimatedDuration: 60,
+    phaseId: 'achilles-phase1',
+    estimatedDuration: 70,
     exercises: [
       {
-        exerciseId: 'weighted-pullups',
+        exerciseId: 'wide-grip-pullup',
         order: 1,
         intensity: 'heavy',
-        targetSets: 5,
-        targetRepsMin: 5,
-        targetRepsMax: 8,
-        restSeconds: 150,
-        notes: 'El ejercicio rey para la V-taper. Achilles standard: BW+50%',
-        alternativeExercises: ['chinups', 'lat-pulldown']
+        targetSets: 4,
+        targetRepsMin: 8,
+        targetRepsMax: 10,
+        restSeconds: 120,
+        notes: 'Pulldowns si no puedes hacer pull-ups',
+        alternativeExercises: ['lat-pulldown']
       },
       {
         exerciseId: 'cable-rows',
         order: 2,
         intensity: 'medium',
-        targetSets: 4,
-        targetRepsMin: 6,
-        targetRepsMax: 12,
-        restSeconds: 120,
-        notes: 'Grosor de espalda para la postura de guerrero',
-        alternativeExercises: ['barbell-bent-over-row', 'inverted-row']
-      },
-      {
-        exerciseId: 'face-pulls',
-        order: 3,
-        intensity: 'light',
-        targetSets: 3,
-        targetRepsMin: 15,
-        targetRepsMax: 20,
-        restSeconds: 60,
-        notes: 'Salud del hombro + deltoides posterior',
-        alternativeExercises: ['rear-delt-flyes']
-      },
-      {
-        exerciseId: 'barbell-curls',
-        order: 4,
-        intensity: 'optional',
-        targetSets: 4,
-        targetRepsMin: 8,
-        targetRepsMax: 12,
-        restSeconds: 90,
-        notes: 'Pico del bíceps',
-        alternativeExercises: ['hammer-curls', 'bodyweight-bicep-curl']
-      },
-      {
-        exerciseId: 'hammer-curls',
-        order: 5,
-        intensity: 'optional',
         targetSets: 3,
         targetRepsMin: 10,
         targetRepsMax: 15,
-        restSeconds: 60,
-        notes: 'Braquial para brazos más gruesos'
+        restSeconds: 90,
+        notes: 'Agarre pronado'
       },
       {
-        exerciseId: 'rear-delt-flyes',
-        order: 6,
-        intensity: 'optional',
-        targetSets: 3,
-        targetRepsMin: 15,
-        targetRepsMax: 20,
-        restSeconds: 60,
-        notes: 'Balance del hombro, esencial para la estética'
-      }
-    ]
-  },
-  {
-    id: 'achilles-legs',
-    name: 'Legs Day - Hoplita',
-    type: 'legs',
-    dayOfWeek: 5,
-    estimatedDuration: 60,
-    exercises: [
+        exerciseId: 't-bar-row',
+        order: 3,
+        intensity: 'medium',
+        targetSets: 2,
+        targetRepsMin: 8,
+        targetRepsMax: 10,
+        restSeconds: 90,
+        notes: 'Chest supported T-bar row'
+      },
       {
-        exerciseId: 'barbell-squats',
-        order: 1,
+        exerciseId: 'hammer-curls',
+        order: 4,
+        intensity: 'medium',
+        targetSets: 5,
+        targetRepsMin: 8,
+        targetRepsMax: 10,
+        restSeconds: 60,
+        notes: 'Pinwheel style'
+      },
+      {
+        exerciseId: 'tricep-pushdowns',
+        order: 5,
+        intensity: 'medium',
+        targetSets: 5,
+        targetRepsMin: 10,
+        targetRepsMax: 15,
+        restSeconds: 60
+      },
+      {
+        exerciseId: 'barbell-curls',
+        order: 6,
         intensity: 'heavy',
         targetSets: 5,
         targetRepsMin: 5,
         targetRepsMax: 8,
-        restSeconds: 180,
-        notes: 'Fundamento de todo atleta. Profundidad completa.',
-        alternativeExercises: ['goblet-squat', 'bulgarian-split-squat']
+        restSeconds: 90,
+        notes: 'EZ Bar curls'
       },
       {
-        exerciseId: 'romanian-deadlifts',
+        exerciseId: 'overhead-tricep-extension',
+        order: 7,
+        intensity: 'medium',
+        targetSets: 5,
+        targetRepsMin: 8,
+        targetRepsMax: 12,
+        restSeconds: 60,
+        notes: 'Rope overhead extension'
+      }
+    ]
+  },
+  {
+    id: 'achilles-p1-chest-shoulders2',
+    name: 'Día 4 - Pecho + Hombros B (Fase I)',
+    type: 'push',
+    dayOfWeek: 4,
+    phaseId: 'achilles-phase1',
+    estimatedDuration: 60,
+    exercises: [
+      {
+        exerciseId: 'dips',
+        order: 1,
+        intensity: 'heavy',
+        targetSets: 4,
+        targetRepsMin: 10,
+        targetRepsMax: 15,
+        restSeconds: 120,
+        notes: 'Añade peso si BW es fácil'
+      },
+      {
+        exerciseId: 'machine-chest-press',
         order: 2,
         intensity: 'medium',
-        targetSets: 4,
-        targetRepsMin: 6,
-        targetRepsMax: 12,
-        restSeconds: 150,
-        notes: 'Isquios y glúteos para piernas proporcionadas',
-        alternativeExercises: ['db-stiff-leg-deadlift']
+        targetSets: 3,
+        targetRepsMin: 10,
+        targetRepsMax: 15,
+        restSeconds: 90,
+        notes: 'Converging chest press'
       },
       {
-        exerciseId: 'leg-press',
+        exerciseId: 'cable-flyes',
         order: 3,
         intensity: 'light',
-        targetSets: 3,
-        targetRepsMin: 10,
-        targetRepsMax: 20,
-        restSeconds: 120,
-        notes: 'Volumen adicional para los cuádriceps',
-        alternativeExercises: ['walking-lunges', 'jump-squat']
-      },
-      {
-        exerciseId: 'leg-curls',
-        order: 4,
-        intensity: 'optional',
-        targetSets: 3,
+        targetSets: 2,
         targetRepsMin: 10,
         targetRepsMax: 15,
-        restSeconds: 90,
-        notes: 'Aislamiento de isquiotibiales',
-        alternativeExercises: ['romanian-deadlifts']
-      },
-      {
-        exerciseId: 'calf-raises',
-        order: 5,
-        intensity: 'optional',
-        targetSets: 4,
-        targetRepsMin: 12,
-        targetRepsMax: 20,
         restSeconds: 60,
-        notes: 'Los griegos no se saltaban las pantorrillas',
-        alternativeExercises: ['single-leg-calf-raise']
+        notes: 'Decline cable fly'
       },
       {
-        exerciseId: 'ab-wheel',
-        order: 6,
-        intensity: 'optional',
+        exerciseId: 'db-shoulder-press',
+        order: 4,
+        intensity: 'heavy',
+        targetSets: 5,
+        targetRepsMin: 5,
+        targetRepsMax: 8,
+        restSeconds: 120,
+        notes: 'Seated DB shoulder press'
+      },
+      {
+        exerciseId: 'lateral-raises',
+        order: 5,
+        intensity: 'medium',
+        targetSets: 5,
+        targetRepsMin: 8,
+        targetRepsMax: 10,
+        restSeconds: 60,
+        notes: 'Sideways incline lateral raise'
+      }
+    ]
+  },
+  {
+    id: 'achilles-p1-back-arms2',
+    name: 'Día 5 - Espalda + Brazos B (Fase I)',
+    type: 'pull',
+    dayOfWeek: 5,
+    phaseId: 'achilles-phase1',
+    estimatedDuration: 70,
+    exercises: [
+      {
+        exerciseId: 'lat-pulldown',
+        order: 1,
+        intensity: 'medium',
+        targetSets: 4,
+        targetRepsMin: 8,
+        targetRepsMax: 12,
+        restSeconds: 90,
+        notes: 'Single arm pulldowns'
+      },
+      {
+        exerciseId: 't-bar-row',
+        order: 2,
+        intensity: 'medium',
         targetSets: 3,
+        targetRepsMin: 6,
+        targetRepsMax: 8,
+        restSeconds: 90,
+        notes: 'Chest supported, pronated grip'
+      },
+      {
+        exerciseId: 'cable-pulldown',
+        order: 3,
+        intensity: 'light',
+        targetSets: 2,
         targetRepsMin: 10,
         targetRepsMax: 15,
+        restSeconds: 60,
+        notes: '1-arm cable pulldown'
+      },
+      {
+        exerciseId: 'hammer-curls',
+        order: 4,
+        intensity: 'medium',
+        targetSets: 5,
+        targetRepsMin: 8,
+        targetRepsMax: 10,
+        restSeconds: 60,
+        notes: 'Pinwheel style'
+      },
+      {
+        exerciseId: 'tricep-pushdowns',
+        order: 5,
+        intensity: 'medium',
+        targetSets: 5,
+        targetRepsMin: 10,
+        targetRepsMax: 15,
+        restSeconds: 60
+      },
+      {
+        exerciseId: 'barbell-curls',
+        order: 6,
+        intensity: 'heavy',
+        targetSets: 5,
+        targetRepsMin: 5,
+        targetRepsMax: 8,
         restSeconds: 90,
-        notes: 'Core de guerrero - los abdominales de Troya',
-        alternativeExercises: ['plank', 'hanging-leg-raise']
+        notes: 'EZ Bar curls'
+      },
+      {
+        exerciseId: 'overhead-tricep-extension',
+        order: 7,
+        intensity: 'medium',
+        targetSets: 5,
+        targetRepsMin: 8,
+        targetRepsMax: 12,
+        restSeconds: 60
       }
     ]
   }
 ];
 
+// ============================================
+// ACHILLES PHASE II WORKOUTS (Progressive Overload)
+// ============================================
+const achillesPhase2Workouts: WorkoutTemplate[] = [
+  {
+    id: 'achilles-p2-chest-shoulders-triceps1',
+    name: 'Día 1 - Pecho + Hombros + Tríceps (Fase II)',
+    type: 'push',
+    dayOfWeek: 1,
+    phaseId: 'achilles-phase2',
+    estimatedDuration: 60,
+    exercises: [
+      {
+        exerciseId: 'incline-barbell-press',
+        order: 1,
+        intensity: 'heavy',
+        targetSets: 3,
+        targetRepsMin: 4,
+        targetRepsMax: 8,
+        restSeconds: 180,
+        notes: 'Pirámide: sube peso cada set (8, 6, 4 reps)'
+      },
+      {
+        exerciseId: 'db-flat-press',
+        order: 2,
+        intensity: 'medium',
+        targetSets: 2,
+        targetRepsMin: 6,
+        targetRepsMax: 10,
+        restSeconds: 120
+      },
+      {
+        exerciseId: 'cable-flyes',
+        order: 3,
+        intensity: 'light',
+        targetSets: 2,
+        targetRepsMin: 10,
+        targetRepsMax: 15,
+        restSeconds: 60,
+        notes: 'Decline cable fly'
+      },
+      {
+        exerciseId: 'lateral-raises',
+        order: 4,
+        intensity: 'medium',
+        targetSets: 3,
+        targetRepsMin: 10,
+        targetRepsMax: 15,
+        restSeconds: 60,
+        notes: 'Incline DB lateral raise'
+      },
+      {
+        exerciseId: 'rear-delt-flyes',
+        order: 5,
+        intensity: 'light',
+        targetSets: 3,
+        targetRepsMin: 10,
+        targetRepsMax: 15,
+        restSeconds: 60,
+        notes: 'Cable rear delt raise'
+      },
+      {
+        exerciseId: 'tricep-pushdowns',
+        order: 6,
+        intensity: 'medium',
+        targetSets: 3,
+        targetRepsMin: 10,
+        targetRepsMax: 15,
+        restSeconds: 60
+      },
+      {
+        exerciseId: 'overhead-tricep-extension',
+        order: 7,
+        intensity: 'medium',
+        targetSets: 3,
+        targetRepsMin: 8,
+        targetRepsMax: 12,
+        restSeconds: 60
+      }
+    ]
+  },
+  {
+    id: 'achilles-p2-back-biceps1',
+    name: 'Día 2 - Espalda + Bíceps (Fase II)',
+    type: 'pull',
+    dayOfWeek: 2,
+    phaseId: 'achilles-phase2',
+    estimatedDuration: 60,
+    exercises: [
+      {
+        exerciseId: 'wide-grip-pullup',
+        order: 1,
+        intensity: 'heavy',
+        targetSets: 3,
+        targetRepsMin: 8,
+        targetRepsMax: 10,
+        restSeconds: 120,
+        alternativeExercises: ['lat-pulldown']
+      },
+      {
+        exerciseId: 'cable-rows',
+        order: 2,
+        intensity: 'medium',
+        targetSets: 3,
+        targetRepsMin: 10,
+        targetRepsMax: 15,
+        restSeconds: 90,
+        notes: 'Wide grip cable row'
+      },
+      {
+        exerciseId: 'inverted-row',
+        order: 3,
+        intensity: 'light',
+        targetSets: 2,
+        targetRepsMin: 8,
+        targetRepsMax: 20,
+        restSeconds: 60,
+        notes: 'Bodyweight inverted row'
+      },
+      {
+        exerciseId: 'incline-db-curl',
+        order: 4,
+        intensity: 'medium',
+        targetSets: 3,
+        targetRepsMin: 8,
+        targetRepsMax: 10,
+        restSeconds: 60,
+        notes: 'DB incline curls - per arm'
+      },
+      {
+        exerciseId: 'barbell-curls',
+        order: 5,
+        intensity: 'heavy',
+        targetSets: 4,
+        targetRepsMin: 5,
+        targetRepsMax: 8,
+        restSeconds: 90,
+        notes: 'EZ bar curls'
+      }
+    ]
+  },
+  {
+    id: 'achilles-p2-legs',
+    name: 'Día 3 - Piernas (Fase II)',
+    type: 'legs',
+    dayOfWeek: 3,
+    phaseId: 'achilles-phase2',
+    estimatedDuration: 60,
+    exercises: [
+      {
+        exerciseId: 'leg-curls',
+        order: 1,
+        intensity: 'medium',
+        targetSets: 3,
+        targetRepsMin: 15,
+        targetRepsMax: 20,
+        restSeconds: 90
+      },
+      {
+        exerciseId: 'weighted-step-ups',
+        order: 2,
+        intensity: 'medium',
+        targetSets: 3,
+        targetRepsMin: 8,
+        targetRepsMax: 10,
+        restSeconds: 90
+      },
+      {
+        exerciseId: 'walking-lunges',
+        order: 3,
+        intensity: 'medium',
+        targetSets: 4,
+        targetRepsMin: 10,
+        targetRepsMax: 15,
+        restSeconds: 90,
+        notes: 'Steps per leg'
+      },
+      {
+        exerciseId: 'romanian-deadlifts',
+        order: 4,
+        intensity: 'heavy',
+        targetSets: 4,
+        targetRepsMin: 6,
+        targetRepsMax: 10,
+        restSeconds: 120,
+        notes: 'BB Stiff Leg Deadlift'
+      },
+      {
+        exerciseId: 'calf-raises',
+        order: 5,
+        intensity: 'light',
+        targetSets: 8,
+        targetRepsMin: 10,
+        targetRepsMax: 15,
+        restSeconds: 60,
+        notes: '4 seated + 4 standing'
+      }
+    ]
+  },
+  {
+    id: 'achilles-p2-back-biceps2',
+    name: 'Día 4 - Espalda + Bíceps B (Fase II)',
+    type: 'pull',
+    dayOfWeek: 4,
+    phaseId: 'achilles-phase2',
+    estimatedDuration: 60,
+    exercises: [
+      {
+        exerciseId: 'chinups',
+        order: 1,
+        intensity: 'heavy',
+        targetSets: 3,
+        targetRepsMin: 8,
+        targetRepsMax: 10,
+        restSeconds: 120,
+        notes: 'Supinated grip',
+        alternativeExercises: ['lat-pulldown']
+      },
+      {
+        exerciseId: 'cable-rows',
+        order: 2,
+        intensity: 'medium',
+        targetSets: 3,
+        targetRepsMin: 8,
+        targetRepsMax: 10,
+        restSeconds: 90,
+        notes: 'Seated pronated grip'
+      },
+      {
+        exerciseId: 't-bar-row',
+        order: 3,
+        intensity: 'medium',
+        targetSets: 2,
+        targetRepsMin: 8,
+        targetRepsMax: 10,
+        restSeconds: 90,
+        notes: 'Chest supported T-bar row'
+      },
+      {
+        exerciseId: 'hammer-curls',
+        order: 4,
+        intensity: 'medium',
+        targetSets: 4,
+        targetRepsMin: 8,
+        targetRepsMax: 10,
+        restSeconds: 60,
+        notes: 'Pinwheel style'
+      },
+      {
+        exerciseId: 'barbell-curls',
+        order: 5,
+        intensity: 'heavy',
+        targetSets: 3,
+        targetRepsMin: 5,
+        targetRepsMax: 8,
+        restSeconds: 90,
+        notes: 'EZ bar curls'
+      }
+    ]
+  },
+  {
+    id: 'achilles-p2-chest-shoulders-triceps2',
+    name: 'Día 5 - Pecho + Hombros + Tríceps B (Fase II)',
+    type: 'push',
+    dayOfWeek: 5,
+    phaseId: 'achilles-phase2',
+    estimatedDuration: 60,
+    exercises: [
+      {
+        exerciseId: 'machine-chest-press',
+        order: 1,
+        intensity: 'medium',
+        targetSets: 3,
+        targetRepsMin: 8,
+        targetRepsMax: 10,
+        restSeconds: 90,
+        notes: 'Converging chest press'
+      },
+      {
+        exerciseId: 'dips',
+        order: 2,
+        intensity: 'medium',
+        targetSets: 2,
+        targetRepsMin: 10,
+        targetRepsMax: 15,
+        restSeconds: 90,
+        notes: 'Add weight if too easy'
+      },
+      {
+        exerciseId: 'cable-flyes',
+        order: 3,
+        intensity: 'light',
+        targetSets: 2,
+        targetRepsMin: 10,
+        targetRepsMax: 15,
+        restSeconds: 60,
+        notes: 'Decline cable fly'
+      },
+      {
+        exerciseId: 'db-shoulder-press',
+        order: 4,
+        intensity: 'heavy',
+        targetSets: 2,
+        targetRepsMin: 5,
+        targetRepsMax: 8,
+        restSeconds: 120,
+        notes: 'Seated DB shoulder press'
+      },
+      {
+        exerciseId: 'lateral-raises',
+        order: 5,
+        intensity: 'medium',
+        targetSets: 3,
+        targetRepsMin: 8,
+        targetRepsMax: 10,
+        restSeconds: 60,
+        notes: 'Leaning DB lateral raise'
+      },
+      {
+        exerciseId: 'rear-delt-flyes',
+        order: 6,
+        intensity: 'light',
+        targetSets: 3,
+        targetRepsMin: 10,
+        targetRepsMax: 15,
+        restSeconds: 60,
+        notes: 'Cable rear delt raise'
+      },
+      {
+        exerciseId: 'overhead-tricep-extension',
+        order: 7,
+        intensity: 'medium',
+        targetSets: 4,
+        targetRepsMin: 8,
+        targetRepsMax: 12,
+        restSeconds: 60
+      }
+    ]
+  }
+];
+
+// ============================================
+// ACHILLES PHASE III WORKOUTS (Intensity - 8 sets/muscle, 1x/week)
+// ============================================
+const achillesPhase3Workouts: WorkoutTemplate[] = [
+  {
+    id: 'achilles-p3-chest',
+    name: 'Día 1 - Pecho (Fase III)',
+    type: 'chest',
+    dayOfWeek: 1,
+    phaseId: 'achilles-phase3',
+    estimatedDuration: 45,
+    exercises: [
+      {
+        exerciseId: 'incline-barbell-press',
+        order: 1,
+        intensity: 'heavy',
+        targetSets: 2,
+        targetRepsMin: 5,
+        targetRepsMax: 8,
+        restSeconds: 180,
+        notes: 'Pesos pesados, PRs'
+      },
+      {
+        exerciseId: 'db-flat-press',
+        order: 2,
+        intensity: 'heavy',
+        targetSets: 4,
+        targetRepsMin: 6,
+        targetRepsMax: 8,
+        restSeconds: 150
+      },
+      {
+        exerciseId: 'dips',
+        order: 3,
+        intensity: 'heavy',
+        targetSets: 2,
+        targetRepsMin: 6,
+        targetRepsMax: 10,
+        restSeconds: 120,
+        notes: 'Weighted dips'
+      },
+      {
+        exerciseId: 'machine-chest-press',
+        order: 4,
+        intensity: 'medium',
+        targetSets: 2,
+        targetRepsMin: 6,
+        targetRepsMax: 10,
+        restSeconds: 90,
+        notes: 'Converging chest press'
+      }
+    ]
+  },
+  {
+    id: 'achilles-p3-back',
+    name: 'Día 2 - Espalda (Fase III)',
+    type: 'back',
+    dayOfWeek: 2,
+    phaseId: 'achilles-phase3',
+    estimatedDuration: 45,
+    exercises: [
+      {
+        exerciseId: 'chinups',
+        order: 1,
+        intensity: 'heavy',
+        targetSets: 2,
+        targetRepsMin: 6,
+        targetRepsMax: 15,
+        restSeconds: 120,
+        notes: 'Max reps each set'
+      },
+      {
+        exerciseId: 'cable-rows',
+        order: 2,
+        intensity: 'medium',
+        targetSets: 2,
+        targetRepsMin: 8,
+        targetRepsMax: 10,
+        restSeconds: 90,
+        notes: 'Seated pronated grip'
+      },
+      {
+        exerciseId: 't-bar-row',
+        order: 3,
+        intensity: 'medium',
+        targetSets: 2,
+        targetRepsMin: 8,
+        targetRepsMax: 10,
+        restSeconds: 90,
+        notes: 'Chest supported, neutral grip'
+      },
+      {
+        exerciseId: 'inverted-row',
+        order: 4,
+        intensity: 'light',
+        targetSets: 2,
+        targetRepsMin: 10,
+        targetRepsMax: 20,
+        restSeconds: 60,
+        notes: 'Max reps'
+      }
+    ]
+  },
+  {
+    id: 'achilles-p3-legs',
+    name: 'Día 3 - Piernas (Fase III)',
+    type: 'legs',
+    dayOfWeek: 3,
+    phaseId: 'achilles-phase3',
+    estimatedDuration: 45,
+    exercises: [
+      {
+        exerciseId: 'leg-curls',
+        order: 1,
+        intensity: 'light',
+        targetSets: 2,
+        targetRepsMin: 20,
+        targetRepsMax: 20,
+        restSeconds: 60
+      },
+      {
+        exerciseId: 'leg-extension',
+        order: 2,
+        intensity: 'light',
+        targetSets: 2,
+        targetRepsMin: 20,
+        targetRepsMax: 20,
+        restSeconds: 60
+      },
+      {
+        exerciseId: 'walking-lunges',
+        order: 3,
+        intensity: 'medium',
+        targetSets: 2,
+        targetRepsMin: 20,
+        targetRepsMax: 20,
+        restSeconds: 90,
+        notes: '45lb barbell on shoulders, 20 steps per leg'
+      },
+      {
+        exerciseId: 'leg-press',
+        order: 4,
+        intensity: 'light',
+        targetSets: 2,
+        targetRepsMin: 20,
+        targetRepsMax: 20,
+        restSeconds: 90
+      }
+    ]
+  },
+  {
+    id: 'achilles-p3-shoulders',
+    name: 'Día 4 - Hombros (Fase III)',
+    type: 'shoulders',
+    dayOfWeek: 4,
+    phaseId: 'achilles-phase3',
+    estimatedDuration: 40,
+    exercises: [
+      {
+        exerciseId: 'db-shoulder-press',
+        order: 1,
+        intensity: 'heavy',
+        targetSets: 2,
+        targetRepsMin: 6,
+        targetRepsMax: 8,
+        restSeconds: 120,
+        notes: 'Seated DB shoulder press'
+      },
+      {
+        exerciseId: 'lateral-raises',
+        order: 2,
+        intensity: 'medium',
+        targetSets: 2,
+        targetRepsMin: 10,
+        targetRepsMax: 15,
+        restSeconds: 60
+      },
+      {
+        exerciseId: 'lateral-raises',
+        order: 3,
+        intensity: 'medium',
+        targetSets: 2,
+        targetRepsMin: 8,
+        targetRepsMax: 10,
+        restSeconds: 60,
+        notes: 'Leaning lateral raise'
+      },
+      {
+        exerciseId: 'rear-delt-flyes',
+        order: 4,
+        intensity: 'light',
+        targetSets: 2,
+        targetRepsMin: 15,
+        targetRepsMax: 20,
+        restSeconds: 60,
+        notes: 'Cable rear delt raise'
+      }
+    ]
+  },
+  {
+    id: 'achilles-p3-arms',
+    name: 'Día 5 - Brazos (Fase III)',
+    type: 'arms',
+    dayOfWeek: 5,
+    phaseId: 'achilles-phase3',
+    estimatedDuration: 45,
+    exercises: [
+      {
+        exerciseId: 'barbell-curls',
+        order: 1,
+        intensity: 'heavy',
+        targetSets: 4,
+        targetRepsMin: 6,
+        targetRepsMax: 10,
+        restSeconds: 90,
+        notes: 'EZ-Bar curls'
+      },
+      {
+        exerciseId: 'tricep-pushdowns',
+        order: 2,
+        intensity: 'medium',
+        targetSets: 4,
+        targetRepsMin: 8,
+        targetRepsMax: 12,
+        restSeconds: 60
+      },
+      {
+        exerciseId: 'hammer-curls',
+        order: 3,
+        intensity: 'medium',
+        targetSets: 4,
+        targetRepsMin: 8,
+        targetRepsMax: 10,
+        restSeconds: 60,
+        notes: 'Supinated alternating DB curls'
+      },
+      {
+        exerciseId: 'overhead-tricep-extension',
+        order: 4,
+        intensity: 'medium',
+        targetSets: 4,
+        targetRepsMin: 8,
+        targetRepsMax: 10,
+        restSeconds: 60
+      }
+    ]
+  }
+];
+
+// ============================================
+// ACHILLES PHASE IV - MAN OF BRONZE (Optional Density Phase)
+// ============================================
+const achillesPhase4Workouts: WorkoutTemplate[] = [
+  {
+    id: 'achilles-p4-legs',
+    name: 'Día 1 - Piernas Bronze (Fase IV)',
+    type: 'legs',
+    dayOfWeek: 1,
+    phaseId: 'achilles-phase4',
+    estimatedDuration: 40,
+    exercises: [
+      {
+        exerciseId: 'goblet-squat',
+        order: 1,
+        intensity: 'medium',
+        targetSets: 10,
+        targetRepsMin: 10,
+        targetRepsMax: 10,
+        restSeconds: 45,
+        notes: 'VELOCIDAD - cada rep con precisión y aceleración'
+      },
+      {
+        exerciseId: 'romanian-deadlifts',
+        order: 2,
+        intensity: 'medium',
+        targetSets: 5,
+        targetRepsMin: 8,
+        targetRepsMax: 10,
+        restSeconds: 60
+      },
+      {
+        exerciseId: 'calf-raises',
+        order: 3,
+        intensity: 'light',
+        targetSets: 8,
+        targetRepsMin: 10,
+        targetRepsMax: 15,
+        restSeconds: 45,
+        notes: '4 seated + 4 standing'
+      }
+    ]
+  },
+  {
+    id: 'achilles-p4-chest-shoulders1',
+    name: 'Día 2 - Pecho + Hombros Bronze (Fase IV)',
+    type: 'push',
+    dayOfWeek: 2,
+    phaseId: 'achilles-phase4',
+    estimatedDuration: 35,
+    exercises: [
+      {
+        exerciseId: 'incline-barbell-press',
+        order: 1,
+        intensity: 'heavy',
+        targetSets: 7,
+        targetRepsMin: 6,
+        targetRepsMax: 6,
+        restSeconds: 60,
+        notes: 'MUCHOS sets, descansa mínimo'
+      },
+      {
+        exerciseId: 'dips',
+        order: 2,
+        intensity: 'medium',
+        targetSets: 7,
+        targetRepsMin: 6,
+        targetRepsMax: 15,
+        restSeconds: 60,
+        notes: 'Bodyweight o weighted'
+      }
+    ]
+  },
+  {
+    id: 'achilles-p4-back',
+    name: 'Día 3 - Espalda Bronze (Fase IV)',
+    type: 'back',
+    dayOfWeek: 3,
+    phaseId: 'achilles-phase4',
+    estimatedDuration: 40,
+    exercises: [
+      {
+        exerciseId: 'chinups',
+        order: 1,
+        intensity: 'heavy',
+        targetSets: 8,
+        targetRepsMin: 8,
+        targetRepsMax: 8,
+        restSeconds: 60,
+        notes: 'Esquema 8x8 Vince Gironda'
+      },
+      {
+        exerciseId: 'face-pulls',
+        order: 2,
+        intensity: 'light',
+        targetSets: 7,
+        targetRepsMin: 10,
+        targetRepsMax: 10,
+        restSeconds: 45,
+        notes: 'Cable rope facepulls'
+      },
+      {
+        exerciseId: 'cable-rows',
+        order: 3,
+        intensity: 'medium',
+        targetSets: 6,
+        targetRepsMin: 6,
+        targetRepsMax: 6,
+        restSeconds: 60,
+        notes: 'Seated close grip'
+      }
+    ]
+  },
+  {
+    id: 'achilles-p4-chest-shoulders2',
+    name: 'Día 4 - Pecho + Hombros Bronze B (Fase IV)',
+    type: 'push',
+    dayOfWeek: 4,
+    phaseId: 'achilles-phase4',
+    estimatedDuration: 40,
+    exercises: [
+      {
+        exerciseId: 'db-flat-press',
+        order: 1,
+        intensity: 'medium',
+        targetSets: 8,
+        targetRepsMin: 8,
+        targetRepsMax: 8,
+        restSeconds: 60,
+        notes: 'Esquema 8x8 - wicked pump'
+      },
+      {
+        exerciseId: 'db-shoulder-press',
+        order: 2,
+        intensity: 'medium',
+        targetSets: 8,
+        targetRepsMin: 8,
+        targetRepsMax: 8,
+        restSeconds: 60,
+        notes: '8x8'
+      },
+      {
+        exerciseId: 'rear-delt-flyes',
+        order: 3,
+        intensity: 'light',
+        targetSets: 7,
+        targetRepsMin: 10,
+        targetRepsMax: 10,
+        restSeconds: 45,
+        notes: 'Machine rear delt flys'
+      }
+    ]
+  },
+  {
+    id: 'achilles-p4-arms',
+    name: 'Día 5 - Brazos Bronze (Fase IV)',
+    type: 'arms',
+    dayOfWeek: 5,
+    phaseId: 'achilles-phase4',
+    estimatedDuration: 35,
+    exercises: [
+      {
+        exerciseId: 'cable-curls',
+        order: 1,
+        intensity: 'medium',
+        targetSets: 5,
+        targetRepsMin: 10,
+        targetRepsMax: 15,
+        restSeconds: 45,
+        notes: 'Pronated cable curls - peak contraction'
+      },
+      {
+        exerciseId: 'barbell-curls',
+        order: 2,
+        intensity: 'heavy',
+        targetSets: 5,
+        targetRepsMin: 6,
+        targetRepsMax: 8,
+        restSeconds: 60,
+        notes: 'EZ bar curls'
+      },
+      {
+        exerciseId: 'tricep-pushdowns',
+        order: 3,
+        intensity: 'medium',
+        targetSets: 5,
+        targetRepsMin: 10,
+        targetRepsMax: 15,
+        restSeconds: 45
+      },
+      {
+        exerciseId: 'overhead-tricep-extension',
+        order: 4,
+        intensity: 'medium',
+        targetSets: 5,
+        targetRepsMin: 10,
+        targetRepsMax: 15,
+        restSeconds: 45,
+        notes: 'Full ROM'
+      }
+    ]
+  }
+];
+
+// ============================================
+// ACHILLES CARDIO TEMPLATES
+// ============================================
+export const achillesCardioTemplates: WorkoutTemplate[] = [
+  {
+    id: 'achilles-cardio-aerobic',
+    name: 'Cardio Aeróbico (1x/semana)',
+    type: 'rest',
+    estimatedDuration: 60,
+    exercises: [
+      {
+        exerciseId: 'walking',
+        order: 1,
+        intensity: 'light',
+        targetSets: 1,
+        targetRepsMin: 1,
+        targetRepsMax: 1,
+        restSeconds: 0,
+        durationSeconds: 3600,
+        notes: '60 minutos de cardio sostenido. HR 60-70% del máximo. Caminar, bici, elíptica, etc.'
+      }
+    ]
+  },
+  {
+    id: 'achilles-cardio-hiit',
+    name: 'HIIT (2x/semana)',
+    type: 'rest',
+    trainingStyle: 'hiit',
+    estimatedDuration: 25,
+    exercises: [
+      {
+        exerciseId: 'walking',
+        order: 1,
+        intensity: 'light',
+        targetSets: 1,
+        targetRepsMin: 1,
+        targetRepsMax: 1,
+        restSeconds: 0,
+        durationSeconds: 300,
+        notes: 'Warm-up: 5 min caminata a 4mph'
+      },
+      {
+        exerciseId: 'sprints',
+        order: 2,
+        intensity: 'explosive',
+        targetSets: 12,
+        targetRepsMin: 1,
+        targetRepsMax: 1,
+        restSeconds: 50,
+        durationSeconds: 10,
+        notes: 'Sprint 10-20 seg, descanso 40-50 seg. Puede ser: sprint, sled push, jump rope, burpees, heavy bag, bike, remo'
+      }
+    ]
+  }
+];
+
+// ============================================
+// ACHILLES ABS TEMPLATES
+// ============================================
+export const achillesAbsTemplate: WorkoutTemplate = {
+  id: 'achilles-abs',
+  name: 'Abdominales Achilles (3-4x/semana)',
+  type: 'rest',
+  estimatedDuration: 15,
+  exercises: [
+    {
+      exerciseId: 'machine-crunch',
+      order: 1,
+      intensity: 'medium',
+      targetSets: 4,
+      targetRepsMin: 8,
+      targetRepsMax: 15,
+      restSeconds: 60,
+      notes: 'Upper abs: machine crunch, stability ball crunch, bosu crunch, incline sit-up, pulldown crunch, ab wheel',
+      alternativeExercises: ['ab-wheel', 'bicycle-crunch']
+    },
+    {
+      exerciseId: 'hanging-leg-raise',
+      order: 2,
+      intensity: 'medium',
+      targetSets: 4,
+      targetRepsMin: 8,
+      targetRepsMax: 15,
+      restSeconds: 60,
+      notes: 'Lower abs: lying leg raise, hanging leg raise, flutter kicks, reverse crunch, stability ball pikes',
+      alternativeExercises: ['lying-leg-raises', 'flutter-kicks']
+    }
+  ]
+};
+
+// Schedule: Mon-Upper, Tue-Lower, Wed-Rest, Thu-Upper, Fri-Rest, Sat-Lower, Sun-Rest
+
+// Legacy simple templates for backwards compatibility
+
+// Legacy simple 3-day templates for backwards compatibility
+export const achillesTemplates: WorkoutTemplate[] = [
+  ...achillesPhase1Workouts.slice(0, 3) // First 3 workouts as simple PPL option
+];
+
 export const achillesProgram: WorkoutProgram = {
   id: 'achilles-3day',
-  name: 'Achilles 3-Day',
-  description: `Programa diseñado para lograr el físico de Brad Pitt en Troya.
+  name: 'Achilles 3.0 Program',
+  description: `Programa completo de 16 semanas para el físico de Brad Pitt en Troya.
+"Crafting The Body Of A DemiGod" - Alexander Cortes
 
-Basado en el Índice de Adonis (ratio 1.618 hombros/cintura) y los principios del programa B3:
-- Ejercicio Heavy: 5x5-8 (fibras grandes, fuerza)
-- Ejercicio Medium: 4x6-12 (fibras medianas, hipertrofia)
-- Ejercicio Light: 3x10-20 (fibras pequeñas, pump)
-- Ejercicios Optional: según energía y tiempo
+ESTRUCTURA DE 4 FASES (5 días/semana):
 
-Enfoque: Torso superior desarrollado (pecho, hombros, espalda), cintura estrecha, abdominales visibles.`,
+FASE I (4 semanas) - Aclimatación:
+• 20 sets por grupo muscular
+• NO al fallo - deja 1-2 reps en reserva
+• Alta frecuencia para adaptación neuromuscular
+
+FASE II (4 semanas) - Sobrecarga Progresiva:
+• 12-16 sets por grupo muscular
+• SÍ al fallo positivo
+• Énfasis en PRs y progresión
+
+FASE III (4 semanas) - Intensidad Máxima:
+• 8 sets por grupo - 1x/semana
+• Pesos máximos, récords cada sesión
+• Frecuencia reducida para recuperación
+
+FASE IV (4 semanas) - Man of Bronze (Opcional):
+• Fase de densidad estilo Vince Gironda (8x8)
+• CERO cardio - solo pesas
+• Workouts cortos pero brutales
+
+CARDIO: 60 min aeróbico 1x/sem + 20 min HIIT 2x/sem
+ABS: 3-4x/semana (upper + lower)
+
+Basado en el Índice de Adonis (ratio 1.618 hombros/cintura).
+Énfasis en PECHO, HOMBROS, ESPALDA, BRAZOS y ABS.`,
   author: 'Alexander Cortes',
   difficulty: 'intermediate',
   goal: 'muscle_gain',
-  daysPerWeek: 3,
-  weeks: 12,
+  daysPerWeek: 5,
+  weeks: 16,
   equipmentRequired: ['barbell', 'dumbbell', 'cable', 'machine'],
   minEquipmentRequired: ['dumbbell', 'bodyweight'],
-  workouts: achillesTemplates,
+  phases: achillesPhases,
+  workouts: [
+    ...achillesPhase1Workouts,
+    ...achillesPhase2Workouts,
+    ...achillesPhase3Workouts,
+    ...achillesPhase4Workouts
+  ],
   nutritionGuidelines: achillesNutrition
 };
 
