@@ -1,18 +1,16 @@
 import { useState, useEffect, useMemo } from 'react';
 import {
-  Lightbulb, Search, ChevronRight, ChevronDown, ChevronUp,
-  Bookmark, BookmarkCheck, X, Shuffle, Filter
+  Lightbulb, Search,
+  Bookmark, BookmarkCheck, X, Shuffle
 } from 'lucide-react';
 import {
   insights,
   categoryInfo,
   sourceInfo,
   getDailyInsight,
-  getInsightsByCategory,
   searchInsights,
   type Insight,
-  type InsightCategory,
-  type InsightSource
+  type InsightCategory
 } from '../../../data/insights';
 
 const colors = {

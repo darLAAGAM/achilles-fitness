@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from 'react';
-import { TrendingUp, Trophy, Scale, Camera, Ruler, X, Image as ImageIcon } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { TrendingUp, Trophy, Scale, Camera, Ruler } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
 import { db } from '../../../services/db/database';
 import { useUserStore } from '../../../stores/userStore';

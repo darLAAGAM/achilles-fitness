@@ -1,70 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import type { CSSProperties } from 'react';
-import { Plus, Utensils, Apple, Beef, Wheat, Droplet, X } from 'lucide-react';
+import { Plus, Utensils, Apple, Beef, Wheat, Droplet, X, Calendar, Calculator } from 'lucide-react';
 import { useUserStore } from '../../../stores/userStore';
 import { db } from '../../../services/db/database';
 import type { DailyNutritionLog, Meal, MealTime } from '../../../types';
 import { format, startOfDay, endOfDay } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { v4 as uuid } from 'uuid';
-
-// Sample meals based on AJAC guide
-const sampleMeals: Meal[] = [
-  {
-    id: 'meal-1',
-    name: 'Desayuno proteico',
-    foods: [],
-    calories: 450,
-    protein: 35,
-    carbs: 30,
-    fat: 20
-  },
-  {
-    id: 'meal-2',
-    name: 'Almuerzo - Pollo y arroz',
-    foods: [],
-    calories: 650,
-    protein: 50,
-    carbs: 60,
-    fat: 20
-  },
-  {
-    id: 'meal-3',
-    name: 'Cena - Carne y verduras',
-    foods: [],
-    calories: 550,
-    protein: 45,
-    carbs: 25,
-    fat: 28
-  },
-  {
-    id: 'meal-4',
-    name: 'Snack - Batido proteico',
-    foods: [],
-    calories: 250,
-    protein: 30,
-    carbs: 15,
-    fat: 5
-  },
-  {
-    id: 'meal-5',
-    name: 'Pre-entreno',
-    foods: [],
-    calories: 300,
-    protein: 25,
-    carbs: 40,
-    fat: 5
-  },
-  {
-    id: 'meal-6',
-    name: 'Post-entreno',
-    foods: [],
-    calories: 400,
-    protein: 40,
-    carbs: 50,
-    fat: 5
-  }
-];
+import { MacroCalculator } from '../components/MacroCalculator';
+import { MealPlanner } from '../components/MealPlanner';
+import { generateWeeklyMealPlan, type Recipe } from '../../../data/meal-plans';
 
 // Estilos base
 const styles: Record<string, CSSProperties> = {
@@ -404,6 +349,26 @@ const styles: Record<string, CSSProperties> = {
     fontWeight: '600',
     color: '#d4af37',
   },
+  toolsContainer: {
+    display: 'flex',
+    gap: '12px',
+    marginBottom: '16px',
+  },
+  toolButton: {
+    flex: 1,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '8px',
+    backgroundColor: '#1a1a1a',
+    border: '1px solid #2a2a2a',
+    borderRadius: '12px',
+    padding: '14px 16px',
+    fontSize: '14px',
+    fontWeight: '500',
+    color: '#fff',
+    cursor: 'pointer',
+  },
 };
 
 export function MacroTracker() {
@@ -411,6 +376,8 @@ export function MacroTracker() {
   const [todayLog, setTodayLog] = useState<DailyNutritionLog | null>(null);
   const [showAddMeal, setShowAddMeal] = useState(false);
   const [selectedMealTime, setSelectedMealTime] = useState<MealTime>('breakfast');
+  const [showMealPlanner, setShowMealPlanner] = useState(false);
+  const [showCalculator, setShowCalculator] = useState(false);
 
   const targets = {
     calories: user?.dailyCalories || 2600,
@@ -419,17 +386,79 @@ export function MacroTracker() {
     fat: user?.fatTarget || 70
   };
 
+  // Extended meal type with mealTime
+  type MealWithType = Meal & { mealType: MealTime };
+
+  // Generate meal plan and get today's meals
+  const todayMeals = useMemo((): MealWithType[] => {
+    try {
+      const phase = user?.currentPhase || 'maintain';
+      const mealPlan = generateWeeklyMealPlan(
+        user?.dailyCalories || 2600,
+        user?.proteinTarget || 160,
+        user?.carbTarget || 280,
+        user?.fatTarget || 70,
+        phase
+      );
+
+      if (!mealPlan || !mealPlan.days) {
+        return [];
+      }
+
+      const todayIndex = new Date().getDay();
+      const todayPlan = mealPlan.days[todayIndex];
+
+      if (!todayPlan || !todayPlan.meals) {
+        return [];
+      }
+
+      // Helper to convert Recipe to Meal format with type
+      const convertToMeal = (recipe: Recipe, mealType: MealTime, index?: number): MealWithType => ({
+        id: `${recipe.id}-${index ?? 0}`,
+        name: recipe.name,
+        foods: [],
+        calories: recipe.calories || 0,
+        protein: recipe.protein || 0,
+        carbs: recipe.carbs || 0,
+        fat: recipe.fat || 0,
+        mealType,
+      });
+
+      // Convert recipes to Meal format for display
+      const meals: MealWithType[] = [];
+
+      if (todayPlan.meals.breakfast) {
+        meals.push(convertToMeal(todayPlan.meals.breakfast, 'breakfast'));
+      }
+      if (todayPlan.meals.lunch) {
+        meals.push(convertToMeal(todayPlan.meals.lunch, 'lunch'));
+      }
+      if (todayPlan.meals.dinner) {
+        meals.push(convertToMeal(todayPlan.meals.dinner, 'dinner'));
+      }
+      if (todayPlan.meals.snacks && todayPlan.meals.snacks.length > 0) {
+        todayPlan.meals.snacks.forEach((snack, idx) => {
+          // Snacks can be used for snack, pre_workout, or post_workout
+          meals.push(convertToMeal(snack, 'snack', idx));
+          meals.push(convertToMeal(snack, 'pre_workout', idx + 100));
+          meals.push(convertToMeal(snack, 'post_workout', idx + 200));
+        });
+      }
+
+      return meals;
+    } catch {
+      return [];
+    }
+  }, [user]);
+
+  // Filter meals based on selected meal time
+  const filteredMeals = useMemo(() => {
+    return todayMeals.filter(meal => meal.mealType === selectedMealTime);
+  }, [todayMeals, selectedMealTime]);
+
   useEffect(() => {
     loadTodayLog();
-    seedMeals();
   }, []);
-
-  const seedMeals = async () => {
-    const existingMeals = await db.meals.count();
-    if (existingMeals === 0) {
-      await db.meals.bulkAdd(sampleMeals);
-    }
-  };
 
   const loadTodayLog = async () => {
     const today = new Date();
@@ -465,7 +494,15 @@ export function MacroTracker() {
       mealId: meal.id,
       mealTime: selectedMealTime,
       consumedAt: new Date(),
-      portionMultiplier: 1
+      portionMultiplier: 1,
+      // Store meal data for display
+      mealData: {
+        name: meal.name,
+        calories: meal.calories,
+        protein: meal.protein,
+        carbs: meal.carbs,
+        fat: meal.fat,
+      }
     };
 
     const updatedLog: DailyNutritionLog = {
@@ -634,6 +671,24 @@ export function MacroTracker() {
           </div>
         </div>
 
+        {/* Tools */}
+        <div style={styles.toolsContainer}>
+          <button
+            style={styles.toolButton}
+            onClick={() => setShowMealPlanner(true)}
+          >
+            <Calendar size={18} color="#d4af37" />
+            Plan de Comidas
+          </button>
+          <button
+            style={styles.toolButton}
+            onClick={() => setShowCalculator(true)}
+          >
+            <Calculator size={18} color="#d4af37" />
+            Calculadora
+          </button>
+        </div>
+
         {/* Meals today */}
         <div style={styles.sectionHeader}>
           <h3 style={styles.sectionTitle}>Comidas de hoy</h3>
@@ -646,8 +701,30 @@ export function MacroTracker() {
         {todayLog && todayLog.meals.length > 0 ? (
           <div>
             {todayLog.meals.map((mealEntry, index) => {
-              const meal = sampleMeals.find(m => m.id === mealEntry.mealId);
-              if (!meal) return null;
+              // Try to find meal in today's plan, or use stored data
+              const meal = todayMeals.find(m => m.id === mealEntry.mealId) ||
+                (mealEntry as any).mealData;
+
+              if (!meal) {
+                // Fallback: show basic info from entry
+                return (
+                  <div key={index} style={styles.cardSmall}>
+                    <div style={styles.mealItem}>
+                      <div style={styles.mealLeft}>
+                        <div style={styles.mealIcon}>
+                          <Utensils size={18} style={{ color: '#888' }} />
+                        </div>
+                        <div>
+                          <p style={styles.mealName}>Comida registrada</p>
+                          <p style={styles.mealTime}>
+                            {mealTimeLabels[mealEntry.mealTime]} - {format(new Date(mealEntry.consumedAt), 'HH:mm')}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              }
 
               return (
                 <div key={index} style={styles.cardSmall}>
@@ -721,31 +798,62 @@ export function MacroTracker() {
               </div>
             </div>
 
-            {/* Meal options */}
+            {/* Meal options from today's plan - filtered by meal time */}
             <div>
               <label style={styles.formLabel}>
-                Selecciona una comida
+                {mealTimeLabels[selectedMealTime]} del plan de hoy
               </label>
-              {sampleMeals.map((meal) => (
-                <button
-                  key={meal.id}
-                  onClick={() => addMealToLog(meal)}
-                  style={styles.mealOption}
-                >
-                  <div style={styles.mealOptionContent}>
-                    <div>
-                      <p style={styles.mealOptionName}>{meal.name}</p>
-                      <p style={styles.mealOptionMacros}>
-                        P:{meal.protein}g - C:{meal.carbs}g - G:{meal.fat}g
-                      </p>
+              {filteredMeals.length > 0 ? (
+                filteredMeals.map((meal) => (
+                  <button
+                    key={meal.id}
+                    onClick={() => addMealToLog(meal)}
+                    style={styles.mealOption}
+                  >
+                    <div style={styles.mealOptionContent}>
+                      <div>
+                        <p style={styles.mealOptionName}>{meal.name}</p>
+                        <p style={styles.mealOptionMacros}>
+                          P:{meal.protein}g - C:{meal.carbs}g - G:{meal.fat}g
+                        </p>
+                      </div>
+                      <span style={styles.mealOptionCalories}>{meal.calories} kcal</span>
                     </div>
-                    <span style={styles.mealOptionCalories}>{meal.calories} kcal</span>
-                  </div>
-                </button>
-              ))}
+                  </button>
+                ))
+              ) : (
+                <p style={{ color: '#888', textAlign: 'center', padding: '20px' }}>
+                  No hay comidas para {mealTimeLabels[selectedMealTime].toLowerCase()}
+                </p>
+              )}
             </div>
           </div>
         </div>
+      )}
+
+      {/* Meal Planner */}
+      {showMealPlanner && (
+        <MealPlanner onClose={() => setShowMealPlanner(false)} />
+      )}
+
+      {/* Macro Calculator */}
+      {showCalculator && (
+        <MacroCalculator
+          onClose={() => setShowCalculator(false)}
+          onAddFood={(food, grams, macros) => {
+            // Create a meal from the calculated food
+            const newMeal: Meal = {
+              id: `custom-${Date.now()}`,
+              name: `${food.name} (${grams}g)`,
+              foods: [],
+              calories: macros.calories,
+              protein: macros.protein,
+              carbs: macros.carbs,
+              fat: macros.fat
+            };
+            addMealToLog(newMeal);
+          }}
+        />
       )}
     </div>
   );

@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Flame, Target, ChevronDown, ChevronUp, Check, Clock, Dumbbell } from 'lucide-react';
-import { getAccessoryPlanByProgram, type AbsWorkout, type CardioWorkout, type AbsExercise } from '../../data/accessory-workouts';
+import { Flame, Target, ChevronDown, ChevronUp, Check, Clock } from 'lucide-react';
+import { getAccessoryPlanByProgram, type AbsWorkout, type CardioWorkout } from '../../data/accessory-workouts';
 import { format, startOfWeek, addDays } from 'date-fns';
-import { es } from 'date-fns/locale';
 
 interface AccessoryTrackerProps {
   programId: string;

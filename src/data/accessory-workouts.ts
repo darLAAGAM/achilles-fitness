@@ -33,13 +33,19 @@ export interface CardioWorkout {
   notes?: string[];
 }
 
+export interface CalvesExercise {
+  name: string;
+  sets: string;
+  reps: string;
+}
+
 export interface AccessoryPlan {
   programId: string;
   absWorkouts: AbsWorkout[];
   cardioWorkouts: CardioWorkout[];
   calves?: {
     frequency: string;
-    exercises: string[];
+    exercises: CalvesExercise[];
     notes?: string;
   };
   phaseOverrides?: {

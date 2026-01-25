@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { ArrowLeft, Camera, Plus, Trash2, X, Image as ImageIcon } from 'lucide-react';
-import { db } from '../../../services/db/database';
+import { ArrowLeft, Camera, Trash2, X, Image as ImageIcon } from 'lucide-react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { v4 as uuid } from 'uuid';
