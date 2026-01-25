@@ -77,8 +77,8 @@ export function SetInput({
   }
 
   return (
-    <div className="flex items-center gap-3 p-3 rounded-xl bg-[var(--color-surface-elevated)]">
-      <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold ${
+    <div className="flex items-center gap-2 p-3 rounded-xl bg-[var(--color-surface-elevated)]">
+      <div className={`w-7 h-7 shrink-0 rounded-lg flex items-center justify-center text-sm font-bold ${
         isWarmup
           ? 'bg-[var(--color-warning)]/20 text-[var(--color-warning)]'
           : 'bg-[var(--color-border)] text-[var(--color-text)]'
@@ -87,47 +87,47 @@ export function SetInput({
       </div>
 
       {/* Weight */}
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-0.5 flex-1 min-w-0">
         <button
           onClick={() => adjustWeight(-2.5)}
-          className="w-8 h-8 rounded-lg bg-[var(--color-surface)] flex items-center justify-center text-[var(--color-text-secondary)] active:scale-95 transition-transform"
+          className="w-7 h-7 shrink-0 rounded-lg bg-[var(--color-surface)] flex items-center justify-center text-[var(--color-text-secondary)] active:scale-95 transition-transform"
         >
-          <Minus size={16} />
+          <Minus size={14} />
         </button>
         <input
           type="number"
           value={weight}
           onChange={(e) => setWeight(Number(e.target.value))}
-          className="w-16 h-8 rounded-lg bg-[var(--color-surface)] text-center text-[var(--color-text)] font-semibold border-none focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
+          className="w-12 min-w-0 h-7 rounded-lg bg-[var(--color-surface)] text-center text-[var(--color-text)] font-semibold text-sm border-none focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
         />
         <button
           onClick={() => adjustWeight(2.5)}
-          className="w-8 h-8 rounded-lg bg-[var(--color-surface)] flex items-center justify-center text-[var(--color-text-secondary)] active:scale-95 transition-transform"
+          className="w-7 h-7 shrink-0 rounded-lg bg-[var(--color-surface)] flex items-center justify-center text-[var(--color-text-secondary)] active:scale-95 transition-transform"
         >
-          <Plus size={16} />
+          <Plus size={14} />
         </button>
-        <span className="text-xs text-[var(--color-text-secondary)] w-6">kg</span>
+        <span className="text-[10px] text-[var(--color-text-secondary)] w-4 shrink-0">kg</span>
       </div>
 
       {/* Reps */}
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-0.5 flex-1 min-w-0">
         <button
           onClick={() => adjustReps(-1)}
-          className="w-8 h-8 rounded-lg bg-[var(--color-surface)] flex items-center justify-center text-[var(--color-text-secondary)] active:scale-95 transition-transform"
+          className="w-7 h-7 shrink-0 rounded-lg bg-[var(--color-surface)] flex items-center justify-center text-[var(--color-text-secondary)] active:scale-95 transition-transform"
         >
-          <Minus size={16} />
+          <Minus size={14} />
         </button>
         <input
           type="number"
           value={reps}
           onChange={(e) => setReps(Number(e.target.value))}
-          className="w-12 h-8 rounded-lg bg-[var(--color-surface)] text-center text-[var(--color-text)] font-semibold border-none focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
+          className="w-10 min-w-0 h-7 rounded-lg bg-[var(--color-surface)] text-center text-[var(--color-text)] font-semibold text-sm border-none focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
         />
         <button
           onClick={() => adjustReps(1)}
-          className="w-8 h-8 rounded-lg bg-[var(--color-surface)] flex items-center justify-center text-[var(--color-text-secondary)] active:scale-95 transition-transform"
+          className="w-7 h-7 shrink-0 rounded-lg bg-[var(--color-surface)] flex items-center justify-center text-[var(--color-text-secondary)] active:scale-95 transition-transform"
         >
-          <Plus size={16} />
+          <Plus size={14} />
         </button>
       </div>
 
@@ -136,9 +136,9 @@ export function SetInput({
         size="sm"
         onClick={() => onComplete(weight, reps)}
         disabled={weight === 0 || reps === 0}
-        className="!p-2"
+        className="!p-1.5 !min-w-[32px] shrink-0"
       >
-        <Check size={18} />
+        <Check size={16} />
       </Button>
     </div>
   );

@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { TrendingUp, Trophy, Scale, Camera, Ruler } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { TrendingUp, Trophy, Scale, Camera, Ruler, X, Image as ImageIcon } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
 import { db } from '../../../services/db/database';
 import { useUserStore } from '../../../stores/userStore';
@@ -7,6 +7,7 @@ import type { ProgressEntry, WorkoutSet } from '../../../types';
 import { format, subDays, startOfDay, endOfDay } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { BodyMetrics } from './BodyMetrics';
+import { PhotoGallery } from './PhotoGallery';
 
 export function ProgressDashboard() {
   const { user } = useUserStore();
@@ -15,6 +16,7 @@ export function ProgressDashboard() {
   const [totalVolume, setTotalVolume] = useState(0);
   const [workoutsThisWeek, setWorkoutsThisWeek] = useState(0);
   const [showMetrics, setShowMetrics] = useState(false);
+  const [showPhotos, setShowPhotos] = useState(false);
 
   useEffect(() => {
     loadProgressData();
@@ -84,6 +86,10 @@ export function ProgressDashboard() {
 
   if (showMetrics) {
     return <BodyMetrics onBack={() => setShowMetrics(false)} />;
+  }
+
+  if (showPhotos) {
+    return <PhotoGallery onBack={() => setShowPhotos(false)} />;
   }
 
   // Estilos reutilizables
@@ -407,7 +413,7 @@ export function ProgressDashboard() {
             <Ruler size={16} style={{ marginRight: '6px', flexShrink: 0 }} />
             Medidas
           </button>
-          <button style={styles.buttonSecondary} onClick={() => {}}>
+          <button style={styles.buttonSecondary} onClick={() => setShowPhotos(true)}>
             <Camera size={16} style={{ marginRight: '6px', flexShrink: 0 }} />
             Fotos
           </button>

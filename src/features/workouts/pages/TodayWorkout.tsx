@@ -9,6 +9,7 @@ import { db } from '../../../services/db/database';
 import type { WorkoutTemplate, Exercise, ExerciseTemplate, WorkoutSet, WorkoutProgram, ProgramPhase } from '../../../types';
 import { ExerciseDetail } from './ExerciseDetail';
 import { FastingTracker } from '../../../components/fasting/FastingTracker';
+import { AccessoryTracker } from '../../../components/workout/AccessoryTracker';
 import { format, startOfWeek, addDays, isToday, isSameDay, differenceInWeeks } from 'date-fns';
 import { es } from 'date-fns/locale';
 
@@ -819,6 +820,12 @@ export function TodayWorkout() {
         {currentProgram.nutritionGuidelines?.recommendedFasting && (
           <FastingTracker />
         )}
+
+        {/* Accessory Tracker - Abs & Cardio */}
+        <AccessoryTracker
+          programId={currentProgram.id}
+          currentPhaseId={currentPhase?.id}
+        />
 
         {/* Rest Day */}
         {selectedWorkoutType === 'rest' && (
