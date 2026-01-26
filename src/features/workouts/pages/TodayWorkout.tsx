@@ -546,9 +546,10 @@ export function TodayWorkout() {
   }, [currentProgram, user?.programStartDate]);
 
   // Get workouts for current phase (or all workouts if no phases)
+  // Workouts without phaseId are shown in ALL phases (for programs like Blood & Guts)
   const programWorkouts = useMemo(() => {
     if (currentPhase && currentProgram.phases) {
-      return currentProgram.workouts.filter(w => w.phaseId === currentPhase.id);
+      return currentProgram.workouts.filter(w => !w.phaseId || w.phaseId === currentPhase.id);
     }
     return currentProgram.workouts;
   }, [currentProgram, currentPhase]);
