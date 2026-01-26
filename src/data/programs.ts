@@ -3792,6 +3792,436 @@ Objetivo estético: "Hombre de Bronce" - espalda dominante, hombros anchos, pier
 };
 
 // ============================================
+// ============================================
+// ============================================
+// DORIAN YATES - BLOOD & GUTS HIT PROGRAM
+// High Intensity Training - 4 Days/Week
+// ============================================
+
+const bloodAndGutsNutrition: NutritionGuidelines = {
+  proteinPerKg: 2.2,
+  mealFrequency: 5,
+  preworkoutTiming: 120,
+  postworkoutTiming: 30,
+  hydrationLiters: 4,
+  supplements: [
+    "Creatina monohidrato: 5g diarios",
+    "Proteina de suero: Post-entreno y entre comidas",
+    "Multivitaminico de calidad",
+    "Omega-3: 2-3g diarios",
+    "Glutamina: 10-15g post-entreno (recuperacion HIT)"
+  ],
+  recommendedFoods: [
+    "Pechuga de pollo",
+    "Carne magra",
+    "Huevos enteros",
+    "Arroz blanco/integral",
+    "Patatas",
+    "Avena",
+    "Brocoli y verduras verdes",
+    "Aguacate",
+    "Frutos secos"
+  ],
+  avoidFoods: [
+    "Azucares refinados",
+    "Comida procesada",
+    "Alcohol (limita el crecimiento muscular)"
+  ],
+  notes: [
+    "HIT requiere MAXIMA recuperacion - prioriza sueno 8+ horas",
+    "Dorian comia cada 2-3 horas sin falta",
+    "Post-entreno es la ventana mas critica: 40-50g proteina + carbos rapidos",
+    "15% superavit para bulk, 15% deficit para cut"
+  ]
+};
+
+// Day 1: Shoulders, Traps, Triceps, Abs
+const bloodAndGutsDay1: WorkoutTemplate = {
+  id: "bg-shoulders-traps-triceps",
+  name: "Dia 1 - Hombros, Trapecios, Triceps, Abs",
+  type: "shoulders",
+  dayOfWeek: 1,
+  estimatedDuration: 60,
+  exercises: [
+    {
+      exerciseId: "db-shoulder-press",
+      order: 1,
+      intensity: "heavy",
+      targetSets: 3,
+      targetRepsMin: 8,
+      targetRepsMax: 10,
+      restSeconds: 120,
+      notes: "2 sets warm-up (12-15 reps), 1 set al FALLO ABSOLUTO. Negativa de 3-4 seg."
+    },
+    {
+      exerciseId: "lateral-raises",
+      order: 2,
+      intensity: "medium",
+      targetSets: 2,
+      targetRepsMin: 8,
+      targetRepsMax: 10,
+      restSeconds: 90,
+      notes: "1 warm-up, 1 set al fallo. Sin momentum. Pausa arriba."
+    },
+    {
+      exerciseId: "db-shrugs",
+      order: 3,
+      intensity: "heavy",
+      targetSets: 2,
+      targetRepsMin: 8,
+      targetRepsMax: 10,
+      restSeconds: 90,
+      notes: "1 warm-up, 1 al fallo. Manten 2 seg arriba. Sin rotar hombros."
+    },
+    {
+      exerciseId: "tricep-pushdowns",
+      order: 4,
+      intensity: "medium",
+      targetSets: 3,
+      targetRepsMin: 8,
+      targetRepsMax: 10,
+      restSeconds: 90,
+      notes: "2 warm-up, 1 al fallo. Codos pegados. Extension completa."
+    },
+    {
+      exerciseId: "skull-crushers",
+      order: 5,
+      intensity: "heavy",
+      targetSets: 2,
+      targetRepsMin: 6,
+      targetRepsMax: 8,
+      restSeconds: 90,
+      notes: "1 warm-up, 1 al fallo. Baja detras de la cabeza para estiramiento."
+    },
+    {
+      exerciseId: "overhead-tricep-extension",
+      order: 6,
+      intensity: "medium",
+      targetSets: 2,
+      targetRepsMin: 8,
+      targetRepsMax: 10,
+      restSeconds: 60,
+      notes: "1 warm-up, 1 al fallo. Estiramiento maximo."
+    },
+    {
+      exerciseId: "decline-crunch",
+      order: 7,
+      intensity: "medium",
+      targetSets: 1,
+      targetRepsMin: 15,
+      targetRepsMax: 20,
+      restSeconds: 60,
+      notes: "1 set al fallo. Contraccion lenta."
+    },
+    {
+      exerciseId: "bicycle-crunch",
+      order: 8,
+      intensity: "medium",
+      targetSets: 1,
+      targetRepsMin: 15,
+      targetRepsMax: 20,
+      restSeconds: 60,
+      notes: "1 set al fallo."
+    },
+    {
+      exerciseId: "lying-leg-raises",
+      order: 9,
+      intensity: "medium",
+      targetSets: 1,
+      targetRepsMin: 15,
+      targetRepsMax: 20,
+      restSeconds: 60,
+      notes: "1 set al fallo. Controla la bajada."
+    }
+  ]
+};
+
+// Day 2: Back and Rear Delts
+const bloodAndGutsDay2: WorkoutTemplate = {
+  id: "bg-back-rear-delts",
+  name: "Dia 2 - Espalda y Deltoides Posterior",
+  type: "back",
+  dayOfWeek: 2,
+  estimatedDuration: 65,
+  exercises: [
+    {
+      exerciseId: "db-pullover",
+      order: 1,
+      intensity: "medium",
+      targetSets: 3,
+      targetRepsMin: 8,
+      targetRepsMax: 10,
+      restSeconds: 90,
+      notes: "2 warm-up, 1 al fallo. Estira los dorsales al maximo. Contraccion arriba."
+    },
+    {
+      exerciseId: "lat-pulldown",
+      order: 2,
+      intensity: "heavy",
+      targetSets: 3,
+      targetRepsMin: 8,
+      targetRepsMax: 10,
+      restSeconds: 120,
+      notes: "Agarre neutro si es posible. 2 warm-up, 1 al fallo. Tira con los codos."
+    },
+    {
+      exerciseId: "barbell-bent-over-row",
+      order: 3,
+      intensity: "heavy",
+      targetSets: 3,
+      targetRepsMin: 8,
+      targetRepsMax: 10,
+      restSeconds: 120,
+      notes: "2 warm-up, 1 al fallo. Torso a 45 grados. Tira al ombligo. Negativa 3 seg."
+    },
+    {
+      exerciseId: "db-row",
+      order: 4,
+      intensity: "heavy",
+      targetSets: 2,
+      targetRepsMin: 8,
+      targetRepsMax: 10,
+      restSeconds: 90,
+      notes: "1 warm-up, 1 al fallo cada brazo. Contraccion completa arriba."
+    },
+    {
+      exerciseId: "face-pulls",
+      order: 5,
+      intensity: "medium",
+      targetSets: 3,
+      targetRepsMin: 8,
+      targetRepsMax: 10,
+      restSeconds: 90,
+      notes: "2 warm-up, 1 al fallo. Tira hacia la frente. Rotacion externa."
+    },
+    {
+      exerciseId: "rear-delt-flyes",
+      order: 6,
+      intensity: "medium",
+      targetSets: 2,
+      targetRepsMin: 8,
+      targetRepsMax: 10,
+      restSeconds: 60,
+      notes: "1 warm-up, 1 al fallo. Pecho apoyado o de pie inclinado."
+    },
+    {
+      exerciseId: "deadlift",
+      order: 7,
+      intensity: "heavy",
+      targetSets: 2,
+      targetRepsMin: 6,
+      targetRepsMax: 8,
+      restSeconds: 180,
+      notes: "Estilo Dorian: desde pins a media altura. 1 warm-up, 1 PESADO al fallo."
+    }
+  ]
+};
+
+// Day 3: Chest and Biceps (Thursday)
+const bloodAndGutsDay3: WorkoutTemplate = {
+  id: "bg-chest-biceps",
+  name: "Dia 3 - Pecho y Biceps",
+  type: "chest",
+  dayOfWeek: 4,
+  estimatedDuration: 55,
+  exercises: [
+    {
+      exerciseId: "incline-barbell-press",
+      order: 1,
+      intensity: "heavy",
+      targetSets: 3,
+      targetRepsMin: 8,
+      targetRepsMax: 10,
+      restSeconds: 150,
+      notes: "2 warm-up (12-15 reps), 1 al FALLO. Banco a 30 grados. Negativa 3-4 seg."
+    },
+    {
+      exerciseId: "db-flat-press",
+      order: 2,
+      intensity: "heavy",
+      targetSets: 3,
+      targetRepsMin: 8,
+      targetRepsMax: 10,
+      restSeconds: 120,
+      notes: "2 warm-up, 1 al fallo. Maxima contraccion arriba."
+    },
+    {
+      exerciseId: "incline-db-fly",
+      order: 3,
+      intensity: "medium",
+      targetSets: 2,
+      targetRepsMin: 6,
+      targetRepsMax: 8,
+      restSeconds: 90,
+      notes: "1 warm-up, 1 al fallo. Estiramiento profundo. Codos ligeramente flexionados."
+    },
+    {
+      exerciseId: "cable-flyes",
+      order: 4,
+      intensity: "medium",
+      targetSets: 2,
+      targetRepsMin: 8,
+      targetRepsMax: 10,
+      restSeconds: 60,
+      notes: "1 warm-up, 1 al fallo. Cruza las manos al final."
+    },
+    {
+      exerciseId: "incline-db-curl",
+      order: 5,
+      intensity: "medium",
+      targetSets: 2,
+      targetRepsMin: 6,
+      targetRepsMax: 8,
+      restSeconds: 90,
+      notes: "1 warm-up, 1 al fallo. Maximo estiramiento en posicion baja."
+    },
+    {
+      exerciseId: "barbell-curls",
+      order: 6,
+      intensity: "heavy",
+      targetSets: 2,
+      targetRepsMin: 6,
+      targetRepsMax: 8,
+      restSeconds: 90,
+      notes: "1 warm-up, 1 al fallo. Sin balanceo. Barra EZ preferida."
+    },
+    {
+      exerciseId: "preacher-curl",
+      order: 7,
+      intensity: "medium",
+      targetSets: 2,
+      targetRepsMin: 6,
+      targetRepsMax: 8,
+      restSeconds: 60,
+      notes: "1 warm-up, 1 al fallo. Unilateral si es posible. Contraccion maxima."
+    }
+  ]
+};
+
+// Day 4: Quads, Hamstrings, Calves (Friday)
+const bloodAndGutsDay4: WorkoutTemplate = {
+  id: "bg-legs",
+  name: "Dia 4 - Piernas Completas",
+  type: "legs",
+  dayOfWeek: 5,
+  estimatedDuration: 70,
+  exercises: [
+    {
+      exerciseId: "leg-extension",
+      order: 1,
+      intensity: "medium",
+      targetSets: 3,
+      targetRepsMin: 8,
+      targetRepsMax: 10,
+      restSeconds: 90,
+      notes: "Pre-agotamiento. 2 warm-up, 1 al fallo. Contraccion 2 seg arriba."
+    },
+    {
+      exerciseId: "leg-press",
+      order: 2,
+      intensity: "heavy",
+      targetSets: 3,
+      targetRepsMin: 8,
+      targetRepsMax: 10,
+      restSeconds: 150,
+      notes: "2 warm-up, 1 al fallo BRUTAL. Pies a media altura. No bloquees rodillas."
+    },
+    {
+      exerciseId: "hack-squat",
+      order: 3,
+      intensity: "heavy",
+      targetSets: 2,
+      targetRepsMin: 6,
+      targetRepsMax: 8,
+      restSeconds: 120,
+      notes: "1 warm-up, 1 al fallo. Profundo. Negativa controlada."
+    },
+    {
+      exerciseId: "seated-leg-curl",
+      order: 4,
+      intensity: "medium",
+      targetSets: 2,
+      targetRepsMin: 8,
+      targetRepsMax: 10,
+      restSeconds: 90,
+      notes: "1 warm-up, 1 al fallo. Contraccion completa."
+    },
+    {
+      exerciseId: "romanian-deadlifts",
+      order: 5,
+      intensity: "heavy",
+      targetSets: 2,
+      targetRepsMin: 6,
+      targetRepsMax: 8,
+      restSeconds: 120,
+      notes: "1 warm-up, 1 al fallo. Estiramiento maximo de isquios. Piernas casi rectas."
+    },
+    {
+      exerciseId: "calf-raises",
+      order: 6,
+      intensity: "medium",
+      targetSets: 2,
+      targetRepsMin: 6,
+      targetRepsMax: 8,
+      restSeconds: 60,
+      notes: "1 warm-up, 1 al fallo. Estiramiento completo abajo, contraccion arriba."
+    },
+    {
+      exerciseId: "seated-calf-raise",
+      order: 7,
+      intensity: "medium",
+      targetSets: 2,
+      targetRepsMin: 6,
+      targetRepsMax: 8,
+      restSeconds: 60,
+      notes: "1 warm-up, 1 al fallo. Soleo. Pausa abajo."
+    }
+  ]
+};
+
+export const bloodAndGutsProgram: WorkoutProgram = {
+  id: "dorian-yates-blood-guts",
+  name: "Dorian Yates - Blood & Guts",
+  description: `Programa HIT (High Intensity Training) de 12 semanas basado en la metodologia de Dorian Yates.
+
+6 veces Mr. Olympia (1992-1997). "The Shadow" revoluciono el bodybuilding con su enfoque de MAXIMA INTENSIDAD.
+
+FILOSOFIA BLOOD & GUTS:
+- 1 SOLO SET DE TRABAJO al fallo absoluto (tras warm-ups)
+- Negativas lentas (3-4 segundos) para maximo dano muscular
+- Menos volumen, MAXIMA intensidad
+- Recuperacion optima entre sesiones
+
+PRINCIPIOS CLAVE:
+1. Warm-up sets NO cuentan - solo preparan el musculo
+2. El set de trabajo es TODO - llega al fallo real
+3. Negativas controladas - donde ocurre el crecimiento
+4. Reps parciales al final del set si es posible
+5. Intensidad > Volumen siempre
+
+ESTRUCTURA: 4 dias por semana
+- Lunes: Hombros, Trapecios, Triceps, Abs
+- Martes: Espalda, Deltoides Posterior
+- Miercoles: DESCANSO
+- Jueves: Pecho, Biceps
+- Viernes: Piernas (Cuadriceps, Isquios, Gemelos)
+- Sabado/Domingo: DESCANSO
+
+ADVERTENCIA: Este programa NO es para principiantes. 
+Requiere experiencia, un spotter de confianza, y la mentalidad de ir MAS ALLA del fallo.
+
+"Everybody wants to be a bodybuilder, but don't nobody want to lift no heavy-ass weights." - Dorian Yates`,
+  author: "Dorian Yates",
+  difficulty: "advanced",
+  goal: "muscle_gain",
+  daysPerWeek: 4,
+  weeks: 12,
+  equipmentRequired: ["barbell", "dumbbell", "cable", "machine"],
+  minEquipmentRequired: ["barbell", "dumbbell"],
+  workouts: [bloodAndGutsDay1, bloodAndGutsDay2, bloodAndGutsDay3, bloodAndGutsDay4],
+  nutritionGuidelines: bloodAndGutsNutrition
+};
+
 // ALL PROGRAMS EXPORT
 // ============================================
 
@@ -3800,9 +4230,9 @@ export const allPrograms: WorkoutProgram[] = [
   achillesElysiumProgram,
   wolverineProgram,
   hopliteProgram,
-  b3Program
+  b3Program,
+  bloodAndGutsProgram
 ];
-
 // Helper functions
 export function getProgramById(id: string): WorkoutProgram | undefined {
   return allPrograms.find(p => p.id === id);
