@@ -152,7 +152,7 @@ const achillesPhase1Workouts: WorkoutTemplate[] = [
         targetSets: 4,
         targetRepsMin: 8,
         targetRepsMax: 10,
-        restSeconds: 120,
+        restSeconds: 150,
         notes: 'Con barra - Stiff Leg Deadlift'
       },
       {
@@ -241,7 +241,7 @@ const achillesPhase1Workouts: WorkoutTemplate[] = [
         targetSets: 4,
         targetRepsMin: 8,
         targetRepsMax: 10,
-        restSeconds: 120,
+        restSeconds: 150,
         notes: 'Pulldowns si no puedes hacer pull-ups',
         alternativeExercises: ['lat-pulldown']
       },
@@ -321,7 +321,7 @@ const achillesPhase1Workouts: WorkoutTemplate[] = [
         targetSets: 4,
         targetRepsMin: 10,
         targetRepsMax: 15,
-        restSeconds: 120,
+        restSeconds: 150,
         notes: 'Añade peso si BW es fácil'
       },
       {
@@ -351,7 +351,7 @@ const achillesPhase1Workouts: WorkoutTemplate[] = [
         targetSets: 5,
         targetRepsMin: 5,
         targetRepsMax: 8,
-        restSeconds: 120,
+        restSeconds: 150,
         notes: 'Seated DB shoulder press'
       },
       {
@@ -542,7 +542,7 @@ const achillesPhase2Workouts: WorkoutTemplate[] = [
         targetSets: 3,
         targetRepsMin: 8,
         targetRepsMax: 10,
-        restSeconds: 120,
+        restSeconds: 150,
         alternativeExercises: ['lat-pulldown']
       },
       {
@@ -630,7 +630,7 @@ const achillesPhase2Workouts: WorkoutTemplate[] = [
         targetSets: 4,
         targetRepsMin: 6,
         targetRepsMax: 10,
-        restSeconds: 120,
+        restSeconds: 150,
         notes: 'BB Stiff Leg Deadlift'
       },
       {
@@ -660,7 +660,7 @@ const achillesPhase2Workouts: WorkoutTemplate[] = [
         targetSets: 3,
         targetRepsMin: 8,
         targetRepsMax: 10,
-        restSeconds: 120,
+        restSeconds: 150,
         notes: 'Supinated grip',
         alternativeExercises: ['lat-pulldown']
       },
@@ -751,7 +751,7 @@ const achillesPhase2Workouts: WorkoutTemplate[] = [
         targetSets: 2,
         targetRepsMin: 5,
         targetRepsMax: 8,
-        restSeconds: 120,
+        restSeconds: 150,
         notes: 'Seated DB shoulder press'
       },
       {
@@ -825,7 +825,7 @@ const achillesPhase3Workouts: WorkoutTemplate[] = [
         targetSets: 2,
         targetRepsMin: 6,
         targetRepsMax: 10,
-        restSeconds: 120,
+        restSeconds: 150,
         notes: 'Weighted dips'
       },
       {
@@ -855,7 +855,7 @@ const achillesPhase3Workouts: WorkoutTemplate[] = [
         targetSets: 2,
         targetRepsMin: 6,
         targetRepsMax: 15,
-        restSeconds: 120,
+        restSeconds: 150,
         notes: 'Max reps each set'
       },
       {
@@ -952,7 +952,7 @@ const achillesPhase3Workouts: WorkoutTemplate[] = [
         targetSets: 2,
         targetRepsMin: 6,
         targetRepsMax: 8,
-        restSeconds: 120,
+        restSeconds: 150,
         notes: 'Seated DB shoulder press'
       },
       {
@@ -1743,7 +1743,7 @@ const wolverinePhase2Workouts: WorkoutTemplate[] = [
         targetSets: 4,
         targetRepsMin: 6,
         targetRepsMax: 12,
-        restSeconds: 120,
+        restSeconds: 150,
         notes: 'Pirámide inversa: 12-10-8-6'
       },
       {
@@ -2401,7 +2401,7 @@ const b3PushTemplate: WorkoutTemplate = {
       targetSets: 4,
       targetRepsMin: 6,
       targetRepsMax: 12,
-      restSeconds: 120,
+      restSeconds: 150,
       notes: 'Movimiento moderado',
       alternativeExercises: ['barbell-ohp', 'arnold-press']
     },
@@ -2471,7 +2471,7 @@ const b3PullTemplate: WorkoutTemplate = {
       targetSets: 4,
       targetRepsMin: 6,
       targetRepsMax: 12,
-      restSeconds: 120,
+      restSeconds: 150,
       notes: 'Movimiento de grosor moderado',
       alternativeExercises: ['t-bar-row', 'db-row']
     },
@@ -2690,7 +2690,7 @@ const elysiumPhase1Workouts: WorkoutTemplate[] = [
         targetSets: 3,
         targetRepsMin: 3,
         targetRepsMax: 6,
-        restSeconds: 120,
+        restSeconds: 150,
         notes: 'Usa asistencia si es necesario. Enfoque en excéntrico.'
       },
       {
@@ -2751,7 +2751,7 @@ const elysiumPhase1Workouts: WorkoutTemplate[] = [
         targetSets: 3,
         targetRepsMin: 6,
         targetRepsMax: 10,
-        restSeconds: 120,
+        restSeconds: 150,
         notes: 'Banco a 30 grados. Control excéntrico.'
       },
       {
@@ -2811,7 +2811,7 @@ const elysiumPhase1Workouts: WorkoutTemplate[] = [
         targetSets: 3,
         targetRepsMin: 5,
         targetRepsMax: 8,
-        restSeconds: 120,
+        restSeconds: 150,
         notes: 'Agarre ancho. Elysium Standard: BW+50% x 6',
         alternativeExercises: ['weighted-pullups', 'lat-pulldown']
       },
@@ -2872,7 +2872,7 @@ const elysiumPhase1Workouts: WorkoutTemplate[] = [
         targetSets: 3,
         targetRepsMin: 8,
         targetRepsMax: 12,
-        restSeconds: 120,
+        restSeconds: 150,
         notes: 'Talones elevados. Rodillas adelante.'
       },
       {
@@ -2933,7 +2933,7 @@ const elysiumPhase1Workouts: WorkoutTemplate[] = [
         targetSets: 3,
         targetRepsMin: 6,
         targetRepsMax: 10,
-        restSeconds: 120,
+        restSeconds: 150,
         notes: 'Sentado o de pie. Control total.'
       },
       {
@@ -2997,7 +2997,7 @@ const elysiumPhase2Workouts: WorkoutTemplate[] = [
         targetSets: 4,
         targetRepsMin: 4,
         targetRepsMax: 8,
-        restSeconds: 120,
+        restSeconds: 150,
         notes: 'Progresa hacia menos asistencia.'
       },
       {
@@ -3068,7 +3068,7 @@ const elysiumPhase2Workouts: WorkoutTemplate[] = [
         targetSets: 4,
         targetRepsMin: 6,
         targetRepsMax: 10,
-        restSeconds: 120,
+        restSeconds: 150,
         notes: 'Aumenta peso vs Fase I.'
       },
       {
@@ -3137,7 +3137,7 @@ const elysiumPhase2Workouts: WorkoutTemplate[] = [
         targetSets: 4,
         targetRepsMin: 5,
         targetRepsMax: 10,
-        restSeconds: 120,
+        restSeconds: 150,
         notes: 'Añade peso si superas 10 reps.'
       },
       {
@@ -3205,7 +3205,7 @@ const elysiumPhase2Workouts: WorkoutTemplate[] = [
         targetSets: 4,
         targetRepsMin: 8,
         targetRepsMax: 12,
-        restSeconds: 120,
+        restSeconds: 150,
         notes: 'Aumenta peso con mancuernas/barra.'
       },
       {
@@ -3274,7 +3274,7 @@ const elysiumPhase2Workouts: WorkoutTemplate[] = [
         targetSets: 4,
         targetRepsMin: 6,
         targetRepsMax: 10,
-        restSeconds: 120,
+        restSeconds: 150,
         notes: 'Nuevo: Press sin soporte de espalda.'
       },
       {
@@ -3345,7 +3345,7 @@ const elysiumPhase3Workouts: WorkoutTemplate[] = [
         targetSets: 5,
         targetRepsMin: 3,
         targetRepsMax: 10,
-        restSeconds: 120,
+        restSeconds: 150,
         notes: 'Pirámide: 10-8-6-4-3 reps. Añade peso/reduce asistencia.'
       },
       {
@@ -3365,7 +3365,7 @@ const elysiumPhase3Workouts: WorkoutTemplate[] = [
         targetSets: 4,
         targetRepsMin: 6,
         targetRepsMax: 10,
-        restSeconds: 120,
+        restSeconds: 150,
         notes: 'Nuevo: RDL pesado en pirámide.'
       },
       {
@@ -3404,7 +3404,7 @@ const elysiumPhase3Workouts: WorkoutTemplate[] = [
         targetSets: 5,
         targetRepsMin: 4,
         targetRepsMax: 12,
-        restSeconds: 120,
+        restSeconds: 150,
         notes: 'Pirámide: 12-10-8-6-4 reps.'
       },
       {
@@ -3414,7 +3414,7 @@ const elysiumPhase3Workouts: WorkoutTemplate[] = [
         targetSets: 4,
         targetRepsMin: 5,
         targetRepsMax: 10,
-        restSeconds: 120,
+        restSeconds: 150,
         notes: 'Nuevo: Press plano en pirámide.'
       },
       {
@@ -3473,7 +3473,7 @@ const elysiumPhase3Workouts: WorkoutTemplate[] = [
         targetSets: 4,
         targetRepsMin: 6,
         targetRepsMax: 10,
-        restSeconds: 120,
+        restSeconds: 150,
         notes: 'Nuevo: Row con barra en pirámide.'
       },
       {
@@ -3599,7 +3599,7 @@ const elysiumPhase3Workouts: WorkoutTemplate[] = [
         targetSets: 3,
         targetRepsMin: 6,
         targetRepsMax: 10,
-        restSeconds: 120,
+        restSeconds: 150,
         notes: 'Después del OHP para volumen.'
       },
       {
@@ -3835,6 +3835,65 @@ const bloodAndGutsNutrition: NutritionGuidelines = {
   ]
 };
 
+
+// Blood & Guts Phases - Dorian Yates UPDATED Protocol (Huberman 2025)
+const bloodAndGutsPhases: ProgramPhase[] = [
+  {
+    id: "bg-phase1",
+    name: "Fase I: Adaptacion",
+    description: "Adaptacion al HIT y cardio HIIT",
+    weeks: 4,
+    focus: "hypertrophy",
+    trainingStyle: "standard",
+    cardioType: "hiit",
+    cardioDuration: 10,
+    cardioFrequency: 3,
+    notes: [
+      "CARDIO: 3 sprints de 20 seg ALL-OUT (bici estatica)",
+      "2-3 min descanso entre sprints - Total ~10 min",
+      "Equivale a 45-60 min de cardio tradicional",
+      "MOVILIDAD: Considera anadir Pilates 1x/semana",
+      "Aprende la tecnica HIT - conexion mente-musculo"
+    ]
+  },
+  {
+    id: "bg-phase2",
+    name: "Fase II: Intensificacion",
+    description: "Aumenta intensidad, anade trabajo funcional",
+    weeks: 4,
+    focus: "hypertrophy",
+    trainingStyle: "standard",
+    cardioType: "hiit",
+    cardioDuration: 12,
+    cardioFrequency: 3,
+    notes: [
+      "CARDIO: 4 sprints de 20 seg ALL-OUT",
+      "LONGEVIDAD: Farmers Walks 2x30seg al final",
+      "HOMBROS: Dead hangs (colgarse) 30-60 seg",
+      "Aumenta pesos manteniendo forma perfecta",
+      "Negativas de 4 segundos"
+    ]
+  },
+  {
+    id: "bg-phase3",
+    name: "Fase III: Pico",
+    description: "Maxima intensidad - protocolo Dorian 2025",
+    weeks: 4,
+    focus: "hypertrophy",
+    trainingStyle: "standard",
+    cardioType: "hiit",
+    cardioDuration: 15,
+    cardioFrequency: 3,
+    notes: [
+      "CARDIO: 5 sprints de 20 seg ALL-OUT",
+      "LONGEVIDAD: Farmers Walks 3x30seg pesado",
+      "HOMBROS: Dead hangs 2x60seg descompresion",
+      "Maxima intensidad en cada set de trabajo",
+      "Recuperacion CRITICA - duerme 8+ horas"
+    ]
+  }
+];
+
 // Day 1: Shoulders, Traps, Triceps, Abs
 const bloodAndGutsDay1: WorkoutTemplate = {
   id: "bg-shoulders-traps-triceps",
@@ -3850,8 +3909,8 @@ const bloodAndGutsDay1: WorkoutTemplate = {
       targetSets: 3,
       targetRepsMin: 8,
       targetRepsMax: 10,
-      restSeconds: 120,
-      notes: "2 sets warm-up (12-15 reps), 1 set al FALLO ABSOLUTO. Negativa de 3-4 seg."
+      restSeconds: 150,
+      notes: "2 warm-up (12-15 reps), 1 al FALLO MUSCULAR (no cardio). Descansa suficiente. Negativa 3-4 seg."
     },
     {
       exerciseId: "lateral-raises",
@@ -3961,7 +4020,7 @@ const bloodAndGutsDay2: WorkoutTemplate = {
       targetSets: 3,
       targetRepsMin: 8,
       targetRepsMax: 10,
-      restSeconds: 120,
+      restSeconds: 150,
       notes: "Agarre neutro si es posible. 2 warm-up, 1 al fallo. Tira con los codos."
     },
     {
@@ -3971,7 +4030,7 @@ const bloodAndGutsDay2: WorkoutTemplate = {
       targetSets: 3,
       targetRepsMin: 8,
       targetRepsMax: 10,
-      restSeconds: 120,
+      restSeconds: 150,
       notes: "2 warm-up, 1 al fallo. Torso a 45 grados. Tira al ombligo. Negativa 3 seg."
     },
     {
@@ -4042,7 +4101,7 @@ const bloodAndGutsDay3: WorkoutTemplate = {
       targetSets: 3,
       targetRepsMin: 8,
       targetRepsMax: 10,
-      restSeconds: 120,
+      restSeconds: 150,
       notes: "2 warm-up, 1 al fallo. Maxima contraccion arriba."
     },
     {
@@ -4133,7 +4192,7 @@ const bloodAndGutsDay4: WorkoutTemplate = {
       targetSets: 2,
       targetRepsMin: 6,
       targetRepsMax: 8,
-      restSeconds: 120,
+      restSeconds: 150,
       notes: "1 warm-up, 1 al fallo. Profundo. Negativa controlada."
     },
     {
@@ -4153,7 +4212,7 @@ const bloodAndGutsDay4: WorkoutTemplate = {
       targetSets: 2,
       targetRepsMin: 6,
       targetRepsMax: 8,
-      restSeconds: 120,
+      restSeconds: 150,
       notes: "1 warm-up, 1 al fallo. Estiramiento maximo de isquios. Piernas casi rectas."
     },
     {
@@ -4192,12 +4251,14 @@ FILOSOFIA BLOOD & GUTS:
 - Menos volumen, MAXIMA intensidad
 - Recuperacion optima entre sesiones
 
-PRINCIPIOS CLAVE:
+PRINCIPIOS CLAVE (Actualizado 2025):
 1. Warm-up sets NO cuentan - solo preparan el musculo
-2. El set de trabajo es TODO - llega al fallo real
-3. Negativas controladas - donde ocurre el crecimiento
-4. Reps parciales al final del set si es posible
-5. Intensidad > Volumen siempre
+2. El set de trabajo es TODO - llega al FALLO MUSCULAR (no cardio)
+3. Negativas controladas 3-4 seg - donde ocurre el crecimiento
+4. DESCANSA SUFICIENTE entre sets pesados (2-3 min compuestos)
+5. Reps parciales/forzadas al final si tienes spotter
+6. Maquinas OK - Dorian las usaba (Hammer, cables)
+7. Tecnica perfecta > peso - evita lesiones
 
 ESTRUCTURA: 4 dias por semana
 - Lunes: Hombros, Trapecios, Triceps, Abs
@@ -4206,6 +4267,13 @@ ESTRUCTURA: 4 dias por semana
 - Jueves: Pecho, Biceps
 - Viernes: Piernas (Cuadriceps, Isquios, Gemelos)
 - Sabado/Domingo: DESCANSO
+
+CARDIO (Protocolo Dorian 2025 - Huberman Lab):
+- HIIT: 3-5 sprints de 20 seg ALL-OUT (bici estatica)
+- Equivale a 45-60 min cardio tradicional
+- Frecuencia: 3x/semana
+- Extras longevidad: Farmers Walks + Dead Hangs
+- Opcional: Pilates 1x/semana para movilidad
 
 ADVERTENCIA: Este programa NO es para principiantes. 
 Requiere experiencia, un spotter de confianza, y la mentalidad de ir MAS ALLA del fallo.
@@ -4218,6 +4286,7 @@ Requiere experiencia, un spotter de confianza, y la mentalidad de ir MAS ALLA de
   weeks: 12,
   equipmentRequired: ["barbell", "dumbbell", "cable", "machine"],
   minEquipmentRequired: ["barbell", "dumbbell"],
+  phases: bloodAndGutsPhases,
   workouts: [bloodAndGutsDay1, bloodAndGutsDay2, bloodAndGutsDay3, bloodAndGutsDay4],
   nutritionGuidelines: bloodAndGutsNutrition
 };
