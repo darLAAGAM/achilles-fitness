@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import {
   Lightbulb, Search,
   Bookmark, BookmarkCheck, X, Shuffle
@@ -365,18 +365,14 @@ export function InsightsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<InsightCategory | 'all'>('all');
   const [selectedInsight, setSelectedInsight] = useState<Insight | null>(null);
-  const [savedInsights, setSavedInsights] = useState<string[]>([]);
+  const [savedInsights, setSavedInsights] = useState<string[]>(() => {
+    // Load saved insights from localStorage on init
+    const saved = localStorage.getItem('achilles-saved-insights');
+    return saved ? JSON.parse(saved) : [];
+  });
   const [showSaved, setShowSaved] = useState(false);
 
   const dailyInsight = useMemo(() => getDailyInsight(), []);
-
-  useEffect(() => {
-    // Load saved insights from localStorage
-    const saved = localStorage.getItem('achilles-saved-insights');
-    if (saved) {
-      setSavedInsights(JSON.parse(saved));
-    }
-  }, []);
 
   const toggleSaveInsight = (insightId: string, e?: React.MouseEvent) => {
     e?.stopPropagation();

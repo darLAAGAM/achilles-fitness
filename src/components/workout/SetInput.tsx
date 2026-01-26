@@ -30,12 +30,14 @@ export function SetInput({
   const [reps, setReps] = useState(completedReps ?? defaultReps);
 
   // Sync with new defaults when they change (e.g., switching exercises)
+  /* eslint-disable react-hooks/set-state-in-effect -- Intentional: sync local state with prop changes */
   useEffect(() => {
     if (!completed) {
       setWeight(completedWeight ?? defaultWeight);
       setReps(completedReps ?? defaultReps);
     }
   }, [defaultWeight, defaultReps, completed, completedWeight, completedReps]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   const adjustWeight = (delta: number) => {
     setWeight(prev => Math.max(0, prev + delta));

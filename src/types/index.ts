@@ -260,6 +260,7 @@ export interface DailyNutritionLog {
     mealTime: MealTime;
     consumedAt: Date;
     portionMultiplier: number;
+    mealData?: Partial<Meal> & Pick<Meal, 'name' | 'calories' | 'protein' | 'carbs' | 'fat'>; // Cached meal data for display
   }[];
   totalCalories: number;
   totalProtein: number;

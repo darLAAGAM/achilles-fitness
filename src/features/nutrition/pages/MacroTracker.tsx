@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import type { CSSProperties } from 'react';
 import { Plus, Utensils, Apple, Beef, Wheat, Droplet, X, Calendar, Calculator } from 'lucide-react';
 import { useUserStore } from '../../../stores/userStore';
@@ -371,6 +371,66 @@ const styles: Record<string, CSSProperties> = {
   },
 };
 
+// Moved outside to avoid creating component during render
+const MacroRing = ({ current, target, label, color, icon: Icon }: {
+  current: number;
+  target: number;
+  label: string;
+  color: string;
+  icon: typeof Beef;
+}) => {
+  const percentage = Math.min((current / target) * 100, 100);
+  const radius = 32;
+  const circumference = 2 * Math.PI * radius;
+  const strokeDashoffset = circumference - (percentage / 100) * circumference;
+  const size = 76;
+  const center = size / 2;
+
+  return (
+    <div style={styles.macroItem}>
+      <div style={styles.macroRingContainer}>
+        <svg
+          width={size}
+          height={size}
+          viewBox={`0 0 ${size} ${size}`}
+          style={{ transform: 'rotate(-90deg)' }}
+        >
+          <circle
+            cx={center}
+            cy={center}
+            r={radius}
+            stroke="#2a2a2a"
+            strokeWidth="5"
+            fill="none"
+          />
+          <circle
+            cx={center}
+            cy={center}
+            r={radius}
+            stroke={color}
+            strokeWidth="5"
+            fill="none"
+            strokeLinecap="round"
+            strokeDasharray={circumference}
+            strokeDashoffset={strokeDashoffset}
+            style={{ transition: 'stroke-dashoffset 0.5s ease' }}
+          />
+        </svg>
+        <div style={styles.macroRingCenter}>
+          <Icon size={14} style={{ color }} />
+          <span style={styles.macroPercentage}>
+            {Math.round(percentage)}%
+          </span>
+        </div>
+      </div>
+      <p style={styles.macroLabel}>{label}</p>
+      <p style={styles.macroValues}>
+        {current}/{target}g
+      </p>
+    </div>
+  );
+};
+
 export function MacroTracker() {
   const { user } = useUserStore();
   const [todayLog, setTodayLog] = useState<DailyNutritionLog | null>(null);
@@ -456,11 +516,7 @@ export function MacroTracker() {
     return todayMeals.filter(meal => meal.mealType === selectedMealTime);
   }, [todayMeals, selectedMealTime]);
 
-  useEffect(() => {
-    loadTodayLog();
-  }, []);
-
-  const loadTodayLog = async () => {
+  const loadTodayLog = useCallback(async () => {
     const today = new Date();
     const logs = await db.dailyNutritionLogs
       .where('date')
@@ -470,7 +526,13 @@ export function MacroTracker() {
     if (logs.length > 0) {
       setTodayLog(logs[0]);
     }
-  };
+  }, []);
+
+  /* eslint-disable react-hooks/set-state-in-effect -- Intentional: load async data on mount */
+  useEffect(() => {
+    loadTodayLog();
+  }, [loadTodayLog]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   const addMealToLog = async (meal: Meal) => {
     const today = new Date();
@@ -535,65 +597,6 @@ export function MacroTracker() {
     snack: 'Snack',
     pre_workout: 'Pre-entreno',
     post_workout: 'Post-entreno'
-  };
-
-  const MacroRing = ({ current, target, label, color, icon: Icon }: {
-    current: number;
-    target: number;
-    label: string;
-    color: string;
-    icon: typeof Beef;
-  }) => {
-    const percentage = Math.min((current / target) * 100, 100);
-    const radius = 32;
-    const circumference = 2 * Math.PI * radius;
-    const strokeDashoffset = circumference - (percentage / 100) * circumference;
-    const size = 76;
-    const center = size / 2;
-
-    return (
-      <div style={styles.macroItem}>
-        <div style={styles.macroRingContainer}>
-          <svg
-            width={size}
-            height={size}
-            viewBox={`0 0 ${size} ${size}`}
-            style={{ transform: 'rotate(-90deg)' }}
-          >
-            <circle
-              cx={center}
-              cy={center}
-              r={radius}
-              stroke="#2a2a2a"
-              strokeWidth="5"
-              fill="none"
-            />
-            <circle
-              cx={center}
-              cy={center}
-              r={radius}
-              stroke={color}
-              strokeWidth="5"
-              fill="none"
-              strokeLinecap="round"
-              strokeDasharray={circumference}
-              strokeDashoffset={strokeDashoffset}
-              style={{ transition: 'stroke-dashoffset 0.5s ease' }}
-            />
-          </svg>
-          <div style={styles.macroRingCenter}>
-            <Icon size={14} style={{ color }} />
-            <span style={styles.macroPercentage}>
-              {Math.round(percentage)}%
-            </span>
-          </div>
-        </div>
-        <p style={styles.macroLabel}>{label}</p>
-        <p style={styles.macroValues}>
-          {current}/{target}g
-        </p>
-      </div>
-    );
   };
 
   return (
@@ -703,7 +706,7 @@ export function MacroTracker() {
             {todayLog.meals.map((mealEntry, index) => {
               // Try to find meal in today's plan, or use stored data
               const meal = todayMeals.find(m => m.id === mealEntry.mealId) ||
-                (mealEntry as any).mealData;
+                mealEntry.mealData;
 
               if (!meal) {
                 // Fallback: show basic info from entry

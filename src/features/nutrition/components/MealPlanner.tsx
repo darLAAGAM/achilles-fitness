@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { ChevronLeft, ChevronRight, ShoppingCart, Utensils, Clock, ChevronDown, ChevronUp, RefreshCw, Check } from 'lucide-react';
 import { useUserStore } from '../../../stores/userStore';
 import {
@@ -331,7 +331,10 @@ export function MealPlanner({ onClose }: MealPlannerProps) {
   const [activeTab, setActiveTab] = useState<'meals' | 'shopping'>('meals');
   const [currentDayIndex, setCurrentDayIndex] = useState(new Date().getDay());
   const [expandedMeals, setExpandedMeals] = useState<string[]>([]);
-  const [checkedItems, setCheckedItems] = useState<string[]>([]);
+  const [checkedItems, setCheckedItems] = useState<string[]>(() => {
+    const saved = localStorage.getItem('achilles-shopping-checked');
+    return saved ? JSON.parse(saved) : [];
+  });
 
   const mealPlan = useMemo(() => {
     try {
@@ -354,14 +357,6 @@ export function MealPlanner({ onClose }: MealPlannerProps) {
   }, [mealPlan]);
 
   const currentDay = mealPlan?.days?.[currentDayIndex];
-
-  // Load checked items from localStorage
-  useEffect(() => {
-    const saved = localStorage.getItem('achilles-shopping-checked');
-    if (saved) {
-      setCheckedItems(JSON.parse(saved));
-    }
-  }, []);
 
   const toggleExpanded = (mealId: string) => {
     setExpandedMeals(prev =>

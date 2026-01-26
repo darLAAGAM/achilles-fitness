@@ -25,8 +25,8 @@ export function Onboarding() {
   // Step 3: Goal
   const [phase, setPhase] = useState<Phase>('bulk');
 
-  // Step 4: Program selection
-  const [selectedProgramId, setSelectedProgramId] = useState<string>('achilles-3day');
+  // Step 4: Program selection (null = auto-select)
+  const [manualProgramId, setManualProgramId] = useState<string | null>(null);
 
   // Filter programs based on training days and equipment
   const availablePrograms = useMemo(() => {
@@ -48,16 +48,20 @@ export function Onboarding() {
     });
   }, [trainingDays, hasGym]);
 
-  // Auto-select best program when options change
-  useMemo(() => {
-    if (availablePrograms.length > 0) {
-      // Find exact match or closest
-      const exactMatch = availablePrograms.find(p => p.daysPerWeek === trainingDays);
-      setSelectedProgramId(exactMatch?.id || availablePrograms[0].id);
+  // Derive selected program: use manual selection or auto-select best match
+  const selectedProgramId = useMemo(() => {
+    if (manualProgramId && availablePrograms.some(p => p.id === manualProgramId)) {
+      return manualProgramId;
     }
-  }, [availablePrograms, trainingDays]);
+    // Auto-select: exact match or first available
+    const exactMatch = availablePrograms.find(p => p.daysPerWeek === trainingDays);
+    return exactMatch?.id || availablePrograms[0]?.id || 'achilles-3day';
+  }, [manualProgramId, availablePrograms, trainingDays]);
 
   const selectedProgram = allPrograms.find(p => p.id === selectedProgramId);
+  
+  // Wrapper to set manual selection
+  const setSelectedProgramId = (id: string) => setManualProgramId(id);
 
   const handleComplete = async () => {
     setLoading(true);

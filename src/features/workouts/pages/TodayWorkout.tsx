@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useCallback } from 'react';
 import type { CSSProperties } from 'react';
 import { Play, CheckCircle2, Zap, ChevronRight, Trophy, Flame, Dumbbell, Calendar, RotateCcw } from 'lucide-react';
 import { useWorkoutStore } from '../../../stores/workoutStore';
@@ -554,12 +554,12 @@ export function TodayWorkout() {
   }, [currentProgram, currentPhase]);
 
   // Map days of week to workouts based on program structure
-  const getWorkoutForDay = (dayOfWeek: number): WorkoutTemplate | null => {
+  const getWorkoutForDay = useCallback((dayOfWeek: number): WorkoutTemplate | null => {
     // dayOfWeek: 0 = Sunday, 1 = Monday, etc.
     // We need to map program days to actual calendar days
     // Programs specify dayOfWeek in their workout templates
     return programWorkouts.find(w => w.dayOfWeek === dayOfWeek) || null;
-  };
+  }, [programWorkouts]);
 
   // Generate week days with dynamic workout assignment
   const weekDays: WeekDay[] = useMemo(() => {
@@ -576,7 +576,7 @@ export function TodayWorkout() {
         isToday: isToday(date),
       };
     });
-  }, [programWorkouts]);
+  }, [getWorkoutForDay]);
 
   // Get selected day's workout
   const selectedDayOfWeek = selectedDate.getDay();

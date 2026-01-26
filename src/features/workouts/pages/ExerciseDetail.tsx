@@ -451,12 +451,14 @@ function SetInputInline({
   const [reps, setReps] = useState(completedReps ?? defaultReps);
 
   // Sync with new defaults when they change (e.g., switching exercises)
+  /* eslint-disable react-hooks/set-state-in-effect -- Intentional: sync local state with prop changes */
   useEffect(() => {
     if (!completed) {
       setWeight(completedWeight ?? defaultWeight);
       setReps(completedReps ?? defaultReps);
     }
   }, [defaultWeight, defaultReps, completed, completedWeight, completedReps]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   const adjustWeight = (delta: number) => {
     setWeight(prev => Math.max(0, prev + delta));
@@ -680,6 +682,7 @@ function RestTimerInline({
   const [displayTime, setDisplayTime] = useState(getRestTimeRemaining());
   const [hasCompleted, setHasCompleted] = useState(false);
 
+  /* eslint-disable react-hooks/set-state-in-effect -- Intentional: timer state management requires sync updates */
   useEffect(() => {
     if (!restTimerActive) {
       setDisplayTime(getRestTimeRemaining());
@@ -738,6 +741,7 @@ function RestTimerInline({
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, [restTimerActive, getRestTimeRemaining, stopRestTimer, onComplete, hasCompleted]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);

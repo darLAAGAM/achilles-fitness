@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { ChevronLeft, Save, Target } from 'lucide-react';
 import { db } from '../../../services/db/database';
 import { useUserStore } from '../../../stores/userStore';
@@ -198,11 +198,7 @@ export function BodyMetrics({ onBack }: BodyMetricsProps) {
   const [saving, setSaving] = useState(false);
   const [, setLastEntry] = useState<ProgressEntry | null>(null);
 
-  useEffect(() => {
-    loadLastEntry();
-  }, []);
-
-  const loadLastEntry = async () => {
+  const loadLastEntry = useCallback(async () => {
     const entries = await db.progressEntries
       .orderBy('date')
       .reverse()
@@ -218,7 +214,13 @@ export function BodyMetrics({ onBack }: BodyMetricsProps) {
         setMeasurements(entries[0].measurements);
       }
     }
-  };
+  }, []);
+
+  /* eslint-disable react-hooks/set-state-in-effect -- Intentional: load async data on mount */
+  useEffect(() => {
+    loadLastEntry();
+  }, [loadLastEntry]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   const handleSave = async () => {
     setSaving(true);

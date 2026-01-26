@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { Flame, Target, ChevronDown, ChevronUp, Check, Clock } from 'lucide-react';
 import { getAccessoryPlanByProgram, type AbsWorkout, type CardioWorkout } from '../../data/accessory-workouts';
 import { format, startOfWeek, addDays } from 'date-fns';
@@ -202,57 +202,48 @@ const styles = {
 
 export function AccessoryTracker({ programId, currentPhaseId }: AccessoryTrackerProps) {
   const [expanded, setExpanded] = useState(false);
-  const [completedToday, setCompletedToday] = useState<CompletedAccessory[]>([]);
-  const [completedThisWeek, setCompletedThisWeek] = useState<CompletedAccessory[]>([]);
+  const [allCompleted, setAllCompleted] = useState<CompletedAccessory[]>(() => {
+    try {
+      const stored = localStorage.getItem('achilles-accessory-completed');
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  });
 
   const plan = getAccessoryPlanByProgram(programId);
   const today = format(new Date(), 'yyyy-MM-dd');
   const weekStart = startOfWeek(new Date(), { weekStartsOn: 1 });
 
+  // Derive filtered data from allCompleted
+  const completedToday = useMemo(() => 
+    allCompleted.filter(a => a.date === today), 
+    [allCompleted, today]
+  );
+  
+  const completedThisWeek = useMemo(() => {
+    const weekDates = Array.from({ length: 7 }, (_, i) =>
+      format(addDays(weekStart, i), 'yyyy-MM-dd')
+    );
+    return allCompleted.filter(a => weekDates.includes(a.date));
+  }, [allCompleted, weekStart]);
+
   // Check if cardio is disabled for current phase
   const phaseOverride = plan?.phaseOverrides?.[currentPhaseId || ''];
   const isCardioDisabled = phaseOverride?.cardio === 'none';
 
-  useEffect(() => {
-    loadCompletedAccessories();
-  }, []);
-
-  const loadCompletedAccessories = () => {
-    try {
-      const stored = localStorage.getItem('achilles-accessory-completed');
-      if (stored) {
-        const all: CompletedAccessory[] = JSON.parse(stored);
-
-        // Filter for today
-        setCompletedToday(all.filter(a => a.date === today));
-
-        // Filter for this week
-        const weekDates = Array.from({ length: 7 }, (_, i) =>
-          format(addDays(weekStart, i), 'yyyy-MM-dd')
-        );
-        setCompletedThisWeek(all.filter(a => weekDates.includes(a.date)));
-      }
-    } catch (e) {
-      console.error('Error loading accessories:', e);
-    }
-  };
-
   const markComplete = (type: CompletedAccessory['type']) => {
     const newEntry: CompletedAccessory = { date: today, type };
 
+    // Check if already completed today
+    const alreadyDone = allCompleted.find(a => a.date === today && a.type === type);
+    if (alreadyDone) return;
+
+    const updated = [...allCompleted, newEntry];
+    
     try {
-      const stored = localStorage.getItem('achilles-accessory-completed');
-      const all: CompletedAccessory[] = stored ? JSON.parse(stored) : [];
-
-      // Check if already completed today
-      const alreadyDone = all.find(a => a.date === today && a.type === type);
-      if (alreadyDone) return;
-
-      const updated = [...all, newEntry];
       localStorage.setItem('achilles-accessory-completed', JSON.stringify(updated));
-
-      setCompletedToday(prev => [...prev, newEntry]);
-      setCompletedThisWeek(prev => [...prev, newEntry]);
+      setAllCompleted(updated);
     } catch (e) {
       console.error('Error saving accessory:', e);
     }

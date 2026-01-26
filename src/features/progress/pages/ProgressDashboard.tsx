@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { TrendingUp, Trophy, Scale, Camera, Ruler } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
 import { db } from '../../../services/db/database';
@@ -18,11 +18,7 @@ export function ProgressDashboard() {
   const [showMetrics, setShowMetrics] = useState(false);
   const [showPhotos, setShowPhotos] = useState(false);
 
-  useEffect(() => {
-    loadProgressData();
-  }, []);
-
-  const loadProgressData = async () => {
+  const loadProgressData = useCallback(async () => {
     // Load progress entries
     const entries = await db.progressEntries
       .orderBy('date')
@@ -73,7 +69,13 @@ export function ProgressDashboard() {
       .filter(s => s.status === 'completed')
       .count();
     setWorkoutsThisWeek(weekSessions);
-  };
+  }, []);
+
+  /* eslint-disable react-hooks/set-state-in-effect -- Intentional: load async data on mount */
+  useEffect(() => {
+    loadProgressData();
+  }, [loadProgressData]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   const chartData = progressEntries.map(entry => ({
     date: format(new Date(entry.date), 'dd/MM'),

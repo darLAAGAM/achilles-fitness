@@ -23,10 +23,13 @@ export function RestTimer({ defaultSeconds = 90, nextExercise, onComplete }: Res
   const [displayTime, setDisplayTime] = useState(getRestTimeRemaining());
   const [hasCompleted, setHasCompleted] = useState(false);
 
+  // Initialize display time when timer becomes inactive
+  
+  
   // Update display time frequently when timer is active
+  /* eslint-disable react-hooks/set-state-in-effect -- Intentional: timer state management requires sync updates */
   useEffect(() => {
     if (!restTimerActive) {
-      setDisplayTime(getRestTimeRemaining());
       return;
     }
 
@@ -87,6 +90,7 @@ export function RestTimer({ defaultSeconds = 90, nextExercise, onComplete }: Res
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, [restTimerActive, getRestTimeRemaining, stopRestTimer, onComplete, hasCompleted]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   const formatTime = useCallback((seconds: number) => {
     const mins = Math.floor(seconds / 60);

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { ArrowLeft, Camera, Trash2, X, Image as ImageIcon } from 'lucide-react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -173,28 +173,23 @@ const styles = {
 };
 
 export function PhotoGallery({ onBack }: PhotoGalleryProps) {
-  const [photos, setPhotos] = useState<ProgressPhoto[]>([]);
-  const [selectedPhoto, setSelectedPhoto] = useState<ProgressPhoto | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    loadPhotos();
-  }, []);
-
-  const loadPhotos = async () => {
+  const [photos, setPhotos] = useState<ProgressPhoto[]>(() => {
     try {
       const stored = localStorage.getItem('achilles-progress-photos');
       if (stored) {
         const parsed = JSON.parse(stored);
-        setPhotos(parsed.map((p: ProgressPhoto) => ({
+        return parsed.map((p: ProgressPhoto) => ({
           ...p,
           date: new Date(p.date)
-        })));
+        }));
       }
     } catch (e) {
       console.error('Error loading photos:', e);
     }
-  };
+    return [];
+  });
+  const [selectedPhoto, setSelectedPhoto] = useState<ProgressPhoto | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const savePhotos = (newPhotos: ProgressPhoto[]) => {
     localStorage.setItem('achilles-progress-photos', JSON.stringify(newPhotos));
