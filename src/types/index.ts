@@ -121,6 +121,7 @@ export interface WorkoutTemplate {
   circuitRounds?: number; // how many times to repeat the circuit
   restBetweenRounds?: number; // seconds rest between circuit rounds
   estimatedDuration?: number; // minutes
+  optional?: boolean; // optional workout day (shown differently in UI)
   exercises: ExerciseTemplate[];
 }
 

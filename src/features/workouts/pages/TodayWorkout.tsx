@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo, useCallback } from 'react';
 import type { CSSProperties } from 'react';
-import { Play, CheckCircle2, Zap, ChevronRight, Trophy, Flame, Dumbbell, Calendar, RotateCcw } from 'lucide-react';
+import { Play, CheckCircle2, Zap, ChevronRight, ChevronDown, Trophy, Flame, Dumbbell, Calendar, RotateCcw } from 'lucide-react';
 import { useWorkoutStore } from '../../../stores/workoutStore';
 import { useUserStore } from '../../../stores/userStore';
 import { getProgramById, achillesProgram } from '../../../data/programs';
@@ -24,6 +24,7 @@ interface WeekDay {
   dayNumber: number;
   workoutType: WorkoutType;
   isToday: boolean;
+  isOptional?: boolean;
 }
 
 // ============================================
@@ -409,6 +410,29 @@ const styles: Record<string, CSSProperties> = {
     margin: 0,
     marginTop: '2px',
   },
+  phaseNotesContainer: {
+    backgroundColor: `${colors.accent}10`,
+    borderRadius: '12px',
+    padding: '12px 16px',
+    margin: '0 24px 16px',
+    display: 'flex',
+    flexDirection: 'column' as const,
+    gap: '8px',
+  },
+  phaseNoteItem: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: '8px',
+  },
+  phaseNoteIcon: {
+    fontSize: '14px',
+    lineHeight: '20px',
+  },
+  phaseNoteText: {
+    fontSize: '13px',
+    color: colors.textSecondary,
+    lineHeight: '20px',
+  },
   circuitBadge: {
     backgroundColor: `${colors.accent}20`,
     color: colors.accent,
@@ -529,6 +553,7 @@ export function TodayWorkout() {
     exercise: Exercise;
     templateExercise: WorkoutTemplate['exercises'][0];
   } | null>(null);
+  const [showPhaseNotes, setShowPhaseNotes] = useState(false);
 
   // Get the user's current program or default to Achilles
   const currentProgram = useMemo(() => {
@@ -575,6 +600,7 @@ export function TodayWorkout() {
         dayNumber: date.getDate(),
         workoutType: (workout?.type || 'rest') as WorkoutType,
         isToday: isToday(date),
+        isOptional: workout?.optional || false,
       };
     });
   }, [getWorkoutForDay]);
@@ -760,16 +786,40 @@ export function TodayWorkout() {
 
       {/* Phase Banner (for programs with phases like Wolverine) */}
       {currentPhase && currentProgram.phases && (
-        <div style={styles.phaseBanner}>
+        <div 
+          style={{...styles.phaseBanner, cursor: currentPhase.notes?.length ? 'pointer' : 'default'}}
+          onClick={() => currentPhase.notes?.length && setShowPhaseNotes(!showPhaseNotes)}
+        >
           <div style={styles.phaseIcon}>
             <Calendar size={20} color={colors.accent} />
           </div>
-          <div style={styles.phaseInfo}>
+          <div style={{...styles.phaseInfo, flex: 1}}>
             <p style={styles.phaseName}>{currentPhase.name}</p>
             <p style={styles.phaseWeek}>
               Semana {weekInPhase} de {currentPhase.weeks} • {currentPhase.focus === 'strength' ? 'Fuerza' : currentPhase.focus === 'hypertrophy' ? 'Hipertrofia' : currentPhase.focus === 'explosivity' ? 'Explosividad' : 'Acondicionamiento'}
             </p>
           </div>
+          {currentPhase.notes && currentPhase.notes.length > 0 && (
+            <ChevronDown 
+              size={20} 
+              color={colors.textSecondary} 
+              style={{transform: showPhaseNotes ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s'}}
+            />
+          )}
+        </div>
+      )}
+      
+      {/* Phase Notes (expanded) */}
+      {showPhaseNotes && currentPhase?.notes && (
+        <div style={styles.phaseNotesContainer}>
+          {currentPhase.notes.map((note, idx) => (
+            <div key={idx} style={styles.phaseNoteItem}>
+              <span style={styles.phaseNoteIcon}>
+                {note.includes('CARDIO') ? '🏃' : note.includes('LONGEVIDAD') || note.includes('Farmers') ? '🏋️' : note.includes('HOMBROS') || note.includes('Dead hang') ? '🙆' : note.includes('MOVILIDAD') || note.includes('Pilates') ? '🧘' : '📝'}
+              </span>
+              <span style={styles.phaseNoteText}>{note}</span>
+            </div>
+          ))}
         </div>
       )}
 
@@ -779,6 +829,7 @@ export function TodayWorkout() {
           {weekDays.map((day) => {
             const isSelected = isSameDay(day.date, selectedDate);
             const dayColor = getWorkoutColor(day.workoutType);
+            const isOptionalDay = day.isOptional;
 
             return (
               <button
@@ -787,7 +838,12 @@ export function TodayWorkout() {
                 style={{
                   ...styles.dayButton,
                   backgroundColor: isSelected ? dayColor : 'transparent',
-                  border: day.isToday && !isSelected ? `2px solid ${colors.accent}` : '2px solid transparent',
+                  border: day.isToday && !isSelected 
+                    ? `2px solid ${colors.accent}` 
+                    : isOptionalDay && !isSelected 
+                      ? `2px dashed ${dayColor}50` 
+                      : '2px solid transparent',
+                  opacity: isOptionalDay && !isSelected ? 0.7 : 1,
                 }}
               >
                 <span style={{
@@ -806,8 +862,9 @@ export function TodayWorkout() {
                   ...styles.dayWorkoutBadge,
                   backgroundColor: isSelected ? 'rgba(0,0,0,0.2)' : `${dayColor}22`,
                   color: isSelected ? '#000' : dayColor,
+                  fontStyle: isOptionalDay ? 'italic' : 'normal',
                 }}>
-                  {getWorkoutLabel(day.workoutType)}
+                  {isOptionalDay ? 'OPC' : getWorkoutLabel(day.workoutType)}
                 </span>
               </button>
             );
@@ -868,6 +925,12 @@ export function TodayWorkout() {
             {/* Workout info card (show when no session or session is for different workout) */}
             {!isSessionForSelectedWorkout && (
               <div style={styles.card}>
+                {/* Optional badge */}
+                {selectedTemplate.optional && (
+                  <div style={{...styles.circuitBadge, backgroundColor: `${colors.textSecondary}20`, color: colors.textSecondary}}>
+                    ⭐ Día opcional
+                  </div>
+                )}
                 {/* Circuit badge for circuit workouts */}
                 {selectedTemplate.isCircuit && (
                   <div style={styles.circuitBadge}>

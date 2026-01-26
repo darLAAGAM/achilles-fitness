@@ -3899,7 +3899,7 @@ const bloodAndGutsDay1: WorkoutTemplate = {
   id: "bg-shoulders-traps-triceps",
   name: "Dia 1 - Hombros, Trapecios, Triceps, Abs",
   type: "shoulders",
-  dayOfWeek: 1,
+  dayOfWeek: 1, // Lunes
   estimatedDuration: 60,
   exercises: [
     {
@@ -4000,7 +4000,7 @@ const bloodAndGutsDay2: WorkoutTemplate = {
   id: "bg-back-rear-delts",
   name: "Dia 2 - Espalda y Deltoides Posterior",
   type: "back",
-  dayOfWeek: 2,
+  dayOfWeek: 3, // Miercoles
   estimatedDuration: 65,
   exercises: [
     {
@@ -4081,7 +4081,7 @@ const bloodAndGutsDay3: WorkoutTemplate = {
   id: "bg-chest-biceps",
   name: "Dia 3 - Pecho y Biceps",
   type: "chest",
-  dayOfWeek: 4,
+  dayOfWeek: 5, // Viernes
   estimatedDuration: 55,
   exercises: [
     {
@@ -4160,9 +4160,10 @@ const bloodAndGutsDay3: WorkoutTemplate = {
 // Day 4: Quads, Hamstrings, Calves (Friday)
 const bloodAndGutsDay4: WorkoutTemplate = {
   id: "bg-legs",
-  name: "Dia 4 - Piernas Completas",
+  name: "Dia 4 - Piernas (Opcional)",
   type: "legs",
-  dayOfWeek: 5,
+  dayOfWeek: 6, // Sabado - OPCIONAL
+  optional: true,
   estimatedDuration: 70,
   exercises: [
     {
@@ -4260,13 +4261,14 @@ PRINCIPIOS CLAVE (Actualizado 2025):
 6. Maquinas OK - Dorian las usaba (Hammer, cables)
 7. Tecnica perfecta > peso - evita lesiones
 
-ESTRUCTURA: 4 dias por semana
+ESTRUCTURA: 3 dias + 1 opcional
 - Lunes: Hombros, Trapecios, Triceps, Abs
-- Martes: Espalda, Deltoides Posterior
-- Miercoles: DESCANSO
-- Jueves: Pecho, Biceps
-- Viernes: Piernas (Cuadriceps, Isquios, Gemelos)
-- Sabado/Domingo: DESCANSO
+- Martes: DESCANSO
+- Miercoles: Espalda, Deltoides Posterior
+- Jueves: DESCANSO
+- Viernes: Pecho, Biceps
+- Sabado: Piernas (OPCIONAL)
+- Domingo: DESCANSO
 
 CARDIO (Protocolo Dorian 2025 - Huberman Lab):
 - HIIT: 3-5 sprints de 20 seg ALL-OUT (bici estatica)
@@ -4282,7 +4284,7 @@ Requiere experiencia, un spotter de confianza, y la mentalidad de ir MAS ALLA de
   author: "Dorian Yates",
   difficulty: "advanced",
   goal: "muscle_gain",
-  daysPerWeek: 4,
+  daysPerWeek: 3, // 3 obligatorios + 1 opcional (piernas)
   weeks: 12,
   equipmentRequired: ["barbell", "dumbbell", "cable", "machine"],
   minEquipmentRequired: ["barbell", "dumbbell"],
