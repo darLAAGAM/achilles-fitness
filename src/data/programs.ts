@@ -4305,3 +4305,4 @@ export function getAdonisRating(index: number): string {
   if (index < goldenRatio) return 'Necesita más desarrollo de hombros';
   return 'Cintura por encima del ideal';
 }
+// Redeploy trigger
