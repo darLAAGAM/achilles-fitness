@@ -118,7 +118,7 @@ export const exercises: Exercise[] = [
     muscleGroup: 'chest',
     category: 'isolation',
     equipment: ['dumbbell'],
-    youtubeUrl: 'https://www.youtube.com/watch?v=bDaIL_gsvzE',
+    youtubeUrl: 'https://www.youtube.com/watch?v=bDaIL_zKbGs',
     techniqueNotes: [
       'Banco a 30-45 grados',
       'Ligera flexión de codos constante',
@@ -248,7 +248,7 @@ export const exercises: Exercise[] = [
     secondaryMuscles: ['chest', 'shoulders_front'],
     category: 'compound',
     equipment: ['bodyweight'],
-    youtubeUrl: 'https://www.youtube.com/watch?v=5Gl0zSjHkAE',
+    youtubeUrl: 'https://www.youtube.com/watch?v=W3gBdsTzDrk',
     techniqueNotes: [
       'Manos cerca formando un diamante o más juntas',
       'Codos pegados al cuerpo',
@@ -269,7 +269,7 @@ export const exercises: Exercise[] = [
     secondaryMuscles: ['triceps', 'shoulders_front'],
     category: 'compound',
     equipment: ['bodyweight'],
-    youtubeUrl: 'https://www.youtube.com/watch?v=cfns1sWVmXY',
+    youtubeUrl: 'https://www.youtube.com/watch?v=K_ftgRYit5U',
     techniqueNotes: [
       'Manos sobre superficies elevadas',
       'Mayor rango de movimiento',
@@ -290,7 +290,7 @@ export const exercises: Exercise[] = [
     secondaryMuscles: ['shoulders_front', 'triceps', 'abs'],
     category: 'compound',
     equipment: ['bodyweight'],
-    youtubeUrl: 'https://www.youtube.com/watch?v=k5sVvYPY5Co',
+    youtubeUrl: 'https://www.youtube.com/watch?v=pcQA61tWqL8',
     techniqueNotes: [
       'Comienza en V invertida (downward dog)',
       'Baja la cabeza hacia las manos',
@@ -532,7 +532,7 @@ export const exercises: Exercise[] = [
     muscleGroup: 'triceps',
     category: 'isolation',
     equipment: ['bodyweight'],
-    youtubeUrl: 'https://www.youtube.com/watch?v=1I9pGR1Dgkc',
+    youtubeUrl: 'https://www.youtube.com/watch?v=99TWIhjzXuw',
     techniqueNotes: [
       'Manos en barra o superficie elevada',
       'Cuerpo en línea recta',
@@ -808,7 +808,7 @@ export const exercises: Exercise[] = [
     secondaryMuscles: ['hamstrings', 'glutes', 'back_width'],
     category: 'compound',
     equipment: ['barbell'],
-    youtubeUrl: 'https://www.youtube.com/watch?v=RXvkUyYO0CE',
+    youtubeUrl: 'https://www.youtube.com/watch?v=5BvrPOHNkME',
     techniqueNotes: [
       'Agarre muy ancho (snatch)',
       'Mayor rango de movimiento',
@@ -907,7 +907,7 @@ export const exercises: Exercise[] = [
     secondaryMuscles: ['back_thickness'],
     category: 'isolation',
     equipment: ['dumbbell'],
-    youtubeUrl: 'https://www.youtube.com/watch?v=eFxMixCQPCs',
+    youtubeUrl: 'https://www.youtube.com/watch?v=tAp2J8tM6kw',
     techniqueNotes: [
       'Pecho apoyado en banco inclinado',
       'Elimina impulso del cuerpo',
@@ -1038,7 +1038,7 @@ export const exercises: Exercise[] = [
     muscleGroup: 'biceps',
     category: 'isolation',
     equipment: ['bodyweight'],
-    youtubeUrl: 'https://www.youtube.com/watch?v=pQi2R7nL3dc',
+    youtubeUrl: 'https://www.youtube.com/watch?v=vByJfI8acOw',
     techniqueNotes: [
       'Usa TRX o sábana sobre puerta',
       'Cuerpo inclinado hacia atrás',
@@ -1425,7 +1425,7 @@ export const exercises: Exercise[] = [
     secondaryMuscles: ['glutes'],
     category: 'compound',
     equipment: ['machine', 'bodyweight'],
-    youtubeUrl: 'https://www.youtube.com/watch?v=lGfcOPrJJhE',
+    youtubeUrl: 'https://www.youtube.com/watch?v=1TlhdiFSJrU',
     techniqueNotes: [
       'Rodillas en el cojín',
       'Baja controlado manteniendo caderas extendidas',
@@ -1446,7 +1446,7 @@ export const exercises: Exercise[] = [
     secondaryMuscles: ['glutes', 'hamstrings'],
     category: 'compound',
     equipment: ['machine'],
-    youtubeUrl: 'https://www.youtube.com/watch?v=vMrbX0gwnQg',
+    youtubeUrl: 'https://www.youtube.com/watch?v=ZYDTJaAM-gE',
     techniqueNotes: [
       'Un pie en la plataforma',
       'Pie más alto para más glúteo',
@@ -1490,7 +1490,7 @@ export const exercises: Exercise[] = [
     muscleGroup: 'calves',
     category: 'isolation',
     equipment: ['bodyweight'],
-    youtubeUrl: 'https://www.youtube.com/watch?v=OB-ANpZgpSA',
+    youtubeUrl: 'https://www.youtube.com/watch?v=ORT4oJ_R8Qs',
     techniqueNotes: [
       'Una mano para equilibrio',
       'Sube lo más alto posible',
@@ -1790,7 +1790,7 @@ export const exercises: Exercise[] = [
     muscleGroup: 'forearms',
     category: 'isolation',
     equipment: ['barbell', 'dumbbell'],
-    youtubeUrl: 'https://www.youtube.com/watch?v=7LtBSmhXLQI',
+    youtubeUrl: 'https://www.youtube.com/watch?v=3VLTzIrnb5g',
     techniqueNotes: [
       'Antebrazos apoyados, muñecas colgando',
       'Flexiona las muñecas hacia arriba',
@@ -1810,7 +1810,7 @@ export const exercises: Exercise[] = [
     muscleGroup: 'forearms',
     category: 'isolation',
     equipment: ['barbell', 'dumbbell'],
-    youtubeUrl: 'https://www.youtube.com/watch?v=F8aU6K6RCNE',
+    youtubeUrl: 'https://www.youtube.com/watch?v=hCMC4Vh2g_s',
     techniqueNotes: [
       'Palmas hacia abajo',
       'Extiende las muñecas hacia arriba',
@@ -1904,7 +1904,7 @@ export const exercises: Exercise[] = [
     secondaryMuscles: ['glutes'],
     category: 'compound',
     equipment: ['dumbbell', 'bodyweight'],
-    youtubeUrl: 'https://www.youtube.com/watch?v=Av3LO2KpGrQ',
+    youtubeUrl: 'https://www.youtube.com/watch?v=hbcAUlNwDpk',
     techniqueNotes: [
       'Talones elevados sobre cuña o disco',
       'Rodillas avanzan sobre los dedos',
@@ -1945,7 +1945,7 @@ export const exercises: Exercise[] = [
     muscleGroup: 'shoulders_rear',
     category: 'isolation',
     equipment: ['dumbbell'],
-    youtubeUrl: 'https://www.youtube.com/watch?v=SvPsXKR1rvg',
+    youtubeUrl: 'https://www.youtube.com/watch?v=CE8H1DZMDhU',
     techniqueNotes: [
       'Acostado de lado sobre banco inclinado',
       'Brazo colgando perpendicular al suelo',
@@ -1966,7 +1966,7 @@ export const exercises: Exercise[] = [
     secondaryMuscles: ['shoulders_rear', 'biceps'],
     category: 'compound',
     equipment: ['cable', 'dumbbell'],
-    youtubeUrl: 'https://www.youtube.com/watch?v=OaI9Cgn1lyk',
+    youtubeUrl: 'https://www.youtube.com/watch?v=fhvQQxi7fZM',
     techniqueNotes: [
       'Banco inclinado a 45 grados, pecho apoyado',
       'Tira hacia las axilas con codos altos',
@@ -1987,7 +1987,7 @@ export const exercises: Exercise[] = [
     secondaryMuscles: ['hamstrings', 'quads'],
     category: 'compound',
     equipment: ['bodyweight', 'dumbbell'],
-    youtubeUrl: 'https://www.youtube.com/watch?v=UxaYjyJj7_8',
+    youtubeUrl: 'https://www.youtube.com/watch?v=F_a9Jvg106c',
     techniqueNotes: [
       'Comienza de pie sobre cajón',
       'Baja una pierna hacia atrás controladamente',
@@ -2008,7 +2008,7 @@ export const exercises: Exercise[] = [
     secondaryMuscles: ['glutes', 'back_thickness'],
     category: 'isolation',
     equipment: ['machine', 'bodyweight'],
-    youtubeUrl: 'https://www.youtube.com/watch?v=GhNpUCLFmhc',
+    youtubeUrl: 'https://www.youtube.com/watch?v=KTPABgPK5Kc',
     techniqueNotes: [
       'En máquina de hiperextensión a 45°',
       'Una pierna trabaja, la otra descansa',
@@ -2096,7 +2096,7 @@ export const exercises: Exercise[] = [
     muscleGroup: 'hamstrings',
     category: 'isolation',
     equipment: ['dumbbell'],
-    youtubeUrl: 'https://www.youtube.com/watch?v=z0kVuC2PXAU',
+    youtubeUrl: 'https://www.youtube.com/watch?v=-yzbS3Yg74Y',
     techniqueNotes: [
       'De pie, mancuerna sujeta entre los pies',
       'Flexiona la rodilla llevando talón al glúteo',
@@ -2144,7 +2144,7 @@ export const exercises: Exercise[] = [
     secondaryMuscles: ['quads'],
     category: 'isolation',
     equipment: ['bodyweight'],
-    youtubeUrl: 'https://www.youtube.com/watch?v=DjZZvr8ZKDY',
+    youtubeUrl: 'https://www.youtube.com/watch?v=uQwelDX1h7Y',
     techniqueNotes: [
       'Colgado o en Roman Chair',
       'Levanta piernas rectas hacia arriba',
@@ -2165,7 +2165,7 @@ export const exercises: Exercise[] = [
     secondaryMuscles: ['back_thickness'],
     category: 'isolation',
     equipment: ['bodyweight'],
-    youtubeUrl: 'https://www.youtube.com/watch?v=_5eKIcvKHB8',
+    youtubeUrl: 'https://www.youtube.com/watch?v=UhgQi_cz5zA',
     techniqueNotes: [
       'Posición de side plank',
       'Baja la cadera hacia el suelo',
@@ -2185,7 +2185,7 @@ export const exercises: Exercise[] = [
     muscleGroup: 'abs',
     category: 'isolation',
     equipment: ['bodyweight'],
-    youtubeUrl: 'https://www.youtube.com/watch?v=_vEXchsKLcg',
+    youtubeUrl: 'https://www.youtube.com/watch?v=FRzQXeN1hro',
     techniqueNotes: [
       'En banco declinado, pies enganchados',
       'Sube el torso usando solo abdominales',
@@ -2227,7 +2227,7 @@ export const exercises: Exercise[] = [
     secondaryMuscles: ['triceps', 'abs'],
     category: 'compound',
     equipment: ['barbell', 'dumbbell'],
-    youtubeUrl: 'https://www.youtube.com/watch?v=o23K_mX6p5E',
+    youtubeUrl: 'https://www.youtube.com/watch?v=8CR-WckW3LY',
     techniqueNotes: [
       'Sentado en el suelo con piernas extendidas',
       'Press por encima de la cabeza',
