@@ -434,7 +434,8 @@ function SetInputInline({
   completed = false,
   completedWeight,
   completedReps,
-  isPersonalRecord = false
+  isPersonalRecord = false,
+  isBodyweight = false
 }: {
   setNumber: number;
   defaultWeight?: number;
@@ -446,6 +447,7 @@ function SetInputInline({
   completedWeight?: number;
   completedReps?: number;
   isPersonalRecord?: boolean;
+  isBodyweight?: boolean;
 }) {
   const [weight, setWeight] = useState(completedWeight ?? defaultWeight);
   const [reps, setReps] = useState(completedReps ?? defaultReps);
@@ -481,9 +483,15 @@ function SetInputInline({
           {isWarmup ? 'W' : setNumber}
         </div>
         <div style={styles.setContent}>
-          <span style={styles.setText}>{completedWeight} kg</span>
-          <span style={styles.setTextSecondary}>×</span>
-          <span style={styles.setText}>{completedReps} reps</span>
+          {isBodyweight ? (
+            <span style={styles.setText}>{completedReps} reps</span>
+          ) : (
+            <>
+              <span style={styles.setText}>{completedWeight} kg</span>
+              <span style={styles.setTextSecondary}>×</span>
+              <span style={styles.setText}>{completedReps} reps</span>
+            </>
+          )}
         </div>
         {isPersonalRecord && <span style={styles.prBadge}>PR!</span>}
         {onDelete && (
@@ -522,61 +530,65 @@ function SetInputInline({
           {isWarmup ? 'W' : setNumber}
         </div>
         
-        {/* Weight control */}
-        <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '4px' }}>
-          <button onClick={() => adjustWeight(-2.5)} style={{
-            width: '28px',
-            height: '28px',
-            borderRadius: '6px',
-            backgroundColor: '#1a1a1a',
-            border: 'none',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: '#888',
-            cursor: 'pointer',
-            flexShrink: 0,
-          }}>
-            <Minus size={14} />
-          </button>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 }}>
-            <input
-              type="number"
-              value={weight}
-              onChange={(e) => setWeight(Number(e.target.value))}
-              style={{
-                width: '100%',
-                maxWidth: '60px',
+        {/* Weight control - hidden for bodyweight exercises */}
+        {!isBodyweight && (
+          <>
+            <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <button onClick={() => adjustWeight(-2.5)} style={{
+                width: '28px',
                 height: '28px',
                 borderRadius: '6px',
                 backgroundColor: '#1a1a1a',
                 border: 'none',
-                textAlign: 'center',
-                color: '#fff',
-                fontWeight: 600,
-                fontSize: '14px',
-              }}
-            />
-            <span style={{ fontSize: '10px', color: '#888', marginTop: '2px' }}>kg</span>
-          </div>
-          <button onClick={() => adjustWeight(2.5)} style={{
-            width: '28px',
-            height: '28px',
-            borderRadius: '6px',
-            backgroundColor: '#1a1a1a',
-            border: 'none',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: '#888',
-            cursor: 'pointer',
-            flexShrink: 0,
-          }}>
-            <Plus size={14} />
-          </button>
-        </div>
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#888',
+                cursor: 'pointer',
+                flexShrink: 0,
+              }}>
+                <Minus size={14} />
+              </button>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 }}>
+                <input
+                  type="number"
+                  value={weight}
+                  onChange={(e) => setWeight(Number(e.target.value))}
+                  style={{
+                    width: '100%',
+                    maxWidth: '60px',
+                    height: '28px',
+                    borderRadius: '6px',
+                    backgroundColor: '#1a1a1a',
+                    border: 'none',
+                    textAlign: 'center',
+                    color: '#fff',
+                    fontWeight: 600,
+                    fontSize: '14px',
+                  }}
+                />
+                <span style={{ fontSize: '10px', color: '#888', marginTop: '2px' }}>kg</span>
+              </div>
+              <button onClick={() => adjustWeight(2.5)} style={{
+                width: '28px',
+                height: '28px',
+                borderRadius: '6px',
+                backgroundColor: '#1a1a1a',
+                border: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#888',
+                cursor: 'pointer',
+                flexShrink: 0,
+              }}>
+                <Plus size={14} />
+              </button>
+            </div>
 
-        <span style={{ color: '#888', fontSize: '14px' }}>×</span>
+            <span style={{ color: '#888', fontSize: '14px' }}>×</span>
+          </>
+        )}
 
         {/* Reps control */}
         <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '4px' }}>
@@ -635,7 +647,7 @@ function SetInputInline({
 
       {/* Row 2: Complete button (full width) */}
       <button
-        onClick={() => onComplete(weight, reps)}
+        onClick={() => onComplete(isBodyweight ? 0 : weight, reps)}
         style={{
           width: '100%',
           height: '44px',
@@ -650,9 +662,9 @@ function SetInputInline({
           fontWeight: 600,
           fontSize: '14px',
           cursor: 'pointer',
-          opacity: weight === 0 || reps === 0 ? 0.4 : 1,
+          opacity: (!isBodyweight && weight === 0) || reps === 0 ? 0.4 : 1,
         }}
-        disabled={weight === 0 || reps === 0}
+        disabled={(!isBodyweight && weight === 0) || reps === 0}
       >
         <Check size={18} />
         Completar serie
@@ -1102,6 +1114,7 @@ export function ExerciseDetail({ exercise, template, onBack }: ExerciseDetailPro
                 completedWeight={set.weight}
                 completedReps={set.reps}
                 isWarmup
+                isBodyweight={exercise.equipment?.includes('bodyweight')}
                 onComplete={() => {}}
                 onDelete={() => handleDeleteSet(set.id)}
               />
@@ -1124,6 +1137,7 @@ export function ExerciseDetail({ exercise, template, onBack }: ExerciseDetailPro
               completedWeight={set.weight}
               completedReps={set.reps}
               isPersonalRecord={set.isPersonalRecord}
+              isBodyweight={exercise.equipment?.includes('bodyweight')}
               onComplete={() => {}}
               onDelete={() => handleDeleteSet(set.id)}
             />
@@ -1135,6 +1149,7 @@ export function ExerciseDetail({ exercise, template, onBack }: ExerciseDetailPro
               setNumber={workingSets.length + 1}
               defaultWeight={lastWeight}
               defaultReps={template.targetRepsMin}
+              isBodyweight={exercise.equipment?.includes('bodyweight')}
               onComplete={(weight, reps) => handleAddSet(weight, reps, false)}
             />
           )}
