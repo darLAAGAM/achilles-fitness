@@ -55,6 +55,13 @@ export type Equipment =
   | 'kettlebell'
   | 'ez_bar';
 
+export interface ExerciseAlternative {
+  name: string;
+  reason: string; // "Sin cable", "Sin mancuernas", "En casa", etc.
+  youtubeUrl: string;
+  briefTechnique: string;
+}
+
 export interface Exercise {
   id: string;
   name: string;
@@ -72,6 +79,7 @@ export interface Exercise {
     elite: number;
   };
   defaultRestSeconds: number;
+  alternatives?: ExerciseAlternative[];
 }
 
 // ============================================

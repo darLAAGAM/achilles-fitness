@@ -863,6 +863,7 @@ function getYouTubeId(url: string): string | null {
 export function ExerciseDetail({ exercise, template, onBack }: ExerciseDetailProps) {
   const { currentSession, addSet, deleteSet, getPersonalRecord } = useWorkoutStore();
   const [showTechnique, setShowTechnique] = useState(false);
+  const [showAlternatives, setShowAlternatives] = useState(false);
   const [showTimer, setShowTimer] = useState(false);
   const [personalRecord, setPersonalRecord] = useState<{ weight: number; reps: number } | null>(null);
   const [lastWeight, setLastWeight] = useState(0);
@@ -1018,6 +1019,66 @@ export function ExerciseDetail({ exercise, template, onBack }: ExerciseDetailPro
             </div>
           )}
         </div>
+
+        {/* Alternative exercises */}
+        {exercise.alternatives && exercise.alternatives.length > 0 && (
+          <div style={{ ...styles.card, padding: 0 }}>
+            <button
+              onClick={() => setShowAlternatives(!showAlternatives)}
+              style={styles.techniqueButton}
+            >
+              <span style={{ fontWeight: 500 }}>Ejercicios alternativos ({exercise.alternatives.length})</span>
+              {showAlternatives ? <ChevronUp size={20} color="#888" /> : <ChevronDown size={20} color="#888" />}
+            </button>
+            {showAlternatives && (
+              <div style={styles.techniqueContent}>
+                {exercise.alternatives.map((alt, i) => {
+                  const altVideoId = getYouTubeId(alt.youtubeUrl);
+                  return (
+                    <div key={i} style={{ 
+                      paddingTop: i > 0 ? '16px' : '12px',
+                      borderTop: i > 0 ? '1px solid #2a2a2a' : 'none',
+                      marginTop: i > 0 ? '12px' : 0
+                    }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                        <span style={{ fontSize: '15px', fontWeight: 600, color: '#fff' }}>{alt.name}</span>
+                        <span style={{ 
+                          fontSize: '11px', 
+                          padding: '3px 8px', 
+                          borderRadius: '12px',
+                          backgroundColor: 'rgba(34, 197, 94, 0.2)',
+                          color: '#4ade80',
+                          border: '1px solid rgba(34, 197, 94, 0.3)'
+                        }}>
+                          {alt.reason}
+                        </span>
+                      </div>
+                      {altVideoId && (
+                        <div style={{ 
+                          marginBottom: '8px',
+                          borderRadius: '8px',
+                          overflow: 'hidden',
+                          backgroundColor: '#0a0a0a'
+                        }}>
+                          <iframe
+                            style={{ width: '100%', aspectRatio: '16/9', border: 'none' }}
+                            src={`https://www.youtube.com/embed/${altVideoId}`}
+                            title={`Tutorial: ${alt.name}`}
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                          />
+                        </div>
+                      )}
+                      <p style={{ fontSize: '13px', color: '#aaa', margin: 0, lineHeight: 1.4 }}>
+                        {alt.briefTechnique}
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Rest Timer */}
         {showTimer && (

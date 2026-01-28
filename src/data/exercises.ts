@@ -56,7 +56,27 @@ export const exercises: Exercise[] = [
       advanced: 1.5,
       elite: 2.0
     },
-    defaultRestSeconds: 180
+    defaultRestSeconds: 180,
+    alternatives: [
+      {
+        name: 'Dumbbell Flat Press',
+        reason: 'Solo mancuernas',
+        youtubeUrl: 'https://www.youtube.com/watch?v=VmB1G1K7v94',
+        briefTechnique: 'Mayor rango de movimiento, permite rotación natural de muñecas, junta arriba'
+      },
+      {
+        name: 'Push-ups',
+        reason: 'Sin equipamiento',
+        youtubeUrl: 'https://www.youtube.com/watch?v=IODxDxX7oi4',
+        briefTechnique: 'Manos ligeramente más anchas que hombros, cuerpo en línea recta, baja el pecho al suelo'
+      },
+      {
+        name: 'Dips',
+        reason: 'Solo barras paralelas',
+        youtubeUrl: 'https://www.youtube.com/watch?v=2z8JmcrW-As',
+        briefTechnique: 'Inclínate adelante para énfasis en pecho, baja hasta 90° de flexión de codo'
+      }
+    ]
   },
   {
     id: 'incline-barbell-press',
@@ -150,7 +170,21 @@ export const exercises: Exercise[] = [
       'Flexionar mucho los codos (se convierte en press)',
       'No controlar la fase negativa'
     ],
-    defaultRestSeconds: 90
+    defaultRestSeconds: 90,
+    alternatives: [
+      {
+        name: 'Incline Dumbbell Fly',
+        reason: 'Solo mancuernas',
+        youtubeUrl: 'https://www.youtube.com/watch?v=bDaIL_zKbGs',
+        briefTechnique: 'Banco a 30-45°, abre los brazos sintiendo estiramiento, junta arriba apretando pecho'
+      },
+      {
+        name: 'Push-ups con pausa',
+        reason: 'Sin equipamiento',
+        youtubeUrl: 'https://www.youtube.com/watch?v=IODxDxX7oi4',
+        briefTechnique: 'Push-up normal pero con pausa de 2 segundos abajo para maximizar estiramiento del pecho'
+      }
+    ]
   },
   {
     id: 'standing-cable-fly',
@@ -170,7 +204,21 @@ export const exercises: Exercise[] = [
       'Perder la posición del core',
       'Movimiento muy rápido'
     ],
-    defaultRestSeconds: 60
+    defaultRestSeconds: 60,
+    alternatives: [
+      {
+        name: 'Dumbbell Fly',
+        reason: 'Solo mancuernas',
+        youtubeUrl: 'https://www.youtube.com/watch?v=bDaIL_zKbGs',
+        briefTechnique: 'Acostado en banco, brazos abiertos con codos semiflexionados, junta arriba'
+      },
+      {
+        name: 'Push-ups con brazos anchos',
+        reason: 'Sin equipamiento',
+        youtubeUrl: 'https://www.youtube.com/watch?v=IODxDxX7oi4',
+        briefTechnique: 'Manos muy separadas para énfasis en estiramiento del pecho'
+      }
+    ]
   },
   {
     id: 'dips',
@@ -332,7 +380,21 @@ export const exercises: Exercise[] = [
       advanced: 0.2,
       elite: 0.25
     },
-    defaultRestSeconds: 60
+    defaultRestSeconds: 60,
+    alternatives: [
+      {
+        name: 'Band Lateral Raises',
+        reason: 'Solo banda elástica',
+        youtubeUrl: 'https://www.youtube.com/watch?v=0GsVJsS6474',
+        briefTechnique: 'Pisa la banda y levanta hacia los lados, tensión constante'
+      },
+      {
+        name: 'Lateral Raise con botellas',
+        reason: 'Sin equipamiento',
+        youtubeUrl: 'https://www.youtube.com/watch?v=3VcKaXpzqRo',
+        briefTechnique: 'Usa botellas de agua llenas como peso, mismo movimiento'
+      }
+    ]
   },
   {
     id: 'front-raises',
@@ -406,7 +468,27 @@ export const exercises: Exercise[] = [
       advanced: 0.8,
       elite: 1.05
     },
-    defaultRestSeconds: 150
+    defaultRestSeconds: 150,
+    alternatives: [
+      {
+        name: 'Dumbbell Shoulder Press',
+        reason: 'Solo mancuernas',
+        youtubeUrl: 'https://www.youtube.com/watch?v=qEwKCR5JCog',
+        briefTechnique: 'Mancuernas a la altura de las orejas, empuja hacia arriba juntando ligeramente'
+      },
+      {
+        name: 'Arnold Press',
+        reason: 'Solo mancuernas - mayor ROM',
+        youtubeUrl: 'https://www.youtube.com/watch?v=6Z15_WdXmVw',
+        briefTechnique: 'Empieza con palmas hacia ti, rota mientras empujas hacia arriba'
+      },
+      {
+        name: 'Pike Push-ups',
+        reason: 'Sin equipamiento',
+        youtubeUrl: 'https://www.youtube.com/watch?v=0GsVJsS6474',
+        briefTechnique: 'Posición de V invertida, baja la cabeza hacia el suelo flexionando codos'
+      }
+    ]
   },
   {
     id: 'db-upright-row',
@@ -478,7 +560,27 @@ export const exercises: Exercise[] = [
       'Inclinarse sobre el cable',
       'No extender completamente'
     ],
-    defaultRestSeconds: 60
+    defaultRestSeconds: 60,
+    alternatives: [
+      {
+        name: 'Overhead Tricep Extension',
+        reason: 'Sin cable - solo mancuerna',
+        youtubeUrl: 'https://www.youtube.com/watch?v=YbX7Wd8jQ-Q',
+        briefTechnique: 'Mancuerna sobre la cabeza, extiende los codos manteniendo los brazos fijos junto a las orejas'
+      },
+      {
+        name: 'Diamond Push-ups',
+        reason: 'Sin equipamiento',
+        youtubeUrl: 'https://www.youtube.com/watch?v=J0DnG1_S92I',
+        briefTechnique: 'Manos juntas formando diamante, codos pegados al cuerpo durante todo el movimiento'
+      },
+      {
+        name: 'Tricep Kickbacks',
+        reason: 'Solo mancuernas',
+        youtubeUrl: 'https://www.youtube.com/watch?v=6SS6K3lAwZ8',
+        briefTechnique: 'Torso paralelo al suelo, extiende el codo completamente hacia atrás y aprieta'
+      }
+    ]
   },
   {
     id: 'overhead-tricep-extension',
@@ -498,7 +600,21 @@ export const exercises: Exercise[] = [
       'Dejar que los codos se abran',
       'Usar demasiado peso'
     ],
-    defaultRestSeconds: 60
+    defaultRestSeconds: 60,
+    alternatives: [
+      {
+        name: 'Diamond Push-ups',
+        reason: 'Sin equipamiento',
+        youtubeUrl: 'https://www.youtube.com/watch?v=J0DnG1_S92I',
+        briefTechnique: 'Manos juntas formando diamante, codos pegados al cuerpo'
+      },
+      {
+        name: 'Bodyweight Skull Crusher',
+        reason: 'Solo barra o superficie',
+        youtubeUrl: 'https://www.youtube.com/watch?v=99TWIhjzXuw',
+        briefTechnique: 'Manos en barra baja, baja la cabeza hacia las manos, extiende codos'
+      }
+    ]
   },
   {
     id: 'skull-crushers',
@@ -524,7 +640,27 @@ export const exercises: Exercise[] = [
       advanced: 0.5,
       elite: 0.7
     },
-    defaultRestSeconds: 90
+    defaultRestSeconds: 90,
+    alternatives: [
+      {
+        name: 'Overhead Tricep Extension',
+        reason: 'Solo mancuerna',
+        youtubeUrl: 'https://www.youtube.com/watch?v=YbX7Wd8jQ-Q',
+        briefTechnique: 'Mancuerna sobre la cabeza, extiende los codos manteniendo brazos fijos'
+      },
+      {
+        name: 'Close Grip Push-ups',
+        reason: 'Sin equipamiento',
+        youtubeUrl: 'https://www.youtube.com/watch?v=W3gBdsTzDrk',
+        briefTechnique: 'Manos cerca, codos pegados al cuerpo, énfasis en tríceps'
+      },
+      {
+        name: 'Bodyweight Skull Crusher',
+        reason: 'Solo barra baja',
+        youtubeUrl: 'https://www.youtube.com/watch?v=99TWIhjzXuw',
+        briefTechnique: 'Manos en barra, baja la cabeza hacia las manos flexionando codos'
+      }
+    ]
   },
   {
     id: 'bodyweight-skullcrusher',
@@ -595,7 +731,27 @@ export const exercises: Exercise[] = [
       advanced: 0.5,
       elite: 0.75
     },
-    defaultRestSeconds: 150
+    defaultRestSeconds: 150,
+    alternatives: [
+      {
+        name: 'Chin-ups',
+        reason: 'Más fácil - agarre supino',
+        youtubeUrl: 'https://www.youtube.com/watch?v=brhRXlOhsAM',
+        briefTechnique: 'Agarre supino (palmas hacia ti), más activación de bíceps, más fácil que pullups'
+      },
+      {
+        name: 'Inverted Row',
+        reason: 'Progresión más fácil',
+        youtubeUrl: 'https://www.youtube.com/watch?v=XZV9IwluPjw',
+        briefTechnique: 'Bajo una barra baja, cuerpo en línea, tira el pecho hacia la barra'
+      },
+      {
+        name: 'Negative Pull-ups',
+        reason: 'Para construir fuerza',
+        youtubeUrl: 'https://www.youtube.com/watch?v=eGo4IYlbE5g',
+        briefTechnique: 'Salta arriba y baja muy lento (5-10 segundos), construye fuerza para pullups'
+      }
+    ]
   },
   {
     id: 'chinups',
@@ -649,7 +805,27 @@ export const exercises: Exercise[] = [
       advanced: 1.1,
       elite: 1.4
     },
-    defaultRestSeconds: 120
+    defaultRestSeconds: 120,
+    alternatives: [
+      {
+        name: 'Pull-ups / Chin-ups',
+        reason: 'Solo barra de dominadas',
+        youtubeUrl: 'https://www.youtube.com/watch?v=eGo4IYlbE5g',
+        briefTechnique: 'Colgado de barra, retrae escápulas primero, tira el pecho hacia la barra'
+      },
+      {
+        name: 'Inverted Row',
+        reason: 'En casa con mesa/barra baja',
+        youtubeUrl: 'https://www.youtube.com/watch?v=XZV9IwluPjw',
+        briefTechnique: 'Cuerpo en línea bajo una barra baja, tira el pecho hacia la barra'
+      },
+      {
+        name: 'Incline Row con sábana',
+        reason: 'Solo sábana y puerta',
+        youtubeUrl: 'https://www.youtube.com/watch?v=rloXYB8M3vU',
+        briefTechnique: 'Ata sábana a puerta, inclínate hacia atrás y tira del cuerpo hacia la puerta'
+      }
+    ]
   },
   {
     id: 'cable-rows',
@@ -676,7 +852,27 @@ export const exercises: Exercise[] = [
       advanced: 1.0,
       elite: 1.25
     },
-    defaultRestSeconds: 120
+    defaultRestSeconds: 120,
+    alternatives: [
+      {
+        name: 'Dumbbell Row',
+        reason: 'Solo mancuernas',
+        youtubeUrl: 'https://www.youtube.com/watch?v=pYcpY20QaE8',
+        briefTechnique: 'Rodilla y mano en banco, tira la mancuerna hacia la cadera apretando el dorsal'
+      },
+      {
+        name: 'Inverted Row',
+        reason: 'Sin equipamiento - usa mesa',
+        youtubeUrl: 'https://www.youtube.com/watch?v=XZV9IwluPjw',
+        briefTechnique: 'Bajo una mesa sólida, agarra el borde y tira el pecho hacia arriba'
+      },
+      {
+        name: 'Bent Over Barbell Row',
+        reason: 'Solo barra',
+        youtubeUrl: 'https://www.youtube.com/watch?v=FWJR5Ve8bnQ',
+        briefTechnique: 'Torso a 45-60°, tira la barra hacia el ombligo apretando escápulas'
+      }
+    ]
   },
   {
     id: 'one-arm-cable-row',
@@ -878,7 +1074,27 @@ export const exercises: Exercise[] = [
       'No rotar los hombros externamente',
       'Inclinar el torso'
     ],
-    defaultRestSeconds: 60
+    defaultRestSeconds: 60,
+    alternatives: [
+      {
+        name: 'Rear Delt Flyes',
+        reason: 'Solo mancuernas',
+        youtubeUrl: 'https://www.youtube.com/watch?v=EA7u4Q_8HQ0',
+        briefTechnique: 'Inclinación 70-80°, levanta hacia los lados con codos semiflexionados, aprieta escápulas'
+      },
+      {
+        name: 'Prone Y Raises',
+        reason: 'Sin equipamiento',
+        youtubeUrl: 'https://www.youtube.com/watch?v=z6PJMT2y8GQ',
+        briefTechnique: 'Boca abajo, levanta brazos formando Y con rotación externa, mantén 2 segundos'
+      },
+      {
+        name: 'Band Pull-Aparts',
+        reason: 'Solo banda elástica',
+        youtubeUrl: 'https://www.youtube.com/watch?v=0GsVJsS6474',
+        briefTechnique: 'Banda frente a ti, separa las manos llevándolas hacia los lados hasta tocar el pecho'
+      }
+    ]
   },
   {
     id: 'rear-delt-flyes',
@@ -949,7 +1165,27 @@ export const exercises: Exercise[] = [
       advanced: 0.7,
       elite: 0.9
     },
-    defaultRestSeconds: 90
+    defaultRestSeconds: 90,
+    alternatives: [
+      {
+        name: 'Hammer Curls',
+        reason: 'Solo mancuernas',
+        youtubeUrl: 'https://www.youtube.com/watch?v=zC3nLlEvin4',
+        briefTechnique: 'Agarre neutro (palmas mirándose), codos fijos, trabaja braquial'
+      },
+      {
+        name: 'Incline Dumbbell Curl',
+        reason: 'Mayor estiramiento',
+        youtubeUrl: 'https://www.youtube.com/watch?v=soxrZlIl35U',
+        briefTechnique: 'Banco a 45-60°, brazos colgando hacia atrás, mayor estiramiento del bíceps'
+      },
+      {
+        name: 'Chin-ups',
+        reason: 'Compuesto para bíceps',
+        youtubeUrl: 'https://www.youtube.com/watch?v=brhRXlOhsAM',
+        briefTechnique: 'Agarre supino, alta activación de bíceps además de espalda'
+      }
+    ]
   },
   {
     id: 'hammer-curls',
@@ -1082,7 +1318,27 @@ export const exercises: Exercise[] = [
       advanced: 1.75,
       elite: 2.25
     },
-    defaultRestSeconds: 180
+    defaultRestSeconds: 180,
+    alternatives: [
+      {
+        name: 'Goblet Squat',
+        reason: 'Solo mancuerna/kettlebell',
+        youtubeUrl: 'https://www.youtube.com/watch?v=MeIiIdhvXT4',
+        briefTechnique: 'Sostén peso al pecho, codos entre rodillas, baja profundo manteniendo torso erguido'
+      },
+      {
+        name: 'Bulgarian Split Squat',
+        reason: 'En casa con banco/silla',
+        youtubeUrl: 'https://www.youtube.com/watch?v=2C-uNgKwPLE',
+        briefTechnique: 'Pie trasero en banco, baja hasta muslo paralelo, empuja con talón delantero'
+      },
+      {
+        name: 'Jump Squat',
+        reason: 'Sin equipamiento - explosivo',
+        youtubeUrl: 'https://www.youtube.com/watch?v=A-cFYWvaHr0',
+        briefTechnique: 'Sentadilla con salto explosivo arriba, aterriza suave flexionando rodillas'
+      }
+    ]
   },
   {
     id: 'front-squat',
@@ -1151,7 +1407,27 @@ export const exercises: Exercise[] = [
       'Bloquear las rodillas completamente',
       'Usar un rango muy corto'
     ],
-    defaultRestSeconds: 120
+    defaultRestSeconds: 120,
+    alternatives: [
+      {
+        name: 'Goblet Squat',
+        reason: 'Solo mancuerna/kettlebell',
+        youtubeUrl: 'https://www.youtube.com/watch?v=MeIiIdhvXT4',
+        briefTechnique: 'Sostén peso al pecho, codos entre rodillas, baja profundo manteniendo torso erguido'
+      },
+      {
+        name: 'Bulgarian Split Squat',
+        reason: 'En casa con banco/silla',
+        youtubeUrl: 'https://www.youtube.com/watch?v=2C-uNgKwPLE',
+        briefTechnique: 'Pie trasero en banco, baja hasta muslo paralelo, empuja con talón delantero'
+      },
+      {
+        name: 'Walking Lunges',
+        reason: 'Sin equipamiento',
+        youtubeUrl: 'https://www.youtube.com/watch?v=L8fvypPrzzs',
+        briefTechnique: 'Paso largo hacia adelante, rodilla trasera casi al suelo, alterna piernas caminando'
+      }
+    ]
   },
   {
     id: 'hack-squat',
@@ -1172,7 +1448,27 @@ export const exercises: Exercise[] = [
       'Rodillas pasando mucho de los pies',
       'Rango incompleto'
     ],
-    defaultRestSeconds: 120
+    defaultRestSeconds: 120,
+    alternatives: [
+      {
+        name: 'Front Squat',
+        reason: 'Solo barra',
+        youtubeUrl: 'https://www.youtube.com/watch?v=m4ytaCJZpl0',
+        briefTechnique: 'Barra en deltoides frontales, codos altos, torso vertical'
+      },
+      {
+        name: 'Goblet Squat',
+        reason: 'Solo mancuerna',
+        youtubeUrl: 'https://www.youtube.com/watch?v=MeIiIdhvXT4',
+        briefTechnique: 'Peso al pecho, énfasis en cuádriceps por torso vertical'
+      },
+      {
+        name: 'Bulgarian Split Squat',
+        reason: 'En casa',
+        youtubeUrl: 'https://www.youtube.com/watch?v=2C-uNgKwPLE',
+        briefTechnique: 'Pie trasero elevado, gran activación de cuádriceps'
+      }
+    ]
   },
   {
     id: 'leg-extension',
@@ -1192,7 +1488,27 @@ export const exercises: Exercise[] = [
       'No extender completamente',
       'Despegar caderas del asiento'
     ],
-    defaultRestSeconds: 60
+    defaultRestSeconds: 60,
+    alternatives: [
+      {
+        name: 'Reverse Lunges',
+        reason: 'Sin equipamiento',
+        youtubeUrl: 'https://www.youtube.com/watch?v=xrPteyQLGAo',
+        briefTechnique: 'Paso hacia atrás, rodilla trasera casi al suelo, empuja con pierna delantera para volver'
+      },
+      {
+        name: 'Sissy Squat',
+        reason: 'Solo peso corporal',
+        youtubeUrl: 'https://www.youtube.com/watch?v=0GsVJsS6474',
+        briefTechnique: 'Talones elevados, inclínate hacia atrás flexionando rodillas, mantén caderas extendidas'
+      },
+      {
+        name: 'Wall Sit Isométrico',
+        reason: 'Sin equipamiento',
+        youtubeUrl: 'https://www.youtube.com/watch?v=y-wV4Venusw',
+        briefTechnique: 'Espalda contra pared, muslos paralelos al suelo, mantén 30-60 segundos'
+      }
+    ]
   },
   {
     id: 'bulgarian-split-squat',
@@ -1369,7 +1685,27 @@ export const exercises: Exercise[] = [
       'Usar impulso',
       'Rango de movimiento incompleto'
     ],
-    defaultRestSeconds: 90
+    defaultRestSeconds: 90,
+    alternatives: [
+      {
+        name: 'Romanian Deadlift',
+        reason: 'Solo mancuernas o barra',
+        youtubeUrl: 'https://www.youtube.com/watch?v=jEy_czb3RKA',
+        briefTechnique: 'Espalda recta, empuja caderas atrás, siente el estiramiento en isquios'
+      },
+      {
+        name: 'Slider Leg Curl',
+        reason: 'Solo calcetines en suelo liso',
+        youtubeUrl: 'https://www.youtube.com/watch?v=0GsVJsS6474',
+        briefTechnique: 'Boca arriba, talones en toalla/slider, desliza talones hacia glúteos'
+      },
+      {
+        name: 'Nordic Curl (negativa)',
+        reason: 'Sin equipamiento',
+        youtubeUrl: 'https://www.youtube.com/watch?v=5BvrPOHNkME',
+        briefTechnique: 'De rodillas, alguien sujeta tobillos, baja controlado hacia adelante'
+      }
+    ]
   },
   {
     id: 'seated-leg-curl',
@@ -1416,7 +1752,21 @@ export const exercises: Exercise[] = [
       advanced: 1.5,
       elite: 2.0
     },
-    defaultRestSeconds: 120
+    defaultRestSeconds: 120,
+    alternatives: [
+      {
+        name: 'Glute Bridge',
+        reason: 'Sin banco - en el suelo',
+        youtubeUrl: 'https://www.youtube.com/watch?v=SEdqd1n0cvg',
+        briefTechnique: 'Acostado boca arriba, pies en suelo, empuja caderas hacia arriba apretando glúteos'
+      },
+      {
+        name: 'Single Leg Glute Bridge',
+        reason: 'Sin equipamiento - unilateral',
+        youtubeUrl: 'https://www.youtube.com/watch?v=SEdqd1n0cvg',
+        briefTechnique: 'Una pierna extendida, empuja con una sola pierna para mayor intensidad'
+      }
+    ]
   },
   {
     id: 'glute-ham-raise',
