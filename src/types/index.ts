@@ -1,16 +1,19 @@
 // ============================================
 // USER TYPES
 // ============================================
+export type Sex = 'male' | 'female';
+
 export interface User {
   id: string;
   name: string;
+  sex: Sex;
   bodyweight: number;
   height: number;
   age: number;
   experienceYears: number;
   trainingDaysPerWeek: 3 | 4 | 5 | 6;
   preferredUnit: 'kg' | 'lbs';
-  currentPhase: 'bulk' | 'cut' | 'maintain';
+  currentPhase: 'bulk' | 'cut' | 'maintain' | 'weight_loss';
   targetBodyweight?: number;
   dailyCalories: number;
   proteinTarget: number;

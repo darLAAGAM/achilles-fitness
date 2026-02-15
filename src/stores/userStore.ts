@@ -65,6 +65,7 @@ export const useUserStore = create<UserState>()(
         const user: User = {
           id: uuid(),
           name: data.name || 'Usuario',
+          sex: data.sex || 'male',
           bodyweight: data.bodyweight || 80,
           height: data.height || 180,
           age: data.age || 34,

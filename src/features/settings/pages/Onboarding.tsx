@@ -2,9 +2,9 @@ import { useState, useMemo } from 'react';
 import { ChevronRight, ChevronLeft, Dumbbell, Home, Clock, Target, Zap } from 'lucide-react';
 import { useUserStore } from '../../../stores/userStore';
 import { allPrograms, getProgramsByDaysPerWeek } from '../../../data/programs';
-import type { WorkoutProgram, Equipment } from '../../../types';
+import type { WorkoutProgram, Equipment, Sex } from '../../../types';
 
-type Phase = 'bulk' | 'cut' | 'maintain';
+type Phase = 'bulk' | 'cut' | 'maintain' | 'weight_loss';
 
 export function Onboarding() {
   const { initializeUser } = useUserStore();
@@ -13,6 +13,7 @@ export function Onboarding() {
 
   // Step 1: Basic info
   const [name, setName] = useState('');
+  const [sex, setSex] = useState<Sex>('male');
   const [age, setAge] = useState('34');
   const [height, setHeight] = useState('180');
   const [bodyweight, setBodyweight] = useState('80');
@@ -67,22 +68,38 @@ export function Onboarding() {
     setLoading(true);
     const bwKg = Number(bodyweight);
     const bwLbs = bwKg * 2.205;
+    const heightCm = Number(height);
+    const ageNum = Number(age);
+
+    // Mifflin-St Jeor BMR
+    const bmr = sex === 'male'
+      ? (10 * bwKg) + (6.25 * heightCm) - (5 * ageNum) + 5
+      : (10 * bwKg) + (6.25 * heightCm) - (5 * ageNum) - 161;
+
+    // Activity multiplier based on training days
+    const activityMultiplier = trainingDays <= 3 ? 1.55 : trainingDays <= 5 ? 1.65 : 1.75;
+    const tdee = Math.round(bmr * activityMultiplier);
 
     let dailyCalories: number, proteinTarget: number, carbTarget: number, fatTarget: number;
 
     if (phase === 'bulk') {
-      dailyCalories = Math.round(bwKg * 33);
-      proteinTarget = Math.round(bwLbs * 1.0);
+      dailyCalories = tdee + 300; // moderate surplus
+      proteinTarget = Math.round(bwKg * 2.0);
       fatTarget = Math.round(dailyCalories * 0.25 / 9);
       carbTarget = Math.round((dailyCalories - (proteinTarget * 4) - (fatTarget * 9)) / 4);
     } else if (phase === 'cut') {
-      dailyCalories = Math.round(bwKg * 26);
-      proteinTarget = Math.round(bwLbs * 1.2);
+      dailyCalories = tdee - 300; // moderate deficit
+      proteinTarget = Math.round(bwKg * 2.4); // higher protein to preserve muscle
       fatTarget = Math.round(dailyCalories * 0.25 / 9);
       carbTarget = Math.round((dailyCalories - (proteinTarget * 4) - (fatTarget * 9)) / 4);
+    } else if (phase === 'weight_loss') {
+      dailyCalories = tdee - 500; // aggressive deficit
+      proteinTarget = Math.round(bwKg * 2.0); // good protein but not extreme
+      fatTarget = Math.round(dailyCalories * 0.30 / 9); // slightly more fat for satiety
+      carbTarget = Math.round((dailyCalories - (proteinTarget * 4) - (fatTarget * 9)) / 4);
     } else {
-      dailyCalories = Math.round(bwKg * 30);
-      proteinTarget = Math.round(bwLbs * 1.0);
+      dailyCalories = tdee;
+      proteinTarget = Math.round(bwKg * 2.0);
       fatTarget = Math.round(dailyCalories * 0.25 / 9);
       carbTarget = Math.round((dailyCalories - (proteinTarget * 4) - (fatTarget * 9)) / 4);
     }
@@ -92,7 +109,8 @@ export function Onboarding() {
       : ['bodyweight'];
 
     await initializeUser({
-      name: name || 'Guerrero',
+      name: name || (sex === 'female' ? 'Guerrera' : 'Guerrero'),
+      sex,
       age: Number(age),
       height: Number(height),
       bodyweight: bwKg,
@@ -452,6 +470,32 @@ export function Onboarding() {
                 />
               </div>
 
+              <label style={styles.label}>Sexo</label>
+              <div style={styles.equipmentToggle}>
+                <button
+                  onClick={() => setSex('male')}
+                  style={styles.equipmentButton(sex === 'male')}
+                >
+                  <span style={{ fontSize: '28px' }}>🙋‍♂️</span>
+                  <span style={{
+                    fontSize: '15px',
+                    fontWeight: 600,
+                    color: sex === 'male' ? '#000' : '#fff'
+                  }}>Hombre</span>
+                </button>
+                <button
+                  onClick={() => setSex('female')}
+                  style={styles.equipmentButton(sex === 'female')}
+                >
+                  <span style={{ fontSize: '28px' }}>🙋‍♀️</span>
+                  <span style={{
+                    fontSize: '15px',
+                    fontWeight: 600,
+                    color: sex === 'female' ? '#000' : '#fff'
+                  }}>Mujer</span>
+                </button>
+              </div>
+
               <div style={styles.gridRow}>
                 <div>
                   <label style={styles.label}>Edad</label>
@@ -573,7 +617,8 @@ export function Onboarding() {
             <div>
               {[
                 { value: 'bulk', emoji: '💪', label: 'Ganar músculo', desc: 'Superávit calórico, máxima hipertrofia' },
-                { value: 'cut', emoji: '🔥', label: 'Definir', desc: 'Déficit controlado, mantener músculo' },
+                { value: 'cut', emoji: '🔥', label: 'Definir', desc: 'Déficit moderado, mantener músculo' },
+                { value: 'weight_loss', emoji: '⬇️', label: 'Perder peso', desc: 'Déficit agresivo, cardio + fuerza' },
                 { value: 'maintain', emoji: '⚖️', label: 'Mantener', desc: 'Recomposición corporal' }
               ].map((option) => (
                 <button
@@ -670,8 +715,17 @@ export function Onboarding() {
                 { label: 'Programa', value: selectedProgram.name, highlight: true },
                 { label: 'Días/semana', value: `${selectedProgram.daysPerWeek} días`, highlight: false },
                 { label: 'Duración', value: `${selectedProgram.weeks} semanas`, highlight: false },
-                { label: 'Objetivo', value: phase === 'bulk' ? '💪 Volumen' : phase === 'cut' ? '🔥 Definición' : '⚖️ Mantener', highlight: false },
-                { label: 'Calorías/día', value: `~${Math.round(Number(bodyweight) * (phase === 'bulk' ? 33 : phase === 'cut' ? 26 : 30))} kcal`, highlight: false }
+                { label: 'Objetivo', value: phase === 'bulk' ? '💪 Volumen' : phase === 'cut' ? '🔥 Definición' : phase === 'weight_loss' ? '⬇️ Perder peso' : '⚖️ Mantener', highlight: false },
+                { label: 'Calorías/día', value: (() => {
+                  const bw = Number(bodyweight);
+                  const h = Number(height);
+                  const a = Number(age);
+                  const bmrEst = sex === 'male' ? (10*bw)+(6.25*h)-(5*a)+5 : (10*bw)+(6.25*h)-(5*a)-161;
+                  const mult = trainingDays <= 3 ? 1.55 : trainingDays <= 5 ? 1.65 : 1.75;
+                  const tdeeEst = Math.round(bmrEst * mult);
+                  const cal = phase === 'bulk' ? tdeeEst+300 : phase === 'cut' ? tdeeEst-300 : phase === 'weight_loss' ? tdeeEst-500 : tdeeEst;
+                  return `~${cal} kcal`;
+                })(), highlight: false }
               ].map((item, i, arr) => (
                 <div key={i} style={styles.summaryRow(i < arr.length - 1)}>
                   <span style={styles.summaryLabel}>{item.label}</span>

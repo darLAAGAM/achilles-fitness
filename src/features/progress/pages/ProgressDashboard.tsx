@@ -4,7 +4,7 @@ import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'rec
 import { db } from '../../../services/db/database';
 import { useUserStore } from '../../../stores/userStore';
 import type { ProgressEntry, WorkoutSet } from '../../../types';
-import { format, subDays, startOfDay, endOfDay } from 'date-fns';
+import { format, subDays, startOfDay, endOfDay, startOfWeek } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { BodyMetrics } from './BodyMetrics';
 import { PhotoGallery } from './PhotoGallery';
@@ -53,19 +53,20 @@ export function ProgressDashboard() {
     }));
     setPersonalRecords(prs.slice(0, 5));
 
-    // Calculate total volume this week
-    const weekStart = startOfDay(subDays(new Date(), 7));
+    // Calculate total volume this week (Monday to Sunday)
+    const weekStart = startOfDay(startOfWeek(new Date(), { weekStartsOn: 1 }));
+    const weekEnd = endOfDay(new Date());
     const weekSets = await db.workoutSets
       .where('completedAt')
-      .above(weekStart)
+      .between(weekStart, weekEnd)
       .toArray();
     const volume = weekSets.reduce((acc, set) => acc + set.volume, 0);
     setTotalVolume(volume);
 
-    // Count workouts this week
+    // Count workouts this week (Monday to Sunday)
     const weekSessions = await db.workoutSessions
       .where('date')
-      .between(weekStart, endOfDay(new Date()))
+      .between(weekStart, weekEnd)
       .filter(s => s.status === 'completed')
       .count();
     setWorkoutsThisWeek(weekSessions);
