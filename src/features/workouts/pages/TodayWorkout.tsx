@@ -554,6 +554,7 @@ export function TodayWorkout() {
     templateExercise: WorkoutTemplate['exercises'][0];
   } | null>(null);
   const [showPhaseNotes, setShowPhaseNotes] = useState(false);
+  const [completedDates, setCompletedDates] = useState<Set<string>>(new Set());
 
   // Get the user's current program or default to Achilles
   const currentProgram = useMemo(() => {
@@ -605,16 +606,47 @@ export function TodayWorkout() {
     });
   }, [getWorkoutForDay]);
 
+  // Weekly progress: how many scheduled workouts completed this week
+  const weeklyStats = useMemo(() => {
+    const scheduled = weekDays.filter(d => d.workoutType !== 'rest' && !d.isOptional).length;
+    const completed = weekDays.filter(d => {
+      const dateKey = format(d.date, 'yyyy-MM-dd');
+      return completedDates.has(dateKey);
+    }).length;
+    return { scheduled, completed, percent: scheduled > 0 ? Math.round((completed / scheduled) * 100) : 0 };
+  }, [weekDays, completedDates]);
+
   // Get selected day's workout
   const selectedDayOfWeek = selectedDate.getDay();
   const selectedTemplate = getWorkoutForDay(selectedDayOfWeek);
   const selectedWorkoutType = (selectedTemplate?.type || 'rest') as WorkoutType;
   const isSelectedToday = isToday(selectedDate);
 
+  // Check if selected day is a missed workout (past, not completed, not rest)
+  const selectedDateKey = format(selectedDate, 'yyyy-MM-dd');
+  const isSelectedDayCompleted = completedDates.has(selectedDateKey);
+  const isMissedDay = selectedDate < new Date() && !isToday(selectedDate) && selectedTemplate !== null && !selectedTemplate.optional && !isSelectedDayCompleted;
+
   // Check if current session matches the selected workout
   const isSessionForSelectedWorkout = currentSession && selectedTemplate
     ? currentSession.workoutTemplateId === selectedTemplate.id
     : false;
+
+  // Load completed sessions for this week
+  useEffect(() => {
+    const loadWeekCompletions = async () => {
+      const weekStart = startOfWeek(new Date(), { weekStartsOn: 1 });
+      const weekEnd = addDays(weekStart, 7);
+      const sessions = await db.workoutSessions
+        .where('date')
+        .between(weekStart, weekEnd)
+        .filter(s => s.status === 'completed')
+        .toArray();
+      const dates = new Set(sessions.map(s => format(new Date(s.date), 'yyyy-MM-dd')));
+      setCompletedDates(dates);
+    };
+    loadWeekCompletions();
+  }, [currentSession]); // reload when session changes (e.g., completed)
 
   useEffect(() => {
     const initializeData = async () => {
@@ -830,6 +862,10 @@ export function TodayWorkout() {
             const isSelected = isSameDay(day.date, selectedDate);
             const dayColor = getWorkoutColor(day.workoutType);
             const isOptionalDay = day.isOptional;
+            const dateKey = format(day.date, 'yyyy-MM-dd');
+            const isDayCompleted = completedDates.has(dateKey);
+            const isPast = day.date < new Date() && !day.isToday;
+            const isMissed = isPast && !isDayCompleted && day.workoutType !== 'rest' && !isOptionalDay;
 
             return (
               <button
@@ -837,13 +873,17 @@ export function TodayWorkout() {
                 onClick={() => setSelectedDate(day.date)}
                 style={{
                   ...styles.dayButton,
-                  backgroundColor: isSelected ? dayColor : 'transparent',
+                  backgroundColor: isSelected ? dayColor : isDayCompleted ? `${colors.success}18` : 'transparent',
                   border: day.isToday && !isSelected 
                     ? `2px solid ${colors.accent}` 
+                    : isDayCompleted && !isSelected
+                      ? `2px solid ${colors.success}60`
                     : isOptionalDay && !isSelected 
                       ? `2px dashed ${dayColor}50` 
+                      : isMissed
+                        ? `2px solid ${colors.intensityHeavy}40`
                       : '2px solid transparent',
-                  opacity: isOptionalDay && !isSelected ? 0.7 : 1,
+                  opacity: (isOptionalDay && !isSelected && !isDayCompleted) ? 0.7 : isMissed ? 0.65 : 1,
                 }}
               >
                 <span style={{
@@ -854,23 +894,64 @@ export function TodayWorkout() {
                 </span>
                 <span style={{
                   ...styles.dayNumber,
-                  color: isSelected ? '#000' : colors.text,
+                  color: isSelected ? '#000' : isDayCompleted ? colors.success : isMissed ? colors.intensityHeavy : colors.text,
                 }}>
                   {day.dayNumber}
                 </span>
-                <span style={{
-                  ...styles.dayWorkoutBadge,
-                  backgroundColor: isSelected ? 'rgba(0,0,0,0.2)' : `${dayColor}22`,
-                  color: isSelected ? '#000' : dayColor,
-                  fontStyle: isOptionalDay ? 'italic' : 'normal',
-                }}>
-                  {isOptionalDay ? 'OPC' : getWorkoutLabel(day.workoutType)}
-                </span>
+                {isDayCompleted && !isSelected ? (
+                  <span style={{
+                    ...styles.dayWorkoutBadge,
+                    backgroundColor: `${colors.success}22`,
+                    color: colors.success,
+                  }}>
+                    ✓
+                  </span>
+                ) : (
+                  <span style={{
+                    ...styles.dayWorkoutBadge,
+                    backgroundColor: isSelected ? 'rgba(0,0,0,0.2)' : `${dayColor}22`,
+                    color: isSelected ? '#000' : dayColor,
+                    fontStyle: isOptionalDay ? 'italic' : 'normal',
+                  }}>
+                    {isOptionalDay ? 'OPC' : getWorkoutLabel(day.workoutType)}
+                  </span>
+                )}
               </button>
             );
           })}
         </div>
       </div>
+
+      {/* Weekly Progress Bar */}
+      {weeklyStats.scheduled > 0 && (
+        <div style={{ ...styles.card, margin: '0 24px 16px' }}>
+          <div style={styles.progressHeader}>
+            <div style={styles.progressLabel}>
+              <Calendar size={18} color={weeklyStats.percent === 100 ? colors.success : colors.accent} />
+              <span style={styles.progressLabelText}>Semana</span>
+              <span style={{ fontSize: '12px', color: colors.textSecondary, marginLeft: '4px' }}>
+                {weeklyStats.completed}/{weeklyStats.scheduled} sesiones
+              </span>
+            </div>
+            <span style={{
+              ...styles.progressPercent,
+              color: weeklyStats.percent === 100 ? colors.success : colors.textSecondary,
+              fontWeight: weeklyStats.percent === 100 ? '600' : '400',
+            }}>
+              {weeklyStats.percent === 100 ? '🔥 ' : ''}{weeklyStats.percent}%
+            </span>
+          </div>
+          <div style={styles.progressBarContainer}>
+            <div
+              style={{
+                ...styles.progressBarFill,
+                width: `${weeklyStats.percent}%`,
+                backgroundColor: weeklyStats.percent === 100 ? colors.success : colors.accent,
+              }}
+            />
+          </div>
+        </div>
+      )}
 
       {/* Content */}
       <div style={styles.content}>
@@ -979,16 +1060,19 @@ export function TodayWorkout() {
                 {!isSelectedToday && (
                   <p style={{
                     fontSize: '13px',
-                    color: colors.accent,
+                    color: isMissedDay ? colors.intensityHeavy : colors.accent,
                     marginBottom: '16px',
                     textAlign: 'center' as const,
                   }}>
-                    Programado para {format(selectedDate, "EEEE d", { locale: es })}
+                    {isMissedDay 
+                      ? `No completado el ${format(selectedDate, "EEEE d", { locale: es })} — ¡aún puedes hacerlo!`
+                      : `Programado para ${format(selectedDate, "EEEE d", { locale: es })}`
+                    }
                   </p>
                 )}
                 <button style={styles.button} onClick={handleStartWorkout}>
                   <Play size={20} />
-                  {isSelectedToday ? 'Comenzar Entreno' : 'Entrenar Ahora'}
+                  {isMissedDay ? 'Recuperar Entreno' : isSelectedToday ? 'Comenzar Entreno' : 'Entrenar Ahora'}
                 </button>
               </div>
             )}

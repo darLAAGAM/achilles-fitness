@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useState } from 'react';
+import { useEffect, useCallback, useState, useRef } from 'react';
 import { Play, Pause, RotateCcw, Plus, Minus, SkipForward } from 'lucide-react';
 import { useWorkoutStore } from '../../stores/workoutStore';
 
@@ -21,59 +21,57 @@ export function RestTimer({ defaultSeconds = 90, nextExercise, onComplete }: Res
 
   // Local state for display, updated frequently
   const [displayTime, setDisplayTime] = useState(getRestTimeRemaining());
-  const [hasCompleted, setHasCompleted] = useState(false);
-
-  // Initialize display time when timer becomes inactive
   
+  // Use ref for completed flag to avoid re-triggering the effect
+  const hasCompletedRef = useRef(false);
+
+  // Reset completed flag when timer starts
+  useEffect(() => {
+    if (restTimerActive) {
+      hasCompletedRef.current = false;
+    }
+  }, [restTimerActive]);
   
   // Update display time frequently when timer is active
+  // Only depend on restTimerActive — use refs/store.getState for everything else
   /* eslint-disable react-hooks/set-state-in-effect -- Intentional: timer state management requires sync updates */
   useEffect(() => {
     if (!restTimerActive) {
       return;
     }
-
-    setHasCompleted(false);
     
-    // Use requestAnimationFrame for smooth updates that work in background
     let animationId: number;
     let lastUpdate = Date.now();
     
     const updateTimer = () => {
       const now = Date.now();
-      // Update at least every 100ms for smooth display
       if (now - lastUpdate >= 100) {
         const remaining = getRestTimeRemaining();
         setDisplayTime(remaining);
         lastUpdate = now;
         
-        // Check if timer completed
-        if (remaining <= 0 && !hasCompleted) {
-          setHasCompleted(true);
+        if (remaining <= 0 && !hasCompletedRef.current) {
+          hasCompletedRef.current = true;
           stopRestTimer();
-          // Vibrate if supported
           if ('vibrate' in navigator) {
             navigator.vibrate([200, 100, 200]);
           }
           onComplete?.();
-          return; // Stop the loop
+          return;
         }
       }
       
-      if (restTimerActive) {
-        animationId = requestAnimationFrame(updateTimer);
-      }
+      animationId = requestAnimationFrame(updateTimer);
     };
     
     animationId = requestAnimationFrame(updateTimer);
     
-    // Also use visibility change to update immediately when app comes back to foreground
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
         const remaining = getRestTimeRemaining();
         setDisplayTime(remaining);
-        if (remaining <= 0 && !hasCompleted) {
-          setHasCompleted(true);
+        if (remaining <= 0 && !hasCompletedRef.current) {
+          hasCompletedRef.current = true;
           stopRestTimer();
           if ('vibrate' in navigator) {
             navigator.vibrate([200, 100, 200]);
@@ -89,7 +87,8 @@ export function RestTimer({ defaultSeconds = 90, nextExercise, onComplete }: Res
       cancelAnimationFrame(animationId);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, [restTimerActive, getRestTimeRemaining, stopRestTimer, onComplete, hasCompleted]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [restTimerActive]);
   /* eslint-enable react-hooks/set-state-in-effect */
 
   const formatTime = useCallback((seconds: number) => {
@@ -99,7 +98,7 @@ export function RestTimer({ defaultSeconds = 90, nextExercise, onComplete }: Res
   }, []);
 
   const handleStart = () => {
-    setHasCompleted(false);
+    hasCompletedRef.current = false;
     const currentTime = getRestTimeRemaining() || defaultSeconds;
     startRestTimer(currentTime);
   };
@@ -109,7 +108,7 @@ export function RestTimer({ defaultSeconds = 90, nextExercise, onComplete }: Res
   };
 
   const handleReset = () => {
-    setHasCompleted(false);
+    hasCompletedRef.current = false;
     stopRestTimer();
     startRestTimer(defaultSeconds);
   };

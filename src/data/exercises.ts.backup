@@ -29,21 +29,7 @@ export const exercises: Exercise[] = [
       advanced: 0.75,
       elite: 1.0
     },
-    defaultRestSeconds: 150,
-    alternatives: [
-      {
-        name: 'Incline Push-ups',
-        reason: 'Sin equipamiento',
-        youtubeUrl: 'https://www.youtube.com/watch?v=cfns5VDVVvk',
-        briefTechnique: 'Manos en superficie elevada (banco/escalón), inclinación reduce dificultad'
-      },
-      {
-        name: 'Resistance Band Chest Press',
-        reason: 'Solo banda elástica',
-        youtubeUrl: 'https://www.youtube.com/watch?v=Z6ly4c3YC6o',
-        briefTechnique: 'Banda anclada atrás, empuja al frente con contracción del pecho'
-      }
-    ]
+    defaultRestSeconds: 150
   },
   {
     id: 'flat-barbell-press',
@@ -117,27 +103,7 @@ export const exercises: Exercise[] = [
       advanced: 1.2,
       elite: 1.6
     },
-    defaultRestSeconds: 150,
-    alternatives: [
-      {
-        name: 'Incline Dumbbell Press',
-        reason: 'Solo mancuernas',
-        youtubeUrl: 'https://www.youtube.com/watch?v=8iPEnn-ltC8',
-        briefTechnique: 'Banco a 30-45°, mancuernas permiten mayor rango de movimiento'
-      },
-      {
-        name: 'Decline Push-ups',
-        reason: 'Sin equipamiento',
-        youtubeUrl: 'https://www.youtube.com/watch?v=SKPab2YC8BE',
-        briefTechnique: 'Pies elevados, énfasis en pecho superior como press inclinado'
-      },
-      {
-        name: 'Band Incline Press',
-        reason: 'Solo banda elástica',
-        youtubeUrl: 'https://www.youtube.com/watch?v=Z6ly4c3YC6o',
-        briefTechnique: 'Banda anclada abajo, empuja hacia arriba y adelante en ángulo'
-      }
-    ]
+    defaultRestSeconds: 150
   },
   {
     id: 'db-flat-press',
@@ -164,27 +130,7 @@ export const exercises: Exercise[] = [
       advanced: 0.65,
       elite: 0.85
     },
-    defaultRestSeconds: 120,
-    alternatives: [
-      {
-        name: 'Flat Barbell Press',
-        reason: 'Solo barra',
-        youtubeUrl: 'https://www.youtube.com/watch?v=rT7DgCr-3pg',
-        briefTechnique: 'Agarre ligeramente más ancho que hombros, baja al pecho medio-bajo'
-      },
-      {
-        name: 'Push-ups',
-        reason: 'Sin equipamiento',
-        youtubeUrl: 'https://www.youtube.com/watch?v=IODxDxX7oi4',
-        briefTechnique: 'Cuerpo en línea recta, baja el pecho al suelo, equivalente horizontal'
-      },
-      {
-        name: 'Floor Press',
-        reason: 'En casa - limitado ROM',
-        youtubeUrl: 'https://www.youtube.com/watch?v=uUGDRwge4F8',
-        briefTechnique: 'Acostado en el suelo, tríceps tocan suelo, press hasta extensión completa'
-      }
-    ]
+    defaultRestSeconds: 120
   },
   {
     id: 'incline-db-fly',
@@ -204,27 +150,7 @@ export const exercises: Exercise[] = [
       'Bajar demasiado (riesgo de hombro)',
       'Usar demasiado peso'
     ],
-    defaultRestSeconds: 90,
-    alternatives: [
-      {
-        name: 'Incline Band Fly',
-        reason: 'Solo banda elástica',
-        youtubeUrl: 'https://www.youtube.com/watch?v=Z6ly4c3YC6o',
-        briefTechnique: 'Banda anclada atrás y abajo, movimiento de vuelo hacia arriba y adelante'
-      },
-      {
-        name: 'Incline Push-up con pausa',
-        reason: 'Sin equipamiento',
-        youtubeUrl: 'https://www.youtube.com/watch?v=cfns5VDVVvk',
-        briefTechnique: 'Push-up inclinado con pausa de 2 seg. abajo para maximizar estiramiento'
-      },
-      {
-        name: 'Cable Fly',
-        reason: 'Solo cable/polea',
-        youtubeUrl: 'https://www.youtube.com/watch?v=Iwe6AmxVf7o',
-        briefTechnique: 'Poleas a altura del pecho, mismo patrón de movimiento horizontal'
-      }
-    ]
+    defaultRestSeconds: 90
   },
   {
     id: 'cable-flyes',
@@ -340,27 +266,7 @@ export const exercises: Exercise[] = [
       'No bajar suficiente',
       'Codos demasiado abiertos'
     ],
-    defaultRestSeconds: 60,
-    alternatives: [
-      {
-        name: 'Incline Push-ups',
-        reason: 'Más fácil - superficie elevada',
-        youtubeUrl: 'https://www.youtube.com/watch?v=cfns5VDVVvk',
-        briefTechnique: 'Manos en superficie elevada, reduce dificultad manteniendo forma'
-      },
-      {
-        name: 'Knee Push-ups',
-        reason: 'Progresión más fácil',
-        youtubeUrl: 'https://www.youtube.com/watch?v=jWxvty2KROs',
-        briefTechnique: 'Apoyado en rodillas en lugar de pies, mantén línea de rodillas a cabeza'
-      },
-      {
-        name: 'Archer Push-ups',
-        reason: 'Progresión más difícil',
-        youtubeUrl: 'https://www.youtube.com/watch?v=lnR_kb7ZJKE',
-        briefTechnique: 'Un brazo empuja, otro se extiende al lado, alterna lados'
-      }
-    ]
+    defaultRestSeconds: 60
   },
   {
     id: 'decline-pushups',
@@ -381,21 +287,7 @@ export const exercises: Exercise[] = [
       'Perder alineación corporal',
       'Rango de movimiento incompleto'
     ],
-    defaultRestSeconds: 60,
-    alternatives: [
-      {
-        name: 'Handstand Push-ups',
-        reason: 'Progresión avanzada',
-        youtubeUrl: 'https://www.youtube.com/watch?v=tQhrk6WMcKw',
-        briefTechnique: 'Contra pared, cabeza hacia abajo, mayor énfasis en hombros'
-      },
-      {
-        name: 'Pike Push-ups',
-        reason: 'Preparación para handstand',
-        youtubeUrl: 'https://www.youtube.com/watch?v=x4YNq24tYwM',
-        briefTechnique: 'V invertida, baja cabeza hacia manos, similar a decline'
-      }
-    ]
+    defaultRestSeconds: 60
   },
   {
     id: 'close-grip-pushups',
@@ -416,21 +308,7 @@ export const exercises: Exercise[] = [
       'Caderas caídas',
       'Rango de movimiento corto'
     ],
-    defaultRestSeconds: 60,
-    alternatives: [
-      {
-        name: 'Tricep Dips',
-        reason: 'Mayor énfasis en tríceps',
-        youtubeUrl: 'https://www.youtube.com/watch?v=0326dy_-CzM',
-        briefTechnique: 'En silla o barras paralelas, codos hacia atrás'
-      },
-      {
-        name: 'Diamond Push-ups progresión',
-        reason: 'Manos en triángulo',
-        youtubeUrl: 'https://www.youtube.com/watch?v=J0DnG1_S92I',
-        briefTechnique: 'Manos forman diamante, máximo énfasis en tríceps'
-      }
-    ]
+    defaultRestSeconds: 60
   },
   {
     id: 'deficit-pushups',
@@ -451,21 +329,7 @@ export const exercises: Exercise[] = [
       'Perder control en la posición baja',
       'Superficies inestables'
     ],
-    defaultRestSeconds: 60,
-    alternatives: [
-      {
-        name: 'Ring/TRX Push-ups',
-        reason: 'Inestabilidad añadida',
-        youtubeUrl: 'https://www.youtube.com/watch?v=4jRoHFNMbRM',
-        briefTechnique: 'Manos en anillas o TRX, mayor rango de movimiento e inestabilidad'
-      },
-      {
-        name: 'Medicine Ball Push-ups',
-        reason: 'Una mano elevada',
-        youtubeUrl: 'https://www.youtube.com/watch?v=cU8hv2hZBWE',
-        briefTechnique: 'Una mano en pelota, alterna lados, mayor rango unilateral'
-      }
-    ]
+    defaultRestSeconds: 60
   },
   {
     id: 'judo-pushup',
@@ -486,21 +350,7 @@ export const exercises: Exercise[] = [
       'No fluir entre posiciones',
       'Golpear la cara contra el suelo'
     ],
-    defaultRestSeconds: 60,
-    alternatives: [
-      {
-        name: 'Hindu Push-ups',
-        reason: 'Movimiento similar fluido',
-        youtubeUrl: 'https://www.youtube.com/watch?v=oDZ4q4jXGwo',
-        briefTechnique: 'Movimiento fluido de perro hacia arriba a perro hacia abajo'
-      },
-      {
-        name: 'Dive Bomber Push-ups',
-        reason: 'Variación de movimiento',
-        youtubeUrl: 'https://www.youtube.com/watch?v=mPqyOh8NQAQ',
-        briefTechnique: 'Similar a judo pero movimiento más profundo y controlado'
-      }
-    ]
+    defaultRestSeconds: 60
   },
 
   // ============================================
@@ -564,21 +414,7 @@ export const exercises: Exercise[] = [
       'Levantar demasiado alto',
       'Arquear la espalda'
     ],
-    defaultRestSeconds: 60,
-    alternatives: [
-      {
-        name: 'Band Front Raise',
-        reason: 'Solo banda elástica',
-        youtubeUrl: 'https://www.youtube.com/watch?v=vryWeqG2b1I',
-        briefTechnique: 'Banda bajo los pies, levanta hacia adelante hasta altura hombros'
-      },
-      {
-        name: 'Pike Push-ups',
-        reason: 'Sin equipamiento',
-        youtubeUrl: 'https://www.youtube.com/watch?v=x4YNq24tYwM',
-        briefTechnique: 'V invertida, trabaja deltoides frontal como front raise'
-      }
-    ]
+    defaultRestSeconds: 60
   },
   {
     id: 'db-shoulder-press',
@@ -673,21 +509,7 @@ export const exercises: Exercise[] = [
       'Usar demasiado peso',
       'Muñecas dobladas'
     ],
-    defaultRestSeconds: 90,
-    alternatives: [
-      {
-        name: 'Band Upright Row',
-        reason: 'Solo banda elástica',
-        youtubeUrl: 'https://www.youtube.com/watch?v=vryWeqG2b1I',
-        briefTechnique: 'Banda bajo pies, tira hacia arriba con codos liderando'
-      },
-      {
-        name: 'High Pull-ups',
-        reason: 'Solo barra',
-        youtubeUrl: 'https://www.youtube.com/watch?v=tZGhA-g1Rkg',
-        briefTechnique: 'Pull-up explosivo tirando más alto que normal'
-      }
-    ]
+    defaultRestSeconds: 90
   },
   {
     id: 'arnold-press',
