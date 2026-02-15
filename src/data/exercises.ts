@@ -319,7 +319,27 @@ export const exercises: Exercise[] = [
       advanced: 0.5,
       elite: 0.75
     },
-    defaultRestSeconds: 120
+    defaultRestSeconds: 120,
+    alternatives: [
+      {
+        name: 'Chair Dips',
+        reason: 'Solo silla/banco',
+        youtubeUrl: 'https://www.youtube.com/watch?v=jDafIn0WMUw',
+        briefTechnique: 'Manos en borde de silla detrás de ti, baja flexionando codos hacia atrás'
+      },
+      {
+        name: 'Diamond Push-ups',
+        reason: 'Sin equipamiento',
+        youtubeUrl: 'https://www.youtube.com/watch?v=J0DnG1_S92I',
+        briefTechnique: 'Manos juntas formando diamante, codos pegados al cuerpo, énfasis en tríceps'
+      },
+      {
+        name: 'Decline Push-ups',
+        reason: 'Solo superficie elevada',
+        youtubeUrl: 'https://www.youtube.com/watch?v=B47qabhNqQY',
+        briefTechnique: 'Pies elevados, mayor énfasis en pecho superior como en dips'
+      }
+    ]
   },
   {
     id: 'pushups',
@@ -1026,7 +1046,27 @@ export const exercises: Exercise[] = [
       advanced: 0.5,
       elite: 0.75
     },
-    defaultRestSeconds: 120
+    defaultRestSeconds: 120,
+    alternatives: [
+      {
+        name: 'Assisted Chin-ups',
+        reason: 'Con banda o máquina',
+        youtubeUrl: 'https://www.youtube.com/watch?v=brhRXlOhsAM',
+        briefTechnique: 'Usa banda elástica o máquina de asistencia para reducir peso corporal'
+      },
+      {
+        name: 'Inverted Row supino',
+        reason: 'En casa con mesa',
+        youtubeUrl: 'https://www.youtube.com/watch?v=XZV9IwluPjw',
+        briefTechnique: 'Bajo mesa, agarre supino (palmas hacia ti), tira pecho hacia barra'
+      },
+      {
+        name: 'Band Lat Pulldown supino',
+        reason: 'Solo banda elástica',
+        youtubeUrl: 'https://www.youtube.com/watch?v=gfEyrmxbCbw',
+        briefTechnique: 'Banda anclada arriba, tira con agarre supino hacia el pecho'
+      }
+    ]
   },
   {
     id: 'lat-pulldown',
@@ -2361,7 +2401,27 @@ export const exercises: Exercise[] = [
       'Rango incompleto',
       'Usar demasiado peso'
     ],
-    defaultRestSeconds: 90
+    defaultRestSeconds: 90,
+    alternatives: [
+      {
+        name: 'Band Hamstring Curl sentado',
+        reason: 'Solo banda elástica',
+        youtubeUrl: 'https://www.youtube.com/watch?v=04wrwxwrCnI',
+        briefTechnique: 'Banda en tobillo, sentado en silla, flexiona hacia atrás contra resistencia'
+      },
+      {
+        name: 'Lying Leg Curl',
+        reason: 'Sin máquina sentada',
+        youtubeUrl: 'https://www.youtube.com/watch?v=1Tq3QdYUuHs',
+        briefTechnique: 'Boca abajo, flexiona piernas hacia glúteos, mismo movimiento acostado'
+      },
+      {
+        name: 'Single Leg RDL',
+        reason: 'Sin equipamiento',
+        youtubeUrl: 'https://www.youtube.com/watch?v=jEy_czb3RKA',
+        briefTechnique: 'Una pierna, bisagra de cadera, enfoque en estiramiento de isquiotibiales'
+      }
+    ]
   },
   {
     id: 'hip-thrust',
@@ -3390,7 +3450,27 @@ export const exercises: Exercise[] = [
       'No usar rango completo',
       'Usar impulso'
     ],
-    defaultRestSeconds: 60
+    defaultRestSeconds: 60,
+    alternatives: [
+      {
+        name: 'Single Leg RDL',
+        reason: 'Sin máquina',
+        youtubeUrl: 'https://www.youtube.com/watch?v=jEy_czb3RKA',
+        briefTechnique: 'Una pierna, bisagra de cadera, enfoque unilateral en isquios y glúteos'
+      },
+      {
+        name: 'Single Leg Good Morning',
+        reason: 'Solo peso corporal',
+        youtubeUrl: 'https://www.youtube.com/watch?v=vKPGe8zb2S4',
+        briefTechnique: 'Una pierna atrás, flexión de cadera manteniendo espalda recta'
+      },
+      {
+        name: 'Swiss Ball Hyperextension',
+        reason: 'Solo pelota de ejercicio',
+        youtubeUrl: 'https://www.youtube.com/shorts/jebYweZO9wU',
+        briefTechnique: 'Cadera en pelota, extiende torso hacia arriba trabajando erectores'
+      }
+    ]
   },
   {
     id: 'assisted-pistol-squat',
@@ -3411,7 +3491,27 @@ export const exercises: Exercise[] = [
       'No bajar suficiente',
       'Perder balance'
     ],
-    defaultRestSeconds: 90
+    defaultRestSeconds: 90,
+    alternatives: [
+      {
+        name: 'Single Leg Box Squat',
+        reason: 'Con cajón para mayor control',
+        youtubeUrl: 'https://www.youtube.com/watch?v=Pzm_v06MUyk',
+        briefTechnique: 'Sentarse en cajón con una pierna, levantarse sin impulso, progresión más fácil'
+      },
+      {
+        name: 'Bulgarian Split Squat',
+        reason: 'Más accesible',
+        youtubeUrl: 'https://www.youtube.com/watch?v=2C-uNgKwPLE',
+        briefTechnique: 'Pie trasero elevado, énfasis en pierna delantera, más estable'
+      },
+      {
+        name: 'Single Leg Ball Squat',
+        reason: 'Con pelota para soporte',
+        youtubeUrl: 'https://www.youtube.com/watch?v=gm91uio4SVM',
+        briefTechnique: 'Espalda contra pelota en pared, una pierna, mayor estabilidad'
+      }
+    ]
   },
   {
     id: 'atg-good-morning',
@@ -3506,7 +3606,27 @@ export const exercises: Exercise[] = [
       'No usar rango completo',
       'Mover la cadera'
     ],
-    defaultRestSeconds: 60
+    defaultRestSeconds: 60,
+    alternatives: [
+      {
+        name: 'Band Standing Leg Curl',
+        reason: 'Solo banda elástica',
+        youtubeUrl: 'https://www.youtube.com/watch?v=04wrwxwrCnI',
+        briefTechnique: 'Banda en tobillo, de pie, flexiona rodilla hacia atrás contra resistencia'
+      },
+      {
+        name: 'Single Leg RDL',
+        reason: 'Sin equipamiento adicional',
+        youtubeUrl: 'https://www.youtube.com/watch?v=jEy_czb3RKA',
+        briefTechnique: 'Una pierna, bisagra de cadera, trabaja isquios de forma funcional'
+      },
+      {
+        name: 'Lying Leg Curl',
+        reason: 'Boca abajo alternativo',
+        youtubeUrl: 'https://www.youtube.com/watch?v=1Tq3QdYUuHs',
+        briefTechnique: 'Acostado boca abajo, flexiona piernas hacia glúteos con o sin peso'
+      }
+    ]
   },
   {
     id: 'wide-grip-pullup',
@@ -3574,7 +3694,27 @@ export const exercises: Exercise[] = [
       'Flexionar las rodillas demasiado',
       'Balancear el cuerpo'
     ],
-    defaultRestSeconds: 60
+    defaultRestSeconds: 60,
+    alternatives: [
+      {
+        name: 'Lying Leg Raises',
+        reason: 'Sin barra - en suelo',
+        youtubeUrl: 'https://www.youtube.com/watch?v=JB2oyawG9KI',
+        briefTechnique: 'Acostado, piernas rectas, levanta hacia 90°, trabaja flexores de cadera'
+      },
+      {
+        name: 'High Knees',
+        reason: 'Dinámico - sin equipamiento',
+        youtubeUrl: 'https://www.youtube.com/watch?v=nmwgirgXLYM',
+        briefTechnique: 'Corriendo en el lugar, levanta rodillas alto trabajando flexores'
+      },
+      {
+        name: 'Mountain Climbers',
+        reason: 'Funcional - core incluido',
+        youtubeUrl: 'https://www.youtube.com/watch?v=nmwgirgXLYM',
+        briefTechnique: 'Plancha, alterna rodillas al pecho, trabaja flexores dinámicamente'
+      }
+    ]
   },
   {
     id: 'ql-raise',
@@ -3595,7 +3735,27 @@ export const exercises: Exercise[] = [
       'Rango de movimiento corto',
       'No mantener alineación'
     ],
-    defaultRestSeconds: 60
+    defaultRestSeconds: 60,
+    alternatives: [
+      {
+        name: 'Side Plank',
+        reason: 'Isométrico - más fácil',
+        youtubeUrl: 'https://www.youtube.com/watch?v=ASdvN_XEl_c',
+        briefTechnique: 'Mantén posición de side plank estática, trabaja QL isométricamente'
+      },
+      {
+        name: 'Bird Dog lateral',
+        reason: 'Cuadrupedia - más estable',
+        youtubeUrl: 'https://www.youtube.com/watch?v=z6PJMT2y8GQ',
+        briefTechnique: 'Cuadrupedia, levanta brazo y pierna del mismo lado, core lateral'
+      },
+      {
+        name: 'Standing Side Bend',
+        reason: 'De pie - funcional',
+        youtubeUrl: 'https://www.youtube.com/watch?v=UhgQi_cz5zA',
+        briefTechnique: 'De pie, inclínate hacia un lado, regresa al centro, trabaja QL'
+      }
+    ]
   },
   {
     id: 'decline-crunch',
@@ -3615,7 +3775,27 @@ export const exercises: Exercise[] = [
       'Tirar del cuello',
       'No controlar el descenso'
     ],
-    defaultRestSeconds: 60
+    defaultRestSeconds: 60,
+    alternatives: [
+      {
+        name: 'Regular Crunches',
+        reason: 'Sin banco declinado',
+        youtubeUrl: 'https://www.youtube.com/watch?v=1fbU_MkV7NE',
+        briefTechnique: 'En suelo, flexiona solo la parte superior del torso, menos intenso'
+      },
+      {
+        name: 'Weighted Crunches',
+        reason: 'Más intensidad sin decline',
+        youtubeUrl: 'https://www.youtube.com/watch?v=1fbU_MkV7NE',
+        briefTechnique: 'Crunch normal con peso en pecho para mayor resistencia'
+      },
+      {
+        name: 'V-Ups',
+        reason: 'Sin equipamiento',
+        youtubeUrl: 'https://www.youtube.com/watch?v=9FGilxCbdz8',
+        briefTechnique: 'Acostado, piernas y torso suben al mismo tiempo formando V'
+      }
+    ]
   },
   {
     id: 'db-pullover',
@@ -3636,7 +3816,27 @@ export const exercises: Exercise[] = [
       'Bajar demasiado (riesgo de hombro)',
       'Arquear la espalda baja'
     ],
-    defaultRestSeconds: 90
+    defaultRestSeconds: 90,
+    alternatives: [
+      {
+        name: 'Incline Dumbbell Fly',
+        reason: 'Mismo estiramiento de pecho',
+        youtubeUrl: 'https://www.youtube.com/watch?v=bDaIL_zKbGs',
+        briefTechnique: 'Banco inclinado, abre brazos sintiendo estiramiento, menor riesgo'
+      },
+      {
+        name: 'Cable Pullover',
+        reason: 'Con cable o banda',
+        youtubeUrl: 'https://www.youtube.com/watch?v=FK4rHfWKEac',
+        briefTechnique: 'Cable alto, tira hacia abajo y adelante, mismo patrón de movimiento'
+      },
+      {
+        name: 'Prone Y Raise',
+        reason: 'Sin equipamiento',
+        youtubeUrl: 'https://www.youtube.com/watch?v=z6PJMT2y8GQ',
+        briefTechnique: 'Boca abajo, brazos en Y, trabaja dorsales y pecho posterior'
+      }
+    ]
   },
   {
     id: 'z-press',
@@ -3663,7 +3863,27 @@ export const exercises: Exercise[] = [
       advanced: 0.6,
       elite: 0.8
     },
-    defaultRestSeconds: 120
+    defaultRestSeconds: 120,
+    alternatives: [
+      {
+        name: 'Overhead Press sentado',
+        reason: 'Con respaldo - más fácil',
+        youtubeUrl: 'https://www.youtube.com/watch?v=qEwKCR5JCog',
+        briefTechnique: 'Sentado con respaldo, press normal sin desafío de core'
+      },
+      {
+        name: 'Pike Push-ups',
+        reason: 'Sin equipamiento',
+        youtubeUrl: 'https://www.youtube.com/watch?v=x4YNq24tYwM',
+        briefTechnique: 'V invertida, baja cabeza hacia manos, trabaja hombros sin core extremo'
+      },
+      {
+        name: 'Band Shoulder Press',
+        reason: 'Solo banda elástica',
+        youtubeUrl: 'https://www.youtube.com/watch?v=0rLjkQweIDg',
+        briefTechnique: 'Banda bajo pies, press hacia arriba, menos desafío de estabilidad'
+      }
+    ]
   }
 ];
 
