@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.97.0",
     "@tanstack/react-router": "^1.157.2",
     "date-fns": "^4.1.0",
     "dexie": "^4.2.1",

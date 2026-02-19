@@ -1,8 +1,9 @@
-import { useState } from 'react';
-import { User, Target, Dumbbell, Download, Trash2, Info, ChevronRight, X, Repeat } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { User, Target, Dumbbell, Download, Trash2, Info, ChevronRight, X, Repeat, Cloud, CloudOff, RefreshCw } from 'lucide-react';
 import { useUserStore } from '../../../stores/userStore';
 import { exportData, clearDatabase } from '../../../services/db/database';
 import { allPrograms, getProgramById } from '../../../data/programs';
+import { pushToCloud, pullFromCloud, getLastSyncTime } from '../../../services/supabase/sync';
 
 export function Settings() {
   const { user, updateUser, setOnboarded, changeProgram } = useUserStore();
@@ -11,6 +12,9 @@ export function Settings() {
   const [showProgram, setShowProgram] = useState(false);
   const [showAbout, setShowAbout] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [syncStatus, setSyncStatus] = useState<'idle' | 'pushing' | 'pulling' | 'success' | 'error'>('idle');
+  const [lastSync, setLastSync] = useState<string | null>(getLastSyncTime());
+  const [syncError, setSyncError] = useState<string | null>(null);
 
   // Profile form state
   const [name, setName] = useState(user?.name || '');
@@ -51,6 +55,40 @@ export function Settings() {
     a.download = `achilles-backup-${new Date().toISOString().split('T')[0]}.json`;
     a.click();
     URL.revokeObjectURL(url);
+  };
+
+  const handlePush = async () => {
+    setSyncStatus('pushing');
+    setSyncError(null);
+    const result = await pushToCloud();
+    if (result.success) {
+      setSyncStatus('success');
+      setLastSync(getLastSyncTime());
+      setTimeout(() => setSyncStatus('idle'), 2000);
+    } else {
+      setSyncStatus('error');
+      setSyncError(result.error || 'Error desconocido');
+    }
+  };
+
+  const handlePull = async () => {
+    if (!confirm('Esto reemplazará tus datos locales con los de la nube. ¿Continuar?')) return;
+    setSyncStatus('pulling');
+    setSyncError(null);
+    const result = await pullFromCloud();
+    if (result.success) {
+      if (result.hasData) {
+        setSyncStatus('success');
+        setLastSync(getLastSyncTime());
+        setTimeout(() => window.location.reload(), 1000);
+      } else {
+        setSyncStatus('error');
+        setSyncError('No hay datos en la nube todavía');
+      }
+    } else {
+      setSyncStatus('error');
+      setSyncError(result.error || 'Error desconocido');
+    }
   };
 
   const handleReset = async () => {
@@ -433,6 +471,18 @@ export function Settings() {
       label: 'Exportar datos',
       description: 'Descarga una copia de seguridad',
       onClick: handleExport
+    },
+    {
+      icon: Cloud,
+      label: 'Subir a la nube',
+      description: syncStatus === 'pushing' ? 'Subiendo...' : lastSync ? `Último sync: ${new Date(lastSync).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}` : 'Guarda tus datos en Supabase',
+      onClick: handlePush
+    },
+    {
+      icon: RefreshCw,
+      label: 'Restaurar de la nube',
+      description: syncStatus === 'pulling' ? 'Descargando...' : 'Recupera tus datos desde Supabase',
+      onClick: handlePull
     },
     {
       icon: Info,
