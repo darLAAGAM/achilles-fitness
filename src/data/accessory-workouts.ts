@@ -407,6 +407,44 @@ export const accessoryPlans: AccessoryPlan[] = [
         ]
       }
     ]
+  },
+  {
+    programId: 'dorian-yates-blood-guts',
+    absWorkouts: achillesAbsPlan,
+    cardioWorkouts: [
+      {
+        id: 'bg-hiit-sprints',
+        name: 'HIIT Sprints (Protocolo Dorian)',
+        type: 'hiit',
+        duration: 10,
+        frequency: 3,
+        intensity: 'ALL-OUT',
+        exercises: [
+          '5 min calentamiento bici estática',
+          '3-5 sprints de 20 seg ALL-OUT',
+          '40 seg recuperación entre sprints',
+          '5 min vuelta a la calma'
+        ],
+        notes: [
+          'Equivale a 45-60 min cardio tradicional (Huberman Lab)',
+          'Bici estática preferible — menos impacto articular',
+          'Si no hay bici: sprints en cinta al máximo incline'
+        ]
+      }
+    ],
+    calves: {
+      frequency: '2x/semana (días de descanso)',
+      exercises: [
+        { name: 'Standing Calf Raise', sets: '3', reps: '12-15' },
+        { name: 'Seated Calf Raise', sets: '3', reps: '15-20' }
+      ],
+      notes: 'Negativas lentas 3 seg — mismo principio Blood & Guts'
+    },
+    phaseOverrides: {
+      'bg-phase1': { cardio: 'normal', absFrequency: '3x/semana', notes: 'Adapta intensidad gradualmente' },
+      'bg-phase2': { cardio: 'normal', absFrequency: '3x/semana' },
+      'bg-phase3': { cardio: 'normal', absFrequency: '4x/semana', notes: 'Máxima intensidad en todo' }
+    }
   }
 ];
 
