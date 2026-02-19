@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { Flame, Target, ChevronDown, ChevronUp, Check, Clock } from 'lucide-react';
-import { getAccessoryPlanByProgram, type AbsWorkout, type CardioWorkout } from '../../data/accessory-workouts';
+import { getAccessoryPlanByProgram, type AbsWorkout, type CardioWorkout, type AbsExercise, type CalvesExercise } from '../../data/accessory-workouts';
 import { format, startOfWeek, addDays } from 'date-fns';
 
 interface AccessoryTrackerProps {
@@ -200,6 +200,55 @@ const styles = {
   } as React.CSSProperties,
 };
 
+function getYouTubeId(url: string): string | null {
+  const match = url.match(/(?:v=|\/embed\/|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+  return match ? match[1] : null;
+}
+
+function ExpandableExerciseDetail({ description, videoUrl }: { description?: string; videoUrl?: string }) {
+  const videoId = videoUrl ? getYouTubeId(videoUrl) : null;
+  return (
+    <div style={{
+      backgroundColor: colors.cardElevated,
+      borderRadius: '10px',
+      padding: '12px',
+      marginTop: '8px',
+      marginBottom: '4px',
+    }}>
+      {description && (
+        <p style={{ fontSize: '12px', color: '#aaa', lineHeight: 1.5, margin: '0 0 10px 0' }}>
+          {description}
+        </p>
+      )}
+      {videoId && (
+        <div style={{
+          position: 'relative' as const,
+          width: '100%',
+          paddingBottom: '56.25%',
+          borderRadius: '12px',
+          overflow: 'hidden',
+        }}>
+          <iframe
+            src={`https://www.youtube.com/embed/${videoId}`}
+            style={{
+              position: 'absolute' as const,
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              border: 'none',
+              borderRadius: '12px',
+            }}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            title="Exercise video"
+          />
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function AccessoryTracker({ programId, currentPhaseId }: AccessoryTrackerProps) {
   const [expanded, setExpanded] = useState(false);
   const [allCompleted, setAllCompleted] = useState<CompletedAccessory[]>(() => {
@@ -359,13 +408,7 @@ export function AccessoryTracker({ programId, currentPhaseId }: AccessoryTracker
                 <p style={styles.sectionTitle}>Pantorrillas ({plan.calves.frequency})</p>
                 <div style={styles.workoutCard}>
                   {plan.calves.exercises.map((ex, i) => (
-                    <div key={i} style={i === plan.calves!.exercises.length - 1 ? styles.exerciseLast : styles.exercise}>
-                      <div style={styles.exerciseBullet} />
-                      <div style={styles.exerciseContent}>
-                        <p style={styles.exerciseName}>{ex.name}</p>
-                        <p style={styles.exerciseDetail}>{ex.sets} series × {ex.reps} reps</p>
-                      </div>
-                    </div>
+                    <ExpandableCalvesExercise key={i} exercise={ex} isLast={i === plan.calves!.exercises.length - 1} />
                   ))}
                   {!isCompletedToday('calves') ? (
                     <button
@@ -452,15 +495,7 @@ function AbsWorkoutCard({
       {showExercises && (
         <div style={styles.exerciseList}>
           {workout.exercises.map((ex, i) => (
-            <div key={ex.id} style={i === workout.exercises.length - 1 ? styles.exerciseLast : styles.exercise}>
-              <div style={styles.exerciseBullet} />
-              <div style={styles.exerciseContent}>
-                <p style={styles.exerciseName}>{ex.name}</p>
-                <p style={styles.exerciseDetail}>
-                  {ex.sets}×{ex.repsMin}-{ex.repsMax} · {ex.notes}
-                </p>
-              </div>
-            </div>
+            <ExpandableAbsExercise key={ex.id} exercise={ex} isLast={i === workout.exercises.length - 1} />
           ))}
         </div>
       )}
@@ -478,6 +513,60 @@ function AbsWorkoutCard({
           Completar {workout.name}
         </button>
       )}
+    </div>
+  );
+}
+
+// Sub-component for expandable abs exercise
+function ExpandableAbsExercise({ exercise: ex, isLast }: { exercise: AbsExercise; isLast: boolean }) {
+  const [open, setOpen] = useState(false);
+  const hasDetail = ex.description || ex.videoUrl;
+  return (
+    <div>
+      <div
+        style={{ ...(isLast ? styles.exerciseLast : styles.exercise), cursor: hasDetail ? 'pointer' : 'default' }}
+        onClick={() => hasDetail && setOpen(!open)}
+      >
+        <div style={styles.exerciseBullet} />
+        <div style={styles.exerciseContent}>
+          <p style={styles.exerciseName}>{ex.name}</p>
+          <p style={styles.exerciseDetail}>
+            {ex.sets}×{ex.repsMin}-{ex.repsMax} · {ex.notes}
+          </p>
+        </div>
+        {hasDetail && (
+          <span style={{ color: colors.textSecondary, fontSize: '12px', marginTop: '4px', flexShrink: 0 }}>
+            {open ? '▲' : '▼'}
+          </span>
+        )}
+      </div>
+      {open && <ExpandableExerciseDetail description={ex.description} videoUrl={ex.videoUrl} />}
+    </div>
+  );
+}
+
+// Sub-component for expandable calves exercise
+function ExpandableCalvesExercise({ exercise: ex, isLast }: { exercise: CalvesExercise; isLast: boolean }) {
+  const [open, setOpen] = useState(false);
+  const hasDetail = ex.description || ex.videoUrl;
+  return (
+    <div>
+      <div
+        style={{ ...(isLast ? styles.exerciseLast : styles.exercise), cursor: hasDetail ? 'pointer' : 'default' }}
+        onClick={() => hasDetail && setOpen(!open)}
+      >
+        <div style={styles.exerciseBullet} />
+        <div style={styles.exerciseContent}>
+          <p style={styles.exerciseName}>{ex.name}</p>
+          <p style={styles.exerciseDetail}>{ex.sets} series × {ex.reps} reps</p>
+        </div>
+        {hasDetail && (
+          <span style={{ color: colors.textSecondary, fontSize: '12px', marginTop: '4px', flexShrink: 0 }}>
+            {open ? '▲' : '▼'}
+          </span>
+        )}
+      </div>
+      {open && <ExpandableExerciseDetail description={ex.description} videoUrl={ex.videoUrl} />}
     </div>
   );
 }

@@ -12,6 +12,7 @@ export interface AbsExercise {
   repsMax: number;
   notes?: string;
   videoUrl?: string;
+  description?: string;
 }
 
 export interface AbsWorkout {
@@ -37,6 +38,8 @@ export interface CalvesExercise {
   name: string;
   sets: string;
   reps: string;
+  videoUrl?: string;
+  description?: string;
 }
 
 export interface AccessoryPlan {
@@ -69,7 +72,9 @@ const achillesUpperAbsExercises: AbsExercise[] = [
     sets: 4,
     repsMin: 8,
     repsMax: 15,
-    notes: 'Contracción controlada, no uses impulso'
+    notes: 'Contracción controlada, no uses impulso',
+    videoUrl: 'https://www.youtube.com/watch?v=G8937xqkxDo',
+    description: 'Siéntate en la máquina con los pies firmes y agarra las asas. Exhala mientras contraes el abdomen hacia abajo, enfocándote en acortar la distancia entre el esternón y el ombligo. Evita tirar con los brazos — todo el movimiento debe venir de la contracción abdominal.'
   },
   {
     id: 'stability-ball-crunch',
@@ -78,7 +83,9 @@ const achillesUpperAbsExercises: AbsExercise[] = [
     sets: 4,
     repsMin: 10,
     repsMax: 20,
-    notes: 'Extiende completamente sobre la pelota'
+    notes: 'Extiende completamente sobre la pelota',
+    videoUrl: 'https://www.youtube.com/watch?v=BKS9NRVko0g',
+    description: 'Acuéstate con la espalda baja apoyada en la pelota, pies firmes en el suelo a la anchura de hombros. Extiéndete hacia atrás para estirar completamente el abdomen, luego contrae subiendo el torso. El rango de movimiento extendido es la clave — aprovecha el estiramiento completo que la pelota te permite.'
   },
   {
     id: 'bosu-crunch',
@@ -87,7 +94,9 @@ const achillesUpperAbsExercises: AbsExercise[] = [
     sets: 4,
     repsMin: 10,
     repsMax: 20,
-    notes: 'Lado redondo hacia arriba'
+    notes: 'Lado redondo hacia arriba',
+    videoUrl: 'https://www.youtube.com/watch?v=s3wftEw2gZs',
+    description: 'Coloca el bosu con el lado redondo hacia arriba y acuéstate con la zona lumbar centrada. Manos detrás de la cabeza sin tirar del cuello. Contrae el abdomen elevando los hombros, mantén la tensión arriba 1 segundo. La superficie inestable activa más fibras del core.'
   },
   {
     id: 'incline-situp',
@@ -96,7 +105,9 @@ const achillesUpperAbsExercises: AbsExercise[] = [
     sets: 4,
     repsMin: 8,
     repsMax: 15,
-    notes: 'Añade peso con disco en el pecho para progresar'
+    notes: 'Añade peso con disco en el pecho para progresar',
+    videoUrl: 'https://www.youtube.com/watch?v=TEvQB9FAdjs',
+    description: 'Engancha los pies en el banco inclinado y baja el torso de forma controlada. Sube contrayendo el abdomen, no tirando del cuello. Para progresar, sostén un disco en el pecho. Evita usar impulso al subir — si necesitas balancearte, baja el peso.'
   },
   {
     id: 'pulldown-crunch',
@@ -105,7 +116,9 @@ const achillesUpperAbsExercises: AbsExercise[] = [
     sets: 4,
     repsMin: 10,
     repsMax: 15,
-    notes: 'Con cuerda en polea alta, lleva codos a rodillas'
+    notes: 'Con cuerda en polea alta, lleva codos a rodillas',
+    videoUrl: 'https://www.youtube.com/watch?v=AV5PmZJIrrw',
+    description: 'Arrodíllate frente a la polea alta con la cuerda detrás de la cabeza. Mantén las caderas fijas y flexiona el tronco llevando los codos hacia las rodillas. El movimiento sale de la cintura, no de los brazos. Controla la vuelta arriba — la negativa es igual de importante.'
   },
   {
     id: 'ab-wheel',
@@ -114,7 +127,9 @@ const achillesUpperAbsExercises: AbsExercise[] = [
     sets: 4,
     repsMin: 8,
     repsMax: 15,
-    notes: 'Mantén core apretado, no arquees la espalda'
+    notes: 'Mantén core apretado, no arquees la espalda',
+    videoUrl: 'https://www.youtube.com/watch?v=ikkOq5mHaho',
+    description: 'Desde rodillas, agarra la rueda y extiéndete hacia adelante manteniendo el core contraído. No dejes que la espalda baja se hunda — si se arquea, has ido demasiado lejos. Vuelve contrayendo el abdomen. Progresa aumentando el rango de movimiento gradualmente.'
   },
   {
     id: 'bicycle-crunch',
@@ -123,7 +138,9 @@ const achillesUpperAbsExercises: AbsExercise[] = [
     sets: 4,
     repsMin: 15,
     repsMax: 30,
-    notes: 'Toca codo con rodilla opuesta'
+    notes: 'Toca codo con rodilla opuesta',
+    videoUrl: 'https://www.youtube.com/watch?v=wpRI3xBhJmo',
+    description: 'Acuéstate con manos detrás de la cabeza y piernas elevadas. Rota el torso llevando el codo a la rodilla opuesta mientras extiendes la otra pierna. El movimiento debe ser controlado — no pedalees rápido sin control. Siente la contracción en los oblicuos con cada rotación.'
   }
 ];
 
@@ -135,7 +152,9 @@ const achillesLowerAbsExercises: AbsExercise[] = [
     sets: 4,
     repsMin: 10,
     repsMax: 20,
-    notes: 'Mantén espalda baja pegada al suelo'
+    notes: 'Mantén espalda baja pegada al suelo',
+    videoUrl: 'https://www.youtube.com/watch?v=Wp4BlxcFTkE',
+    description: 'Acuéstate boca arriba con las manos debajo de los glúteos o a los lados. Eleva las piernas juntas y rectas hasta 90 grados, luego baja lentamente sin tocar el suelo. La clave es mantener la espalda baja pegada al suelo — si se despega, no bajes tanto las piernas.'
   },
   {
     id: 'hanging-leg-raise',
@@ -144,7 +163,9 @@ const achillesLowerAbsExercises: AbsExercise[] = [
     sets: 4,
     repsMin: 8,
     repsMax: 15,
-    notes: 'Piernas rectas o rodillas dobladas para principiantes'
+    notes: 'Piernas rectas o rodillas dobladas para principiantes',
+    videoUrl: 'https://www.youtube.com/watch?v=Pr1ieGZ5atk',
+    description: 'Cuélgate de una barra con agarre firme y hombros activos. Eleva las piernas rectas hasta la horizontal o más arriba, controlando el balanceo. Si no puedes con piernas rectas, dobla las rodillas. Concéntrate en elevar la pelvis, no solo las piernas — ahí está la contracción real del abdomen inferior.'
   },
   {
     id: 'flutter-kicks',
@@ -153,7 +174,9 @@ const achillesLowerAbsExercises: AbsExercise[] = [
     sets: 4,
     repsMin: 20,
     repsMax: 40,
-    notes: 'Movimiento rápido y controlado'
+    notes: 'Movimiento rápido y controlado',
+    videoUrl: 'https://www.youtube.com/watch?v=ANVdMDaYRts',
+    description: 'Acuéstate boca arriba con las manos bajo los glúteos. Eleva ambas piernas ligeramente del suelo y alterna subiendo y bajando como si nadaras. Mantén la zona lumbar pegada al suelo en todo momento. El movimiento es pequeño y rápido pero controlado — no dejes que las piernas caigan.'
   },
   {
     id: 'reverse-crunch',
@@ -162,7 +185,9 @@ const achillesLowerAbsExercises: AbsExercise[] = [
     sets: 4,
     repsMin: 12,
     repsMax: 20,
-    notes: 'Lleva las rodillas al pecho, levanta caderas'
+    notes: 'Lleva las rodillas al pecho, levanta caderas',
+    videoUrl: 'https://www.youtube.com/watch?v=yH-oSzE5_g0',
+    description: 'Acuéstate con las rodillas dobladas a 90 grados. Contrae el abdomen inferior para llevar las rodillas hacia el pecho, elevando las caderas del suelo. El secreto es el despegue de caderas — sin él, solo doblas las piernas sin trabajar el abdomen. Baja de forma controlada.'
   },
   {
     id: 'stability-ball-pike',
@@ -171,7 +196,9 @@ const achillesLowerAbsExercises: AbsExercise[] = [
     sets: 4,
     repsMin: 8,
     repsMax: 15,
-    notes: 'Pies en la pelota, sube caderas hacia el techo'
+    notes: 'Pies en la pelota, sube caderas hacia el techo',
+    videoUrl: 'https://www.youtube.com/watch?v=eFcjeQ9tuEQ',
+    description: 'Colócate en posición de plancha con los pies sobre la pelota de estabilidad. Contrae el core y eleva las caderas hacia el techo formando una V invertida, manteniendo las piernas rectas. Baja con control. Es un ejercicio avanzado — si pierdes estabilidad, empieza con rodillas al pecho en su lugar.'
   }
 ];
 
@@ -300,9 +327,9 @@ export const elysiumAbsPlan: AbsWorkout[] = [
 export const elysiumCalvesPlan = {
   frequency: '2x/semana (mínimo 2 días entre sesiones)',
   exercises: [
-    { name: 'Anterior Tibialis Raise', sets: '2-3', reps: '8-15' },
-    { name: 'Seated Calf Raise', sets: '2-3', reps: '8-15' },
-    { name: 'Standing Calf Raise (BW)', sets: '2-3', reps: '8-15' }
+    { name: 'Anterior Tibialis Raise', sets: '2-3', reps: '8-15', videoUrl: 'https://www.youtube.com/watch?v=RHWRxiBe1iU', description: 'Apóyate contra una pared con los pies adelantados. Levanta las puntas de los pies hacia las espinillas, manteniendo los talones en el suelo. Contrae arriba 1 segundo y baja con control. Fortalece el tibial anterior y previene dolor de espinillas.' },
+    { name: 'Seated Calf Raise', sets: '2-3', reps: '8-15', videoUrl: 'https://www.youtube.com/watch?v=ORY-ke6vcgk', description: 'Siéntate con las rodillas bajo la almohadilla y la punta de los pies en el borde. Empuja hacia arriba contrayendo el sóleo, mantén 1 segundo arriba, y baja lentamente. Este ejercicio aísla el sóleo, fundamental para la parte inferior de la pantorrilla.' },
+    { name: 'Standing Calf Raise (BW)', sets: '2-3', reps: '8-15', videoUrl: 'https://www.youtube.com/watch?v=k67UjgvJdEk', description: 'Párate en el borde de un escalón con los talones colgando. Sube empujando con los dedos hasta máxima contracción, luego baja estirando completamente. Haz cada rep lenta y controlada — sin rebotes. Puedes hacerlo a una pierna para mayor intensidad.' }
   ],
   notes: 'Haz TODOS los ejercicios en cada sesión de pantorrillas'
 };
@@ -435,8 +462,8 @@ export const accessoryPlans: AccessoryPlan[] = [
     calves: {
       frequency: '2x/semana (días de descanso)',
       exercises: [
-        { name: 'Standing Calf Raise', sets: '3', reps: '12-15' },
-        { name: 'Seated Calf Raise', sets: '3', reps: '15-20' }
+        { name: 'Standing Calf Raise', sets: '3', reps: '12-15', videoUrl: 'https://www.youtube.com/watch?v=k67UjgvJdEk', description: 'Colócate en la máquina con las almohadillas sobre los hombros y la punta de los pies en el borde de la plataforma. Sube empujando con los dedos hasta máxima contracción, luego baja lentamente estirando completamente el talón. La negativa de 3 segundos es clave — no rebotes abajo.' },
+        { name: 'Seated Calf Raise', sets: '3', reps: '15-20', videoUrl: 'https://www.youtube.com/watch?v=ORY-ke6vcgk', description: 'Siéntate con las rodillas bajo la almohadilla y la punta de los pies en el borde de la plataforma. Empuja hacia arriba contrayendo el sóleo, mantén 1 segundo arriba, y baja lentamente con negativa de 3 segundos. Este ejercicio trabaja el sóleo, que es el músculo más grande de la pantorrilla.' }
       ],
       notes: 'Negativas lentas 3 seg — mismo principio Blood & Guts'
     },
