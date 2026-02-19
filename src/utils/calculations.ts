@@ -18,7 +18,7 @@ export function calculateVolume(weight: number, reps: number): number {
  */
 export function calculateMacros(
   bodyweightKg: number,
-  phase: 'bulk' | 'cut' | 'maintain'
+  phase: 'bulk' | 'cut' | 'maintain' | 'weight_loss'
 ): {
   calories: number;
   protein: number;

@@ -67,7 +67,6 @@ export function Onboarding() {
   const handleComplete = async () => {
     setLoading(true);
     const bwKg = Number(bodyweight);
-    const bwLbs = bwKg * 2.205;
     const heightCm = Number(height);
     const ageNum = Number(age);
 

@@ -621,7 +621,7 @@ export function generateWeeklyMealPlan(
   targetProtein: number,
   targetCarbs: number,
   targetFat: number,
-  phase: 'bulk' | 'cut' | 'maintain' = 'maintain'
+  phase: 'bulk' | 'cut' | 'maintain' | 'weight_loss' = 'maintain'
 ): WeeklyMealPlan {
   const dayNames = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
 

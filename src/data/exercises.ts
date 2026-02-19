@@ -564,21 +564,7 @@ export const exercises: Exercise[] = [
         briefTechnique: 'V invertida, baja cabeza hacia manos, trabaja deltoides frontales'
       }
     ],
-    defaultRestSeconds: 60,
-    alternatives: [
-      {
-        name: 'Band Lateral Raises',
-        reason: 'Solo banda elástica',
-        youtubeUrl: 'https://www.youtube.com/watch?v=0GsVJsS6474',
-        briefTechnique: 'Pisa la banda y levanta hacia los lados, tensión constante'
-      },
-      {
-        name: 'Lateral Raise con botellas',
-        reason: 'Sin equipamiento',
-        youtubeUrl: 'https://www.youtube.com/watch?v=3VcKaXpzqRo',
-        briefTechnique: 'Usa botellas de agua llenas como peso, mismo movimiento'
-      }
-    ]
+    defaultRestSeconds: 60
   },
   {
     id: 'front-raises',

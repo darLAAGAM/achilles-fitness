@@ -19,7 +19,7 @@ export function Settings() {
   const [bodyweight, setBodyweight] = useState(user?.bodyweight?.toString() || '80');
 
   // Goals form state
-  const [phase, setPhase] = useState<'bulk' | 'cut' | 'maintain'>(user?.currentPhase || 'bulk');
+  const [phase, setPhase] = useState<'bulk' | 'cut' | 'maintain' | 'weight_loss'>(user?.currentPhase || 'bulk');
   const [protein, setProtein] = useState(user?.proteinTarget?.toString() || '160');
   const [calories, setCalories] = useState(user?.dailyCalories?.toString() || '2600');
 
