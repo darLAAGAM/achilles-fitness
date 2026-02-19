@@ -10,6 +10,7 @@ import type { WorkoutTemplate, Exercise, ExerciseTemplate, WorkoutSet, ProgramPh
 import { ExerciseDetail } from './ExerciseDetail';
 import { FastingTracker } from '../../../components/fasting/FastingTracker';
 import { AccessoryTracker } from '../../../components/workout/AccessoryTracker';
+import { MobilityTracker } from '../../../components/workout/MobilityTracker';
 import { format, startOfWeek, addDays, isToday, isSameDay, differenceInWeeks } from 'date-fns';
 import { es } from 'date-fns/locale';
 
@@ -1050,6 +1051,9 @@ export function TodayWorkout() {
           programId={currentProgram.id}
           currentPhaseId={currentPhase?.id}
         />
+
+        {/* Mobility & Stretching Tracker */}
+        <MobilityTracker />
 
         {/* Rest Day */}
         {selectedWorkoutType === 'rest' && (
