@@ -423,12 +423,12 @@ export function Onboarding() {
         {/* Step 0: Welcome */}
         {step === 0 && (
           <div style={{ textAlign: 'center', maxWidth: 360 }}>
-            <div style={{ fontSize: '72px', marginBottom: '24px' }}>⚔️</div>
+            <div style={{ fontSize: '72px', marginBottom: '24px' }}>💪</div>
             <h1 style={{ ...s.title, fontSize: '36px', marginBottom: '16px' }}>
               <span style={s.gold}>Achilles</span> Fitness
             </h1>
             <p style={{ color: '#888', fontSize: '18px', lineHeight: 1.5, marginBottom: '40px' }}>
-              Entrena como un guerrero griego.<br />
+              Tu mejor versión física empieza aquí.<br />
               Diseña tu programa perfecto en 2 minutos.
             </p>
           </div>

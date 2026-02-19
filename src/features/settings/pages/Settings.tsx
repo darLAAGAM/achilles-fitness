@@ -696,9 +696,9 @@ export function Settings() {
               <p style={styles.aboutVersion}>Version 1.0.0</p>
               <p style={styles.aboutDesc}>
                 Basado en el Programa Achilles de Alexander Cortes.
-                Disenado para alcanzar el fisico de Brad Pitt en Troya.
+                Tu entrenador personal inteligente. Programas adaptados a tu objetivo.
               </p>
-              <p style={styles.aboutHighlight}>Indice de Adonis: 1.618</p>
+              <p style={styles.aboutHighlight}>8 programas • Movilidad • Nutrición • Progreso</p>
             </div>
           </div>
         </div>

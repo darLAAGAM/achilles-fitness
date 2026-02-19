@@ -490,13 +490,13 @@ const getWorkoutDescription = (template: WorkoutTemplate | null): string => {
 
   const type = template.type;
   switch (type) {
-    case 'push': return 'Pecho, hombros y tríceps. Construye los hombros anchos del guerrero griego.';
-    case 'pull': return 'Espalda y bíceps. Desarrolla la V-taper característica de Achilles.';
-    case 'legs': return 'Piernas y core. La base atlética de un verdadero hoplita.';
+    case 'push': return 'Pecho, hombros y tríceps. Construye unos hombros anchos y definidos.';
+    case 'pull': return 'Espalda y bíceps. Desarrolla una espalda ancha y definida.';
+    case 'legs': return 'Piernas y core. La base de un físico equilibrado.';
     case 'shoulders': return 'Deltoides anterior, lateral y posterior. Hombros de acero.';
     case 'arms': return 'Bíceps y tríceps. Brazos definidos y funcionales.';
     case 'chest': return 'Pecho desde múltiples ángulos. Desarrollo completo del pectoral.';
-    case 'back': return 'Espalda ancha y gruesa. La V-taper del guerrero.';
+    case 'back': return 'Espalda ancha y gruesa. Desarrolla una V-taper definida.';
     case 'full': return template.isCircuit
       ? `Circuito de cuerpo completo. ${template.circuitRounds || 3} rondas de alta intensidad.`
       : 'Entrenamiento de cuerpo completo. Trabaja todos los músculos principales.';
