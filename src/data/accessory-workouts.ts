@@ -445,6 +445,112 @@ export const accessoryPlans: AccessoryPlan[] = [
       'bg-phase2': { cardio: 'normal', absFrequency: '3x/semana' },
       'bg-phase3': { cardio: 'normal', absFrequency: '4x/semana', notes: 'Máxima intensidad en todo' }
     }
+  },
+  // ============================================
+  // ATHENA ACCESSORY PLAN
+  // ============================================
+  {
+    programId: 'athena-women',
+    absWorkouts: [
+      {
+        id: 'athena-core-circuit',
+        name: 'Athena Core Circuit',
+        exercises: [
+          { id: 'dead-bug-acc', name: 'Dead Bug', type: 'lower', sets: 3, repsMin: 10, repsMax: 15, notes: 'Espalda baja pegada al suelo' },
+          { id: 'plank-acc', name: 'Plank Hold', type: 'full', sets: 3, repsMin: 1, repsMax: 1, notes: '30-45 seg' },
+          { id: 'bicycle-crunch-acc', name: 'Bicycle Crunch', type: 'oblique', sets: 3, repsMin: 15, repsMax: 20 },
+          { id: 'hanging-leg-acc', name: 'Hanging Knee Raise', type: 'lower', sets: 3, repsMin: 10, repsMax: 15 }
+        ],
+        frequency: '2-3x/semana (incluido en Día 2)',
+        notes: ['Core funcional, no crunch infinitos', 'Priorizar estabilidad lumbar']
+      }
+    ],
+    cardioWorkouts: [
+      {
+        id: 'athena-hiit',
+        name: 'HIIT Protocol (Incluido en Día 4)',
+        type: 'hiit',
+        duration: 12,
+        frequency: 1,
+        intensity: '80%+ FC máx',
+        exercises: [
+          '8 × 20s sprint / 40s descanso (bici, remo o running)',
+          'O: EMOM 10 min con ejercicio compuesto'
+        ],
+        notes: [
+          'HIIT real = 80%+ durante minutos (Dr. Stacy Sims)',
+          'No confundir con "sudar mucho en una clase"',
+          'Ya incluido en Día 4 del programa'
+        ]
+      },
+      {
+        id: 'athena-walks',
+        name: 'Caminatas Zona 2 (Opcional)',
+        type: 'aerobic',
+        duration: 35,
+        frequency: 2,
+        intensity: 'Conversación cómoda',
+        notes: ['Días de descanso', 'No obligatorio — la pesa es la prioridad']
+      }
+    ]
+  },
+  // ============================================
+  // TITAN ACCESSORY PLAN
+  // ============================================
+  {
+    programId: 'titan-seniors',
+    absWorkouts: [
+      {
+        id: 'titan-stability-circuit',
+        name: 'Titan Stability Circuit',
+        exercises: [
+          { id: 'dead-bug-titan', name: 'Dead Bug', type: 'lower', sets: 3, repsMin: 8, repsMax: 10, notes: 'Lento y controlado' },
+          { id: 'bird-dog-titan', name: 'Bird Dog', type: 'full', sets: 3, repsMin: 8, repsMax: 10 },
+          { id: 'plank-titan', name: 'Plank', type: 'full', sets: 2, repsMin: 1, repsMax: 1, notes: '15-30 seg, de rodillas si necesario' }
+        ],
+        frequency: '3-4x/semana (incluido en sesiones)',
+        notes: ['Balance integrado en CADA sesión', 'Evitar flexión espinal cargada si osteoporosis']
+      }
+    ],
+    cardioWorkouts: [
+      {
+        id: 'titan-zona2',
+        name: 'Cardio Zona 2 (Pilar fundamental)',
+        type: 'aerobic',
+        duration: 40,
+        frequency: 4,
+        intensity: 'Conversación cómoda, lactato <2 mmol/L',
+        exercises: ['Caminar rápido', 'Bici estática', 'Elíptica', 'Nadar'],
+        notes: [
+          '150-200 min/semana zona 2 (WHO/ACSM)',
+          '80% del cardio en zona 2',
+          'Incluido como Día 4 + caminatas adicionales'
+        ]
+      },
+      {
+        id: 'titan-intervalos',
+        name: 'Intervalos Suaves (Solo Fase 3)',
+        type: 'hiit',
+        duration: 20,
+        frequency: 1,
+        intensity: 'Moderada-alta (NO all-out)',
+        exercises: [
+          '4 × 2-3 min esfuerzo alto / 2-3 min recuperación',
+          'En bici o caminata rápida en cuesta'
+        ],
+        notes: [
+          'Empezar con 2 intervalos, añadir 1 cada 2 semanas',
+          'NUNCA sprints all-out — controlado',
+          'Monitorizar frecuencia cardíaca'
+        ]
+      }
+    ],
+    phaseOverrides: {
+      'titan-phase0': { cardio: 'reduced', absFrequency: '2x/semana', notes: 'Solo caminatas zona 2 + movilidad básica' },
+      'titan-phase1': { cardio: 'normal', absFrequency: '3x/semana' },
+      'titan-phase2': { cardio: 'normal', absFrequency: '3x/semana' },
+      'titan-phase3': { cardio: 'normal', absFrequency: '4x/semana', notes: 'Añadir intervalos suaves 1x/semana' }
+    }
   }
 ];
 

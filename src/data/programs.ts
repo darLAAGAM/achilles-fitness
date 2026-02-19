@@ -1,4 +1,6 @@
 import type { WorkoutProgram, WorkoutTemplate, ProgramPhase, NutritionGuidelines, Equipment } from '../types';
+import { athenaProgram } from './athena-program';
+import { titanProgram } from './titan-program';
 
 // ============================================
 // ACHILLES 3.0 PROGRAM (5 Days/Week, 4 Phases)
@@ -4302,7 +4304,9 @@ export const allPrograms: WorkoutProgram[] = [
   wolverineProgram,
   hopliteProgram,
   b3Program,
-  bloodAndGutsProgram
+  bloodAndGutsProgram,
+  athenaProgram,
+  titanProgram
 ];
 // Helper functions
 export function getProgramById(id: string): WorkoutProgram | undefined {

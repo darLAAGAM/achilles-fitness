@@ -85,6 +85,11 @@ export const useUserStore = create<UserState>()(
           // Equipment
           availableEquipment: data.availableEquipment || ['barbell', 'dumbbell', 'cable', 'machine', 'bodyweight'],
           hasGymAccess: data.hasGymAccess ?? true,
+          // Smart onboarding
+          injuries: data.injuries,
+          sessionDuration: data.sessionDuration,
+          trainingLocation: data.trainingLocation,
+          fitnessGoal: data.fitnessGoal,
           createdAt: new Date(),
           updatedAt: new Date()
         };

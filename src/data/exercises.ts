@@ -3870,6 +3870,217 @@ export const exercises: Exercise[] = [
         briefTechnique: 'Banda bajo pies, press hacia arriba, menos desafío de estabilidad'
       }
     ]
+  },
+
+  // ============================================
+  // NEW EXERCISES — ATHENA & TITAN PROGRAMS
+  // ============================================
+
+  // --- Athena exercises ---
+  {
+    id: 'cable-kickback',
+    name: 'Cable Glute Kickback',
+    muscleGroup: 'glutes',
+    secondaryMuscles: ['hamstrings'],
+    category: 'isolation',
+    equipment: ['cable'],
+    youtubeUrl: 'https://www.youtube.com/watch?v=dJa5qPfEMdU',
+    techniqueNotes: ['Tobillera en el cable bajo', 'Extiende la cadera sin arquear la espalda', 'Aprieta el glúteo arriba'],
+    defaultRestSeconds: 60
+  },
+  {
+    id: 'sumo-squat',
+    name: 'Sumo Squat',
+    muscleGroup: 'glutes',
+    secondaryMuscles: ['quads'],
+    category: 'compound',
+    equipment: ['dumbbell'],
+    youtubeUrl: 'https://www.youtube.com/watch?v=9ZuXKqRbT9k',
+    techniqueNotes: ['Pies más anchos que los hombros, puntas hacia fuera', 'Baja hasta que los muslos estén paralelos', 'Empuja con los talones'],
+    defaultRestSeconds: 90
+  },
+  {
+    id: 'banded-lateral-walk',
+    name: 'Banded Lateral Walk',
+    muscleGroup: 'glutes',
+    category: 'isolation',
+    equipment: ['bodyweight'],
+    youtubeUrl: 'https://www.youtube.com/watch?v=XqnlYSEqSiw',
+    techniqueNotes: ['Banda por encima de las rodillas o en los tobillos', 'Mantén tensión constante', 'Pasos controlados laterales'],
+    defaultRestSeconds: 45
+  },
+  {
+    id: 'single-leg-hip-thrust',
+    name: 'Single-Leg Hip Thrust',
+    muscleGroup: 'glutes',
+    secondaryMuscles: ['hamstrings'],
+    category: 'compound',
+    equipment: ['bodyweight'],
+    youtubeUrl: 'https://www.youtube.com/watch?v=AVAXhy6pl7o',
+    techniqueNotes: ['Espalda alta en el banco', 'Una pierna extendida', 'Aprieta el glúteo arriba 1-2 seg'],
+    defaultRestSeconds: 60
+  },
+  {
+    id: 'kettlebell-swing',
+    name: 'Kettlebell Swing',
+    muscleGroup: 'glutes',
+    secondaryMuscles: ['hamstrings', 'abs'],
+    category: 'compound',
+    equipment: ['kettlebell'],
+    youtubeUrl: 'https://www.youtube.com/watch?v=YSxHifyI6s8',
+    techniqueNotes: ['Hip hinge explosivo', 'Brazos relajados, la fuerza viene de las caderas', 'Glúteos apretados arriba'],
+    defaultRestSeconds: 60
+  },
+  {
+    id: 'weighted-step-ups',
+    name: 'Weighted Step-Ups',
+    muscleGroup: 'quads',
+    secondaryMuscles: ['glutes'],
+    category: 'compound',
+    equipment: ['dumbbell'],
+    youtubeUrl: 'https://www.youtube.com/watch?v=dQqApCGd5Ss',
+    techniqueNotes: ['Caja a la altura de la rodilla', 'Empuja con el pie de arriba sin impulsar con el de abajo', 'Control en la bajada'],
+    defaultRestSeconds: 90
+  },
+
+  // --- Titan exercises (seniors) ---
+  {
+    id: 'dead-bug',
+    name: 'Dead Bug',
+    muscleGroup: 'abs',
+    category: 'isolation',
+    equipment: ['bodyweight'],
+    youtubeUrl: 'https://www.youtube.com/watch?v=I5xbsA71v1A',
+    techniqueNotes: ['Espalda baja pegada al suelo', 'Extiende brazo y pierna opuestos lentamente', 'Exhala al extender'],
+    defaultRestSeconds: 45
+  },
+  {
+    id: 'bird-dog',
+    name: 'Bird Dog',
+    muscleGroup: 'abs',
+    secondaryMuscles: ['glutes'],
+    category: 'isolation',
+    equipment: ['bodyweight'],
+    youtubeUrl: 'https://www.youtube.com/watch?v=wiFNA3sqjCA',
+    techniqueNotes: ['En cuadrupedia', 'Extiende brazo y pierna opuestos', 'Mantén la cadera nivelada'],
+    defaultRestSeconds: 45
+  },
+  {
+    id: 'tandem-walk',
+    name: 'Tandem Walk (Heel-to-Toe)',
+    muscleGroup: 'calves',
+    secondaryMuscles: ['quads'],
+    category: 'isolation',
+    equipment: ['bodyweight'],
+    youtubeUrl: 'https://www.youtube.com/watch?v=sRPgGK_o2ys',
+    techniqueNotes: ['Talón toca la punta del otro pie', '10-20 pasos en línea recta', 'Mirada al frente'],
+    defaultRestSeconds: 30
+  },
+  {
+    id: 'floor-get-up',
+    name: 'Floor Get-Up',
+    muscleGroup: 'abs',
+    secondaryMuscles: ['quads', 'glutes'],
+    category: 'compound',
+    equipment: ['bodyweight'],
+    youtubeUrl: 'https://www.youtube.com/watch?v=0dHYwLqaOoY',
+    techniqueNotes: ['Desde tumbado en el suelo, levántate sin apoyar las manos si puedes', 'Progresión: usa una mano, luego ninguna'],
+    defaultRestSeconds: 60
+  },
+  {
+    id: 'sit-to-stand',
+    name: 'Sit-to-Stand',
+    muscleGroup: 'quads',
+    secondaryMuscles: ['glutes'],
+    category: 'compound',
+    equipment: ['bodyweight'],
+    youtubeUrl: 'https://www.youtube.com/watch?v=FwYMJwfEPao',
+    techniqueNotes: ['Desde una silla, levántate sin impulso', 'Controla la bajada 3 segundos', 'Progresión: brazos cruzados en el pecho'],
+    defaultRestSeconds: 45
+  },
+  {
+    id: 'wall-push-up',
+    name: 'Wall Push-Up',
+    muscleGroup: 'chest',
+    secondaryMuscles: ['shoulders_front', 'triceps'],
+    category: 'compound',
+    equipment: ['bodyweight'],
+    youtubeUrl: 'https://www.youtube.com/watch?v=a6YHbXD2XlU',
+    techniqueNotes: ['Manos en la pared a la altura de los hombros', 'Cuerpo recto, baja controlado', 'Progresión: incline push-up en banco'],
+    defaultRestSeconds: 60
+  },
+  {
+    id: 'band-pull-apart',
+    name: 'Band Pull-Apart',
+    muscleGroup: 'shoulders_rear',
+    secondaryMuscles: ['back_thickness'],
+    category: 'isolation',
+    equipment: ['bodyweight'],
+    youtubeUrl: 'https://www.youtube.com/watch?v=AWoaIdRDBMg',
+    techniqueNotes: ['Agarra la banda con brazos extendidos', 'Separa las manos tirando con los dorsales y deltoides posteriores'],
+    defaultRestSeconds: 45
+  },
+  {
+    id: 'pallof-press',
+    name: 'Pallof Press',
+    muscleGroup: 'abs',
+    category: 'isolation',
+    equipment: ['cable'],
+    youtubeUrl: 'https://www.youtube.com/watch?v=AH_QZLm_0-s',
+    techniqueNotes: ['Cable a la altura del pecho', 'Extiende los brazos resistiendo la rotación', 'Core activado todo el tiempo'],
+    defaultRestSeconds: 45
+  },
+  {
+    id: 'suitcase-carry',
+    name: 'Suitcase Carry',
+    muscleGroup: 'abs',
+    secondaryMuscles: ['forearms'],
+    category: 'compound',
+    equipment: ['dumbbell'],
+    youtubeUrl: 'https://www.youtube.com/watch?v=bLzD69YnMzk',
+    techniqueNotes: ['Mancuerna en una mano', 'Camina recto sin inclinarte', 'Cambia de mano a mitad'],
+    defaultRestSeconds: 60
+  },
+  {
+    id: 'wall-angels',
+    name: 'Wall Angels',
+    muscleGroup: 'shoulders_rear',
+    category: 'isolation',
+    equipment: ['bodyweight'],
+    youtubeUrl: 'https://www.youtube.com/watch?v=M3iS3TB8Qkg',
+    techniqueNotes: ['Espalda y cabeza contra la pared', 'Desliza los brazos arriba y abajo manteniendo contacto'],
+    defaultRestSeconds: 30
+  },
+  {
+    id: 'cat-cow',
+    name: 'Cat-Cow Stretch',
+    muscleGroup: 'abs',
+    category: 'isolation',
+    equipment: ['bodyweight'],
+    youtubeUrl: 'https://www.youtube.com/watch?v=kqnua4rHVVA',
+    techniqueNotes: ['En cuadrupedia', 'Arquea la espalda (gato) y luego extiéndela (vaca)', 'Coordina con la respiración'],
+    defaultRestSeconds: 30
+  },
+  {
+    id: 'single-leg-stance',
+    name: 'Single-Leg Stance',
+    muscleGroup: 'calves',
+    secondaryMuscles: ['quads'],
+    category: 'isolation',
+    equipment: ['bodyweight'],
+    youtubeUrl: 'https://www.youtube.com/watch?v=F4UVjz5tn5s',
+    techniqueNotes: ['Levanta un pie del suelo', 'Mantén 30 segundos', 'Progresión: ojos cerrados'],
+    defaultRestSeconds: 30
+  },
+  {
+    id: 'hip-circles',
+    name: 'Hip Circles',
+    muscleGroup: 'glutes',
+    category: 'isolation',
+    equipment: ['bodyweight'],
+    youtubeUrl: 'https://www.youtube.com/watch?v=4AOslFGFnSo',
+    techniqueNotes: ['De pie, haz círculos amplios con la cadera', '10 en cada dirección'],
+    defaultRestSeconds: 30
   }
 ];
 

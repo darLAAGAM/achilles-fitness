@@ -26,6 +26,11 @@ export interface User {
   // Equipment availability
   availableEquipment: Equipment[];
   hasGymAccess: boolean;
+  // Smart onboarding fields
+  injuries?: string[];
+  sessionDuration?: number;
+  trainingLocation?: 'gym' | 'home' | 'bodyweight';
+  fitnessGoal?: 'muscle_gain' | 'tone' | 'fat_loss' | 'longevity' | 'athletic';
   createdAt: Date;
   updatedAt: Date;
 }
