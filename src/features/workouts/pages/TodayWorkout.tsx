@@ -1,12 +1,12 @@
 import { useEffect, useState, useMemo, useCallback } from 'react';
 import type { CSSProperties } from 'react';
-import { Play, CheckCircle2, Zap, ChevronRight, ChevronDown, Trophy, Flame, Dumbbell, Calendar, RotateCcw } from 'lucide-react';
+import { Play, CheckCircle2, Zap, ChevronRight, ChevronDown, ChevronLeft, Trophy, Flame, Dumbbell, Calendar, RotateCcw } from 'lucide-react';
 import { useWorkoutStore } from '../../../stores/workoutStore';
 import { useUserStore } from '../../../stores/userStore';
 import { getProgramById, achillesProgram } from '../../../data/programs';
 import { exercises as exerciseData } from '../../../data/exercises';
 import { db } from '../../../services/db/database';
-import type { WorkoutTemplate, Exercise, ExerciseTemplate, WorkoutSet, WorkoutProgram, ProgramPhase } from '../../../types';
+import type { WorkoutTemplate, Exercise, ExerciseTemplate, WorkoutSet, ProgramPhase } from '../../../types';
 import { ExerciseDetail } from './ExerciseDetail';
 import { FastingTracker } from '../../../components/fasting/FastingTracker';
 import { AccessoryTracker } from '../../../components/workout/AccessoryTracker';
@@ -499,42 +499,6 @@ const getWorkoutDescription = (template: WorkoutTemplate | null): string => {
 };
 
 // Get current phase for programs with multiple phases
-const getCurrentPhase = (program: WorkoutProgram, startDate?: Date): ProgramPhase | null => {
-  if (!program.phases || program.phases.length === 0) return null;
-  if (!startDate) return program.phases[0];
-
-  const weeksElapsed = differenceInWeeks(new Date(), startDate);
-  let accumulatedWeeks = 0;
-
-  for (const phase of program.phases) {
-    accumulatedWeeks += phase.weeks;
-    if (weeksElapsed < accumulatedWeeks) {
-      return phase;
-    }
-  }
-
-  // If all phases complete, return last phase
-  return program.phases[program.phases.length - 1];
-};
-
-// Get week number within current phase
-const getWeekInPhase = (program: WorkoutProgram, startDate?: Date): number => {
-  if (!program.phases || program.phases.length === 0) return 1;
-  if (!startDate) return 1;
-
-  const weeksElapsed = differenceInWeeks(new Date(), startDate);
-  let accumulatedWeeks = 0;
-
-  for (const phase of program.phases) {
-    if (weeksElapsed < accumulatedWeeks + phase.weeks) {
-      return weeksElapsed - accumulatedWeeks + 1;
-    }
-    accumulatedWeeks += phase.weeks;
-  }
-
-  return 1;
-};
-
 // ============================================
 // COMPONENT
 // ============================================
@@ -548,6 +512,7 @@ export function TodayWorkout() {
     completeSession
   } = useWorkoutStore();
 
+  const [weekOffset, setWeekOffset] = useState(0);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [selectedExercise, setSelectedExercise] = useState<{
     exercise: Exercise;
@@ -562,14 +527,65 @@ export function TodayWorkout() {
     return getProgramById(programId) || achillesProgram;
   }, [user?.currentProgramId]);
 
+  // Viewed week date (offset from current)
+  const viewedWeekDate = useMemo(() => {
+    return addDays(new Date(), weekOffset * 7);
+  }, [weekOffset]);
+
+  // Calculate total program weeks for navigation limits
+  const totalProgramWeeks = currentProgram.weeks || 
+    (currentProgram.phases?.reduce((sum, p) => sum + p.weeks, 0)) || 0;
+
+  // Weeks elapsed from program start to viewed week
+  const viewedWeeksElapsed = useMemo(() => {
+    if (!user?.programStartDate) return 0;
+    return differenceInWeeks(viewedWeekDate, user.programStartDate);
+  }, [viewedWeekDate, user?.programStartDate]);
+
+  // Get phase for the VIEWED week (not necessarily current)
+  const getPhaseForWeek = useCallback((weeksElapsed: number): ProgramPhase | null => {
+    if (!currentProgram.phases || currentProgram.phases.length === 0) return null;
+    let accumulatedWeeks = 0;
+    for (const phase of currentProgram.phases) {
+      accumulatedWeeks += phase.weeks;
+      if (weeksElapsed < accumulatedWeeks) return phase;
+    }
+    return currentProgram.phases[currentProgram.phases.length - 1];
+  }, [currentProgram]);
+
+  const getWeekInPhaseForWeek = useCallback((weeksElapsed: number): number => {
+    if (!currentProgram.phases || currentProgram.phases.length === 0) return 1;
+    let accumulatedWeeks = 0;
+    for (const phase of currentProgram.phases) {
+      if (weeksElapsed < accumulatedWeeks + phase.weeks) {
+        return weeksElapsed - accumulatedWeeks + 1;
+      }
+      accumulatedWeeks += phase.weeks;
+    }
+    return 1;
+  }, [currentProgram]);
+
   // Get current phase for programs with phases (like Wolverine)
   const currentPhase = useMemo(() => {
-    return getCurrentPhase(currentProgram, user?.programStartDate);
-  }, [currentProgram, user?.programStartDate]);
+    return getPhaseForWeek(viewedWeeksElapsed);
+  }, [viewedWeeksElapsed, getPhaseForWeek]);
 
   const weekInPhase = useMemo(() => {
-    return getWeekInPhase(currentProgram, user?.programStartDate);
-  }, [currentProgram, user?.programStartDate]);
+    return getWeekInPhaseForWeek(viewedWeeksElapsed);
+  }, [viewedWeeksElapsed, getWeekInPhaseForWeek]);
+
+  // Navigation limits
+  const canGoBack = useMemo(() => {
+    if (!user?.programStartDate) return weekOffset > -4; // Allow 4 weeks back if no start date
+    return viewedWeeksElapsed > 0;
+  }, [weekOffset, viewedWeeksElapsed, user?.programStartDate]);
+
+  const canGoForward = useMemo(() => {
+    if (totalProgramWeeks === 0) return weekOffset < 12; // Arbitrary limit
+    return viewedWeeksElapsed < totalProgramWeeks - 1;
+  }, [weekOffset, viewedWeeksElapsed, totalProgramWeeks]);
+
+  const isCurrentWeek = weekOffset === 0;
 
   // Get workouts for current phase (or all workouts if no phases)
   // Workouts without phaseId are shown in ALL phases (for programs like Blood & Guts)
@@ -590,7 +606,7 @@ export function TodayWorkout() {
 
   // Generate week days with dynamic workout assignment
   const weekDays: WeekDay[] = useMemo(() => {
-    const weekStart = startOfWeek(new Date(), { weekStartsOn: 1 }); // Start on Monday
+    const weekStart = startOfWeek(addDays(new Date(), weekOffset * 7), { weekStartsOn: 1 });
     return Array.from({ length: 7 }, (_, i) => {
       const date = addDays(weekStart, i);
       const dayOfWeek = date.getDay();
@@ -604,7 +620,7 @@ export function TodayWorkout() {
         isOptional: workout?.optional || false,
       };
     });
-  }, [getWorkoutForDay]);
+  }, [getWorkoutForDay, weekOffset]);
 
   // Weekly progress: how many scheduled workouts completed this week
   const weeklyStats = useMemo(() => {
@@ -809,7 +825,7 @@ export function TodayWorkout() {
           <div>
             <h1 style={styles.headerTitle}>Entreno</h1>
             <p style={styles.headerSubtitle}>
-              {format(new Date(), "MMMM yyyy", { locale: es })}
+              {format(viewedWeekDate, "MMMM yyyy", { locale: es })}
             </p>
           </div>
           <span style={styles.weekLabel}>{currentProgram.name}</span>
@@ -857,6 +873,70 @@ export function TodayWorkout() {
 
       {/* Week Calendar */}
       <div style={styles.calendarCard}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginBottom: '12px',
+        }}>
+          <button
+            onClick={() => { if (canGoBack) { setWeekOffset(w => w - 1); setSelectedDate(addDays(new Date(), (weekOffset - 1) * 7)); } }}
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: canGoBack ? 'pointer' : 'default',
+              opacity: canGoBack ? 1 : 0.3,
+              padding: '8px',
+              display: 'flex',
+              alignItems: 'center',
+            }}
+            disabled={!canGoBack}
+          >
+            <ChevronLeft size={20} color={colors.textSecondary} />
+          </button>
+          <div style={{ textAlign: 'center' as const }}>
+            <span style={{
+              fontSize: '13px',
+              fontWeight: '600',
+              color: isCurrentWeek ? colors.accent : colors.text,
+              textTransform: 'capitalize' as const,
+            }}>
+              {isCurrentWeek ? 'Esta semana' : format(weekDays[0]?.date || new Date(), "d MMM", { locale: es }) + ' – ' + format(weekDays[6]?.date || new Date(), "d MMM", { locale: es })}
+            </span>
+            {!isCurrentWeek && (
+              <button
+                onClick={() => { setWeekOffset(0); setSelectedDate(new Date()); }}
+                style={{
+                  background: 'none',
+                  border: `1px solid ${colors.accent}50`,
+                  borderRadius: '8px',
+                  padding: '2px 8px',
+                  marginLeft: '8px',
+                  cursor: 'pointer',
+                  fontSize: '11px',
+                  color: colors.accent,
+                }}
+              >
+                Hoy
+              </button>
+            )}
+          </div>
+          <button
+            onClick={() => { if (canGoForward) { setWeekOffset(w => w + 1); setSelectedDate(addDays(new Date(), (weekOffset + 1) * 7)); } }}
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: canGoForward ? 'pointer' : 'default',
+              opacity: canGoForward ? 1 : 0.3,
+              padding: '8px',
+              display: 'flex',
+              alignItems: 'center',
+            }}
+            disabled={!canGoForward}
+          >
+            <ChevronRight size={20} color={colors.textSecondary} />
+          </button>
+        </div>
         <div style={styles.calendarGrid}>
           {weekDays.map((day) => {
             const isSelected = isSameDay(day.date, selectedDate);
