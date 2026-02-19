@@ -476,6 +476,78 @@ function ExerciseTimer({
 }
 
 // ============================================
+// INLINE EXERCISE TIMER (for expanded panel)
+// ============================================
+function InlineExerciseTimer({ duration, isPerSide, exerciseName: _exerciseName }: { duration: number; isPerSide?: boolean; exerciseName: string }) {
+  const totalDuration = isPerSide ? duration * 2 : duration;
+  const [timeLeft, setTimeLeft] = useState(totalDuration);
+  const [isRunning, setIsRunning] = useState(false);
+  const [currentSide, setCurrentSide] = useState<'right' | 'left'>('right');
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  useEffect(() => {
+    if (isRunning && timeLeft > 0) {
+      intervalRef.current = setInterval(() => {
+        setTimeLeft(prev => {
+          if (prev <= 1) {
+            setIsRunning(false);
+            return 0;
+          }
+          if (isPerSide && prev === duration + 1) {
+            setCurrentSide('left');
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
+  }, [isRunning, timeLeft, duration, isPerSide]);
+
+  const mins = Math.floor(timeLeft / 60);
+  const secs = timeLeft % 60;
+  const progress = ((totalDuration - timeLeft) / totalDuration) * 100;
+
+  return (
+    <div style={{ marginTop: '12px', padding: '12px', backgroundColor: `${colors.mobility}10`, borderRadius: '12px' }}>
+      {isPerSide && isRunning && (
+        <p style={{ fontSize: '12px', color: colors.mobility, fontWeight: '600', margin: '0 0 6px', textAlign: 'center' }}>
+          {currentSide === 'right' ? '→ Lado derecho' : '← Lado izquierdo'}
+        </p>
+      )}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <button
+          onClick={() => {
+            if (timeLeft === 0) { setTimeLeft(totalDuration); setCurrentSide('right'); }
+            setIsRunning(!isRunning);
+          }}
+          style={{
+            width: '40px', height: '40px', borderRadius: '50%', border: 'none',
+            backgroundColor: isRunning ? `${colors.textSecondary}30` : colors.mobility,
+            color: isRunning ? colors.text : '#000',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0,
+          }}
+        >
+          {isRunning ? <Pause size={16} /> : <Play size={16} />}
+        </button>
+        <div style={{ flex: 1 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+            <span style={{ fontSize: '13px', color: colors.text, fontWeight: '600' }}>
+              {mins}:{secs.toString().padStart(2, '0')}
+            </span>
+            <span style={{ fontSize: '11px', color: colors.textSecondary }}>
+              {isPerSide ? `${duration}s/lado` : `${duration}s`}
+            </span>
+          </div>
+          <div style={{ height: '4px', backgroundColor: `${colors.textSecondary}30`, borderRadius: '2px', overflow: 'hidden' }}>
+            <div style={{ height: '100%', backgroundColor: colors.mobility, borderRadius: '2px', width: `${progress}%`, transition: 'width 1s linear' }} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ============================================
 // MAIN COMPONENT
 // ============================================
 export function MobilityTracker() {
@@ -774,12 +846,36 @@ export function MobilityTracker() {
                     </div>
                   </div>
 
-                  {/* Description Panel */}
+                  {/* Expanded Panel: Description + Video + Timer */}
                   {isExpanded && (
                     <div style={styles.descriptionPanel}>
                       <p style={styles.descriptionText}>
                         {exercise.description}
                       </p>
+                      {/* Embedded YouTube Video */}
+                      {exercise.youtubeUrl && (() => {
+                        const match = exercise.youtubeUrl.match(/(?:v=|\/embed\/|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+                        const videoId = match ? match[1] : null;
+                        return videoId ? (
+                          <div style={{ position: 'relative', width: '100%', paddingBottom: '56.25%', marginTop: '10px', borderRadius: '12px', overflow: 'hidden' }}>
+                            <iframe
+                              src={`https://www.youtube.com/embed/${videoId}?rel=0`}
+                              style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 'none' }}
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                              allowFullScreen
+                              title={exercise.name}
+                            />
+                          </div>
+                        ) : null;
+                      })()}
+                      {/* Inline Timer */}
+                      {exercise.duration > 0 && (
+                        <InlineExerciseTimer
+                          duration={exercise.duration}
+                          isPerSide={exercise.isPerSide}
+                          exerciseName={exercise.name}
+                        />
+                      )}
                     </div>
                   )}
                 </div>
