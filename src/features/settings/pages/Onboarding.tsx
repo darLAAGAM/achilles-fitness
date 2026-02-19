@@ -319,6 +319,7 @@ export function Onboarding() {
       border: sel ? 'none' : '2px solid #333',
       backgroundColor: sel ? '#d4af37' : '#1a1a1a',
       cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '12px',
+      textAlign: 'left' as const,
     }),
     optLabel: (sel: boolean): CSSProperties => ({ fontSize: '17px', fontWeight: 600, color: sel ? '#000' : '#fff' }),
     optDesc: (sel: boolean): CSSProperties => ({ fontSize: '13px', color: sel ? 'rgba(0,0,0,0.7)' : '#888' }),
@@ -607,7 +608,7 @@ export function Onboarding() {
         {step === 5 && (
           <div>
             <h1 style={s.title}>
-              Tu programa,{' '}<span style={s.gold}>{name || 'Guerrero'}</span>
+              Tu programa,{' '}<span style={s.gold}>{name || 'Campeón'}</span>
             </h1>
             <p style={s.sub}>Basado en tus respuestas, te recomendamos:</p>
 
