@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { User, Target, Dumbbell, Download, Trash2, Info, ChevronRight, X, Repeat, Cloud, CloudOff, RefreshCw } from 'lucide-react';
+import { useState } from 'react';
+import { User, Target, Dumbbell, Download, Trash2, Info, ChevronRight, X, Repeat, Cloud, RefreshCw } from 'lucide-react';
 import { useUserStore } from '../../../stores/userStore';
 import { exportData, clearDatabase } from '../../../services/db/database';
 import { allPrograms, getProgramById } from '../../../data/programs';
@@ -14,7 +14,7 @@ export function Settings() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [syncStatus, setSyncStatus] = useState<'idle' | 'pushing' | 'pulling' | 'success' | 'error'>('idle');
   const [lastSync, setLastSync] = useState<string | null>(getLastSyncTime());
-  const [syncError, setSyncError] = useState<string | null>(null);
+  const [_syncError, setSyncError] = useState<string | null>(null);
 
   // Profile form state
   const [name, setName] = useState(user?.name || '');
