@@ -150,6 +150,7 @@ export function Onboarding() {
 
   // Step 5: Recommendation
   const [selectedProgramId, setSelectedProgramId] = useState<string | null>(null);
+  const [showAllPrograms, setShowAllPrograms] = useState(false);
 
   const totalSteps = 6; // 0=welcome, 1=basic, 2=history, 3=goal, 4=life, 5=recommendation
 
@@ -642,40 +643,40 @@ export function Onboarding() {
               );
             })}
 
-            {/* All programs link */}
+            {/* All programs dropdown */}
             <button
-              onClick={() => {
-                // Show all programs — simple expand for now
-                setSelectedProgramId(null);
-              }}
+              onClick={() => setShowAllPrograms(!showAllPrograms)}
               style={{
                 width: '100%', padding: '16px', borderRadius: '16px',
                 border: '1px solid #333', backgroundColor: 'transparent',
                 cursor: 'pointer', color: '#888', fontSize: '14px', marginTop: '8px',
-                textAlign: 'center',
+                textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
               }}
             >
               Ver todos los programas ({allPrograms.length})
+              <ChevronRight size={16} style={{ transform: showAllPrograms ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }} />
             </button>
 
-            {/* Show all programs if no selection matches recommendations */}
-            {selectedProgramId === null && (
-              <div style={{ marginTop: '16px' }}>
-                {allPrograms.filter(p => !recommendations.some(r => r.program.id === p.id)).map(program => (
-                  <button key={program.id} onClick={() => setSelectedProgramId(program.id)} style={s.programCard(false)}>
-                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
-                      <span style={{ fontSize: '28px' }}>{getProgramIcon(program)}</span>
-                      <div style={{ flex: 1, textAlign: 'left' }}>
-                        <div style={{ fontSize: '17px', fontWeight: 700, color: '#fff', marginBottom: '4px' }}>{program.name}</div>
-                        <div style={{ display: 'flex', gap: '12px' }}>
-                          <span style={{ fontSize: '12px', color: '#888' }}>{program.daysPerWeek}d/sem</span>
-                          <span style={{ fontSize: '12px', color: '#888' }}>{program.weeks}sem</span>
-                          <span style={{ fontSize: '12px', color: '#888' }}>{getDiffLabel(program.difficulty)}</span>
+            {showAllPrograms && (
+              <div style={{ marginTop: '12px' }}>
+                {allPrograms.filter(p => !recommendations.some(r => r.program.id === p.id)).map(program => {
+                  const sel = finalProgramId === program.id;
+                  return (
+                    <button key={program.id} onClick={() => setSelectedProgramId(program.id)} style={s.programCard(sel)}>
+                      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+                        <span style={{ fontSize: '28px' }}>{getProgramIcon(program)}</span>
+                        <div style={{ flex: 1, textAlign: 'left' }}>
+                          <div style={{ fontSize: '17px', fontWeight: 700, color: sel ? '#d4af37' : '#fff', marginBottom: '4px' }}>{program.name}</div>
+                          <div style={{ display: 'flex', gap: '12px' }}>
+                            <span style={{ fontSize: '12px', color: '#888' }}>{program.daysPerWeek}d/sem</span>
+                            <span style={{ fontSize: '12px', color: '#888' }}>{program.weeks}sem</span>
+                            <span style={{ fontSize: '12px', color: '#888' }}>{getDiffLabel(program.difficulty)}</span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </button>
-                ))}
+                    </button>
+                  );
+                })}
               </div>
             )}
           </div>
@@ -700,7 +701,7 @@ export function Onboarding() {
           ) : step < totalSteps - 1 ? (
             <>Continuar <ChevronRight size={22} strokeWidth={2.5} /></>
           ) : (
-            <>Empezar con {allPrograms.find(p => p.id === finalProgramId)?.name || 'Achilles'} <ChevronRight size={22} strokeWidth={2.5} /></>
+            <>Empezar <ChevronRight size={22} strokeWidth={2.5} /></>
           )}
         </button>
       </div>
