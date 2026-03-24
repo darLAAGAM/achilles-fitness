@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
-import { ChevronDown, ChevronUp, Check, Play, Pause, ExternalLink, Clock, ChevronLeft, Info } from 'lucide-react';
+import { ChevronDown, ChevronUp, Check, Play, Pause, Clock, ChevronLeft } from 'lucide-react';
 import { mobilityRoutines, type MobilityRoutine } from '../../data/mobility-routines';
 import { format, startOfWeek, addDays } from 'date-fns';
 
@@ -762,14 +762,17 @@ export function MobilityTracker() {
 
               return (
                 <div key={index} style={styles.exerciseCard}>
-                  <div style={styles.exerciseRow}>
+                  <div
+                    style={{ ...styles.exerciseRow, cursor: 'pointer' }}
+                    onClick={() => setExpandedExercise(isExpanded ? null : index)}
+                  >
                     {/* Checkbox */}
                     <div
                       style={{
                         ...styles.checkbox,
                         ...(isComplete ? styles.checkboxChecked : {}),
                       }}
-                      onClick={() => toggleExerciseComplete(index)}
+                      onClick={(e) => { e.stopPropagation(); toggleExerciseComplete(index); }}
                     >
                       {isComplete && <Check size={14} color="#fff" />}
                     </div>
@@ -794,56 +797,10 @@ export function MobilityTracker() {
                       </div>
                     </div>
 
-                    {/* Actions */}
-                    <div style={styles.exerciseActions}>
-                      {/* Info toggle */}
-                      <button
-                        style={{
-                          ...styles.actionButton,
-                          backgroundColor: isExpanded ? `${colors.mobility}20` : `${colors.textSecondary}15`,
-                        }}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setExpandedExercise(isExpanded ? null : index);
-                        }}
-                      >
-                        <Info size={14} color={isExpanded ? colors.mobility : colors.textSecondary} />
-                      </button>
-
-                      {/* Timer / Play */}
-                      {exercise.duration > 0 && !isComplete && (
-                        <button
-                          style={{
-                            ...styles.actionButton,
-                            backgroundColor: activeTimer === index ? `${colors.mobility}30` : `${colors.mobility}15`,
-                          }}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setActiveTimer(activeTimer === index ? null : index);
-                          }}
-                        >
-                          {activeTimer === index
-                            ? <Pause size={14} color={colors.mobility} />
-                            : <Play size={14} color={colors.mobility} />
-                          }
-                        </button>
-                      )}
-
-                      {/* YouTube */}
-                      <a
-                        href={exercise.youtubeUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()}
-                        style={{
-                          ...styles.actionButton,
-                          backgroundColor: '#ff000015',
-                          textDecoration: 'none',
-                        }}
-                      >
-                        <ExternalLink size={14} color="#ef4444" />
-                      </a>
-                    </div>
+                    {/* Chevron indicator */}
+                    <span style={{ color: colors.textSecondary, fontSize: '12px', flexShrink: 0 }}>
+                      {isExpanded ? '▲' : '▼'}
+                    </span>
                   </div>
 
                   {/* Expanded Panel: Description + Video + Timer */}
