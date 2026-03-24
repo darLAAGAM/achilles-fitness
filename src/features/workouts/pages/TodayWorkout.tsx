@@ -526,6 +526,7 @@ export function TodayWorkout() {
   } | null>(null);
   const [showPhaseNotes, setShowPhaseNotes] = useState(false);
   const [completedDates, setCompletedDates] = useState<Set<string>>(new Set());
+  const [completionReloadKey, setCompletionReloadKey] = useState(0);
 
   // Get the user's current program or default to Achilles
   const currentProgram = useMemo(() => {
@@ -654,10 +655,10 @@ export function TodayWorkout() {
     ? currentSession.workoutTemplateId === selectedTemplate.id
     : false;
 
-  // Load completed sessions for this week
+  // Load completed sessions for the viewed week
   useEffect(() => {
     const loadWeekCompletions = async () => {
-      const weekStart = startOfWeek(new Date(), { weekStartsOn: 1 });
+      const weekStart = startOfWeek(addDays(new Date(), weekOffset * 7), { weekStartsOn: 1 });
       const weekEnd = addDays(weekStart, 7);
       const sessions = await db.workoutSessions
         .where('date')
@@ -668,7 +669,7 @@ export function TodayWorkout() {
       setCompletedDates(dates);
     };
     loadWeekCompletions();
-  }, [currentSession]); // reload when session changes (e.g., completed)
+  }, [currentSession, weekOffset, completionReloadKey]); // reload on session change, week change, or manual reload
 
   useEffect(() => {
     const initializeData = async () => {
@@ -709,6 +710,7 @@ export function TodayWorkout() {
 
   const handleCompleteWorkout = async () => {
     await completeSession();
+    setCompletionReloadKey(k => k + 1);
   };
 
   const getExerciseSets = (exerciseId: string) => {

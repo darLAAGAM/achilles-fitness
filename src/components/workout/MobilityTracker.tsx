@@ -406,7 +406,8 @@ function ExerciseTimer({
   }, [cleanup]);
 
   useEffect(() => {
-    if (isRunning && timeLeft > 0) {
+    cleanup();
+    if (isRunning) {
       intervalRef.current = setInterval(() => {
         setTimeLeft(prev => {
           if (prev <= 1) {
@@ -415,18 +416,15 @@ function ExerciseTimer({
             onComplete();
             return 0;
           }
-          // Switch side indicator at halfway for perSide exercises
           if (isPerSide && prev === duration + 1) {
             setCurrentSide('left');
           }
           return prev - 1;
         });
       }, 1000);
-    } else {
-      cleanup();
     }
     return cleanup;
-  }, [isRunning, timeLeft, duration, isPerSide, onComplete, cleanup]);
+  }, [isRunning, duration, isPerSide, onComplete, cleanup]); // removed timeLeft from deps
 
   const progress = ((totalDuration - timeLeft) / totalDuration) * 100;
   const mins = Math.floor(timeLeft / 60);
@@ -486,7 +484,11 @@ function InlineExerciseTimer({ duration, isPerSide, exerciseName: _exerciseName 
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
-    if (isRunning && timeLeft > 0) {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+    if (isRunning) {
       intervalRef.current = setInterval(() => {
         setTimeLeft(prev => {
           if (prev <= 1) {
@@ -501,7 +503,7 @@ function InlineExerciseTimer({ duration, isPerSide, exerciseName: _exerciseName 
       }, 1000);
     }
     return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
-  }, [isRunning, timeLeft, duration, isPerSide]);
+  }, [isRunning, duration, isPerSide]); // removed timeLeft from deps
 
   const mins = Math.floor(timeLeft / 60);
   const secs = timeLeft % 60;
@@ -564,6 +566,17 @@ export function MobilityTracker() {
   // Load completed routines
   useEffect(() => {
     setCompletedToday(getCompletedRoutines(today));
+  }, [today]);
+
+  // Reload from localStorage when tab becomes visible again
+  useEffect(() => {
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') {
+        setCompletedToday(getCompletedRoutines(today));
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+    return () => document.removeEventListener('visibilitychange', handleVisibility);
   }, [today]);
 
   // Count weekly completions

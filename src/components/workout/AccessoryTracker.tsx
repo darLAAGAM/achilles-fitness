@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 import { Flame, Target, ChevronDown, ChevronUp, Check, Clock } from 'lucide-react';
 import { getAccessoryPlanByProgram, type AbsWorkout, type CardioWorkout, type AbsExercise, type CalvesExercise } from '../../data/accessory-workouts';
 import { format, startOfWeek, addDays } from 'date-fns';
@@ -259,6 +259,24 @@ export function AccessoryTracker({ programId, currentPhaseId }: AccessoryTracker
       return [];
     }
   });
+
+  // Reload from localStorage when component becomes visible (tab switch, navigation back)
+  const reloadFromStorage = useCallback(() => {
+    try {
+      const stored = localStorage.getItem('achilles-accessory-completed');
+      if (stored) {
+        setAllCompleted(JSON.parse(stored));
+      }
+    } catch { /* ignore */ }
+  }, []);
+
+  useEffect(() => {
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') reloadFromStorage();
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+    return () => document.removeEventListener('visibilitychange', handleVisibility);
+  }, [reloadFromStorage]);
 
   const plan = getAccessoryPlanByProgram(programId);
   const today = format(new Date(), 'yyyy-MM-dd');
